@@ -1,0 +1,26 @@
+import service from "../../partials/services/axios.config";
+
+export type ResponseAPI = {
+  message?: string;
+  results?: any;
+};
+
+export type QueryFunc = (queryKey) => Promise<ResponseAPI>;
+
+export const getCampaigns: QueryFunc = async ({ queryKey }) => {
+  const { params } = queryKey[1];
+  return await service.get("/campaign", { params });
+};
+
+export const getStoreAppById: QueryFunc = async ({ queryKey }) => {
+  const appId = queryKey[1];
+
+  if (!appId) {
+    return Promise.resolve({});
+  }
+  return await service.get(`/store-app/${appId}`);
+};
+
+export const getCurrency: QueryFunc = async () => {
+  return await service.get("/rule-config/currency");
+};

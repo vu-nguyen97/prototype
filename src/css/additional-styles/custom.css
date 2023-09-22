@@ -1,0 +1,47 @@
+/* Thêm các styles để custom component */
+.custom-mobile-form .ant-form-item-label {
+  @apply p-0;
+}
+.remove-padding .ant-col-24.ant-form-item-label {
+  @apply p-0;
+}
+
+.tabs-rounded .ant-tabs-nav-wrap {
+  @apply !rounded-t;
+}
+.tabs-rounded .ant-tabs-content-holder {
+  @apply !rounded-b;
+}
+.ant-tabs.tabs-without-border .ant-tabs-content-holder {
+  @apply !border-0;
+}
+
+.ant-transfer.hidden-operation button {
+  @apply hidden;
+}
+
+/* Table */
+.table-cell-bg.custom-dashed,
+.ant-table-cell.custom-dashed {
+  @apply !border !border-neutral-500 border-dashed;
+}
+
+.ant-table-cell:not(.custom-dashed):has(+ .ant-table-cell.custom-dashed) {
+  @apply !border-r !border-r-neutral-500;
+}
+
+.table-full-screen .TableWrapper-header {
+  @apply top-0;
+}
+
+.table-full-screen .TableWrapper-header:has(+ div #report-table) {
+  @apply -top-3 lg:top-0;
+}
+
+.table-full-screen #report-table .ant-table-sticky-holder {
+  @apply !top-[30px];
+}
+
+.table-full-screen #report-table .ant-table-body {
+  @apply !max-h-[none] lg:!max-h-[calc(100vh-180px)];
+}
