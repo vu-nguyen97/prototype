@@ -4,6 +4,7 @@ import { AiOutlineAppstore } from "@react-icons/all-files/ai/AiOutlineAppstore";
 import { AiOutlineSetting } from "@react-icons/all-files/ai/AiOutlineSetting";
 import { AiOutlineUsergroupAdd } from "@react-icons/all-files/ai/AiOutlineUsergroupAdd";
 import { AiOutlineTool } from "@react-icons/all-files/ai/AiOutlineTool";
+import { AiOutlineNotification } from "@react-icons/all-files/ai/AiOutlineNotification";
 
 export const SidebarConfigs = [
   {
@@ -56,6 +57,13 @@ export const SidebarAppConfigs = [
     label: "Overview",
     iconEl: <AiOutlineDashboard size={20} />,
     preload: () => import("../../pages/App/overview/Overview"),
+  },
+  {
+    id: 3,
+    url: "/campaigns",
+    label: "Campaigns",
+    iconEl: <AiOutlineNotification size={20} />,
+    preload: () => import("../../pages/App/Campaigns/Campaigns"),
   },
   {
     id: 6,

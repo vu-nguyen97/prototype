@@ -86,7 +86,8 @@ function Sidebar({
     getStoreAppById,
     {
       staleTime: 5 * 60000,
-      enabled: !!urlParams.appId,
+      // enabled: !!urlParams.appId,
+      enabled: false,
     }
   );
 

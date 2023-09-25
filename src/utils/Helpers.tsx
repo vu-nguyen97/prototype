@@ -516,34 +516,3 @@ export const checkMaximumValue = (
 
   return check;
 };
-
-export const getAppFromAdNetwork = (apps) => {
-  if (!apps?.length || !Array.isArray(apps)) return [];
-  return apps.filter(
-    (el) => el.networkConnector?.network?.networkType?.type === AD_NETWORK_TYPE
-  );
-};
-
-export const EDIT_PERCENTAGE_TOOLTIP = (
-  <div>
-    <div>Ex: To increase 10% - enter 110</div>
-    <div className="pl-6">To decrease 10% - enter 90</div>
-  </div>
-);
-
-export const DESCRIPTION_TOOLTIP = (
-  <div>
-    <div>* Only CPI Bid</div>
-  </div>
-);
-
-export const SELECT_COUNTRIES_TOOLTIP = (
-  <div>
-    Tip: You can type string "in, jp" then press "Enter" from keyboard to get
-    India and Japan countries.
-  </div>
-);
-
-export const SELECT_FOLDER_TOOLTIP = (
-  <div>Tip: Use Ctrl + Click or Shift + Click to select multiple folders.</div>
-);

@@ -89,53 +89,47 @@ function Notifications() {
   }, []);
 
   useEffect(() => {
-    const onConnected = () => {
-      const headers = { [OG_CODE_HEADER]: organizationCode };
-      client.subscribe(
-        `/topic/${organizationCode}/notification`,
-        function (msg) {
-          if (msg.body) {
-            const jsonBody = JSON.parse(msg.body);
-
-            if (!jsonBody) return;
-
-            const { data } = jsonBody;
-            if (data) {
-              dispatch(updateNotification({}));
-              if (data.popUp && !getMutedStatus()) {
-                const messageText = data.createdBy + ": " + data.title;
-
-                switch (data.type) {
-                  case NOTIFICATION_TYPES.error:
-                    return message.error(messageText);
-                  case NOTIFICATION_TYPES.warning:
-                    return message.warning(messageText);
-                  default:
-                    return message.success(messageText);
-                }
-              }
-            }
-          }
-        },
-        headers
-      );
-    };
-    const onDisconnected = () => {};
-
-    const client = new Client({
-      brokerURL: SOCKET_URL,
-      reconnectDelay: 5000,
-      heartbeatIncoming: 4000,
-      heartbeatOutgoing: 4000,
-      onConnect: onConnected,
-      onDisconnect: onDisconnected,
-    });
-
-    client.activate();
-
-    return () => {
-      client.deactivate();
-    };
+    // const onConnected = () => {
+    //   const headers = { [OG_CODE_HEADER]: organizationCode };
+    //   client.subscribe(
+    //     `/topic/${organizationCode}/notification`,
+    //     function (msg) {
+    //       if (msg.body) {
+    //         const jsonBody = JSON.parse(msg.body);
+    //         if (!jsonBody) return;
+    //         const { data } = jsonBody;
+    //         if (data) {
+    //           dispatch(updateNotification({}));
+    //           if (data.popUp && !getMutedStatus()) {
+    //             const messageText = data.createdBy + ": " + data.title;
+    //             switch (data.type) {
+    //               case NOTIFICATION_TYPES.error:
+    //                 return message.error(messageText);
+    //               case NOTIFICATION_TYPES.warning:
+    //                 return message.warning(messageText);
+    //               default:
+    //                 return message.success(messageText);
+    //             }
+    //           }
+    //         }
+    //       }
+    //     },
+    //     headers
+    //   );
+    // };
+    // const onDisconnected = () => {};
+    // const client = new Client({
+    //   brokerURL: SOCKET_URL,
+    //   reconnectDelay: 5000,
+    //   heartbeatIncoming: 4000,
+    //   heartbeatOutgoing: 4000,
+    //   onConnect: onConnected,
+    //   onDisconnect: onDisconnected,
+    // });
+    // client.activate();
+    // return () => {
+    //   client.deactivate();
+    // };
   }, []);
 
   const getNoti = (page = 0) => {

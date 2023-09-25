@@ -44,6 +44,7 @@ const Apps = React.lazy(() => import("../pages/Apps/Apps"));
 const NetworkConfig = React.lazy(
   () => import("../pages/NetworkConfig/NetworkConfig")
 );
+const Campaigns = React.lazy(() => import("../pages/App/Campaigns/Campaigns"));
 const Settings = React.lazy(() => import("../pages/App/setting/Settings"));
 const Overview = React.lazy(() => import("../pages/App/overview/Overview"));
 const Notifications = React.lazy(
@@ -63,6 +64,7 @@ const AppRoutes = () => (
         <Route path="apps/:appId/">
           <Route index element={getAppPage(<Overview />)} />
           <Route path="overview" element={getAppPage(<Overview />)} />
+          <Route path="campaigns" element={getAppPage(<Campaigns />)} />
           <Route path="settings" element={getAppPage(<Settings />)} />
         </Route>
 

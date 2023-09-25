@@ -1,8 +1,12 @@
 import React from "react";
-import Overview from "../App/overview/Overview";
+import Page from "../../utils/composables/Page";
 
 function Dashboard() {
-  return <Overview isAllApp />;
+  return (
+    <Page>
+      <div>Dashboard</div>
+    </Page>
+  );
 }
 
 export default Dashboard;
