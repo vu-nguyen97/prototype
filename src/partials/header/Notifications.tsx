@@ -78,14 +78,14 @@ function Notifications() {
   const dropdown = useRef(null);
 
   useEffect(() => {
-    service.get("/notification/count").then(
-      (res: any) => {
-        if (res.results) {
-          dispatch(updateNotification({ newValue: res.results }));
-        }
-      },
-      () => {}
-    );
+    // service.get("/notification/count").then(
+    //   (res: any) => {
+    //     if (res.results) {
+    //       dispatch(updateNotification({ newValue: res.results }));
+    //     }
+    //   },
+    //   () => {}
+    // );
   }, []);
 
   useEffect(() => {

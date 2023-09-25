@@ -6,24 +6,20 @@ import Empty from "antd/lib/empty";
 import AntInput from "antd/lib/input/Input";
 import Radio from "antd/lib/radio";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getStoreAppsWithDetailData } from "../../api/apps/apps.api";
-import { LIST_STORE_APPS, WITH_DETAIL_DATA } from "../../api/constants.api";
-import { ORGANIZATION_PATH } from "../../constants/constants";
+import { getStoreApps } from "../../api/apps/apps.api";
+import { LIST_STORE_APPS } from "../../api/constants.api";
 import GamePlatformIcon from "../../partials/common/GamePlatformIcon";
 import Input from "../../partials/elements/Input";
 import Modal from "../../partials/elements/Modal";
 import service from "../../partials/services/axios.config";
-import { RootState } from "../../redux/store";
 import Page from "../../utils/composables/Page";
 import { addStoreApp } from "../../utils/helper/ReactQueryHelpers";
 import { handleErrorImage } from "../../utils/Helpers";
 import Loading from "../../utils/Loading";
-import { numberWithCommas } from "../../utils/Utils";
 import classNames from "classnames";
-import { AppChart } from "./AppChart";
+import { App } from "../../partials/interfaces/App";
 
 const SortIds = {
   name: "0",
@@ -42,14 +38,11 @@ function Apps() {
   };
   const queryClient = useQueryClient();
   const { state } = useLocation();
-  const organizationCode = useSelector(
-    (state: RootState) => state.account.userData.organization.code
-  );
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenModalAddApp, setIsOpenModalAddApp] = useState(false);
   const [appUrl, setAppUrl] = useState("");
   const [appInfo, setAppInfo] = useState(defaultApp);
-  const [listApp, setListApp] = useState<any>([]);
+  const [listApp, setListApp] = useState<App[]>([]);
 
   const [sortType, setSortType] = useState(SortIds.name);
   const [search, setSearch] = useState("");
@@ -64,8 +57,8 @@ function Apps() {
   }, []);
 
   const { data: storeAppRes, isLoading: isLoadingApp } = useQuery(
-    [LIST_STORE_APPS, WITH_DETAIL_DATA],
-    getStoreAppsWithDetailData,
+    [LIST_STORE_APPS],
+    getStoreApps,
     { staleTime: 120 * 60000 }
   );
 
@@ -199,18 +192,7 @@ function Apps() {
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filteredApp.map((app: any, idx) => {
-              const appUrl =
-                ORGANIZATION_PATH +
-                "/" +
-                organizationCode +
-                "/apps/" +
-                app.id +
-                "/overview";
-
-              const installsDetail = app.installsDetail || {};
-              const { nonOrganicTotal, data } = installsDetail;
-              const isShowInstallsData =
-                nonOrganicTotal === 0 ? true : nonOrganicTotal && data.length;
+              const appUrl = "/apps/" + app.id + "/overview";
               const packageClass = "!text-slate-400 truncate";
 
               const name = app.name?.toLowerCase() || "";
@@ -263,15 +245,6 @@ function Apps() {
                       )}
                     </div>
                   </div>
-                  {isShowInstallsData && (
-                    <div className="w-24 md:w-28 2xl:w-32 shrink-0 text-center text-xs2 ml-1">
-                      <div>Non-organic installs</div>
-                      <div>{numberWithCommas(nonOrganicTotal)}</div>
-                      <div className="h-6 xs:h-8 sm:h-10 sm:mt-3">
-                        <AppChart data={data} />
-                      </div>
-                    </div>
-                  )}
                 </div>
               );
             })}
