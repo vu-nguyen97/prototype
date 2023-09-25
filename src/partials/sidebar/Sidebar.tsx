@@ -8,15 +8,10 @@ import React, {
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 // @ts-ignore
 import logo from "../../images/logo/logo.svg";
-import {
-  APP_PATH,
-  ORGANIZATION_PATH,
-  SIDEBAR_EXPANDED,
-} from "../../constants/constants";
+import { APP_PATH, SIDEBAR_EXPANDED } from "../../constants/constants";
 import classNames from "classnames";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getLastSlug, getSubOrganizationUrl } from "../../utils/Helpers";
-import { RootState } from "../../redux/store";
 import { BiArrowBack } from "@react-icons/all-files/bi/BiArrowBack";
 import GamePlatformIcon from "../common/GamePlatformIcon";
 import { useQuery } from "@tanstack/react-query";
@@ -57,10 +52,7 @@ function Sidebar({
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const organization = useSelector(
-    (state: RootState) => state.account.userData.organization
-  );
-  const orgUrl = ORGANIZATION_PATH + "/" + organization.code;
+  const orgUrl = "";
 
   const { state } = location;
   const trigger = useRef(null);
@@ -267,7 +259,7 @@ function Sidebar({
           leaveStart="opacity-100"
           leaveEnd="opacity-0 whitespace-nowrap"
         >
-          {organization.name}
+          Falcon Game Studio
         </Transition>
       </div>
 

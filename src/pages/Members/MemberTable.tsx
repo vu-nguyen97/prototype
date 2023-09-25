@@ -73,10 +73,10 @@ const MemberTable = (props) => {
       title: "Status",
       filters: STATUS_FILTER,
       filterIcon: filterIcon,
-      onFilter: (value, record) => record.isActive === value,
-      sorter: sortByBool("isActive"),
+      onFilter: (value, record) => record.active === value,
+      sorter: sortByBool("active"),
       render: (record) =>
-        record.isActive ? STATUS_FILTER[0].text : STATUS_FILTER[1].text,
+        record.active ? STATUS_FILTER[0].text : STATUS_FILTER[1].text,
     },
     {
       title: "Apps",
@@ -105,7 +105,7 @@ const MemberTable = (props) => {
             />
           </Tooltip>
 
-          {record.isActive ? (
+          {record.active ? (
             <Tooltip title="Lock member">
               <BiBlock
                 size={20}
@@ -145,7 +145,7 @@ const MemberTable = (props) => {
       rowKey={(record) => record.id}
       // @ts-ignore
       columns={columns}
-      rowClassName={(record) => (record.isActive ? "" : "text-red-500")}
+      rowClassName={(record) => (record.active ? "" : "text-red-500")}
       dataSource={[...listData]}
       scroll={{ x: 600 }}
       pagination={pagination}

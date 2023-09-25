@@ -5,15 +5,12 @@ import { Link, useParams } from "react-router-dom";
 import SidebarLinkGroup from "../SidebarLinkGroup";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { APP_PATH, ORGANIZATION_PATH, STORE } from "../../constants/constants";
+import { APP_PATH, STORE } from "../../constants/constants";
 
 function Navs(props) {
   const urlParams = useParams();
   const isAdmin = useSelector(
     (state: RootState) => state.account.userData.isAdmin
-  );
-  const organization = useSelector(
-    (state: RootState) => state.account.userData.organization
   );
 
   const {
@@ -28,7 +25,7 @@ function Navs(props) {
     appState,
   } = props;
 
-  const orgUrl = ORGANIZATION_PATH + "/" + organization.code;
+  const orgUrl = "";
   const appUrl = APP_PATH + "/" + urlParams.appId;
   const baseUrl = isDetailApp ? orgUrl + appUrl : orgUrl;
 

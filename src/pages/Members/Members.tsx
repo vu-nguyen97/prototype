@@ -69,7 +69,7 @@ const Members = () => {
       (res: any) => {
         const newTableData = listMember.map((mem) =>
           mem.id === memberData.id
-            ? Object.assign({}, mem, { isActive: false })
+            ? Object.assign({}, mem, { active: false })
             : mem
         );
 
@@ -87,7 +87,7 @@ const Members = () => {
       (res: any) => {
         const newTableData = listMember.map((mem) =>
           mem.id === memberData.id
-            ? Object.assign({}, mem, { isActive: true })
+            ? Object.assign({}, mem, { active: true })
             : mem
         );
 

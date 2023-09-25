@@ -43,7 +43,7 @@ function SignUp(props) {
       organization: name,
       // organizationCode: code,
       email,
-      isNotSendOgCode: true,
+      // isNotSendOgCode: true,
     };
 
     setIsLoading(true);

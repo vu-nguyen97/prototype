@@ -56,7 +56,7 @@ function EnterOtp(props) {
       googleAuthenticatorCode: otp,
       isNotShowToken: true,
       organizationCode,
-      isNotSendOgCode: true,
+      // isNotSendOgCode: true,
     };
 
     setIsLoading(true);

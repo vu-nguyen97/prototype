@@ -3,10 +3,8 @@ import { Route, Routes } from "react-router-dom";
 import {
   AdminRoutes,
   ExternalUrlRoutes,
-  OrganizationRoute,
   ProtectedRoutes,
 } from "../utils/ProtectedRoutes";
-import { ORGANIZATION_PATH } from "../constants/constants";
 import { FallbackProvider } from "../utils/composables/FallbackProvider";
 // import ErrorBoundary from "../utils/ErrorBoundary";
 
@@ -61,30 +59,22 @@ const AppRoutes = () => (
   <FallbackProvider>
     <Routes>
       <Route element={<ProtectedRoutes />}>
+        <Route path="apps" element={getPage(<Apps />)} />
+        <Route path="apps/:appId/">
+          <Route index element={getAppPage(<Overview />)} />
+          <Route path="overview" element={getAppPage(<Overview />)} />
+          <Route path="settings" element={getAppPage(<Settings />)} />
+        </Route>
+
+        <Route path="settings/account" element={getPage(<Account />)} />
         <Route
-          path={`${ORGANIZATION_PATH}/:organizationCode/`}
-          element={<OrganizationRoute />}
-        >
-          <Route index element={getPage(<Dashboard />)} />
-          <Route path="apps" element={getPage(<Apps />)} />
-          <Route path="apps/:appId/">
-            <Route index element={getAppPage(<Overview />)} />
-            <Route path="overview" element={getAppPage(<Overview />)} />
-            <Route path="settings" element={getAppPage(<Settings />)} />
-          </Route>
+          path="settings/notifications"
+          element={getPage(<Notifications />)}
+        />
 
-          <Route path="account-report" element={getPage(<Dashboard />)} />
-          <Route path="insight-rules" element={getPage(<Dashboard />)} />
-          <Route path="settings/account" element={getPage(<Account />)} />
-          <Route
-            path="settings/notifications"
-            element={getPage(<Notifications />)}
-          />
-
-          <Route element={<AdminRoutes />}>
-            <Route path="networks" element={getPage(<NetworkConfig />)} />
-            <Route path="members" element={getPage(<Members />)} />
-          </Route>
+        <Route element={<AdminRoutes />}>
+          <Route path="networks" element={getPage(<NetworkConfig />)} />
+          <Route path="members" element={getPage(<Members />)} />
         </Route>
 
         <Route

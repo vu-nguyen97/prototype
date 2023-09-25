@@ -1,18 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import Checkbox from "../partials/elements/Checkbox";
 import Input from "../partials/elements/Input";
-import service, { OG_CODE_HEADER } from "../partials/services/axios.config";
+import service from "../partials/services/axios.config";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Loading from "../utils/Loading";
 import Page from "../utils/composables/Page";
 import { Logo, PageBg } from "../utils/helper/UIHelper";
 import { useDispatch } from "react-redux";
 import { login, updateUser } from "../redux/account/accountSlice";
-import {
-  ORGANIZATION_PATH,
-  REMEMBER_PASSWORD,
-  ROLES,
-} from "../constants/constants";
+import { REMEMBER_PASSWORD, ROLES } from "../constants/constants";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -23,13 +19,11 @@ const Login = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
-  const [organizationCode, setOrganizationCode] = useState("");
   const [password, setPassword] = useState("");
   const [rememberPass, setRememberPass] = useState(true);
 
   useEffect(() => {
     setEmail(state?.email || "");
-    setOrganizationCode(state?.organizationCode || "");
   }, []);
 
   const onLogin = () => {
@@ -40,9 +34,7 @@ const Login = () => {
       .post("/authenticate", {
         email,
         password,
-        organizationCode,
         isNotShowToken: true,
-        isNotSendOgCode: true,
       })
       .then(
         (res: any) => {
@@ -52,7 +44,7 @@ const Login = () => {
 
           if (!token) {
             return navigate("/otp", {
-              state: { email, password, rememberPass, from, organizationCode },
+              state: { email, password, rememberPass, from },
             });
           }
 
@@ -61,8 +53,7 @@ const Login = () => {
             localStorage.setItem(REMEMBER_PASSWORD, "true");
           }
 
-          const headers = { [OG_CODE_HEADER]: organizationCode };
-          service.get("/user", { headers }).then(
+          service.get("/user").then(
             (userRes: any) => {
               const isAdmin = userRes.results?.role?.name === ROLES.admin;
               dispatch(
@@ -73,7 +64,7 @@ const Login = () => {
                 return navigate(from);
               }
 
-              navigate(`${ORGANIZATION_PATH}/${organizationCode}/`);
+              navigate("/");
             },
             () => navigate("/")
           );
@@ -102,17 +93,6 @@ const Login = () => {
                 Sign in to your account
               </h1>
               <div className="space-y-4 md:space-y-6">
-                <Input
-                  id="organizationCode"
-                  type="text"
-                  value={organizationCode}
-                  onChange={setOrganizationCode}
-                  label="Organization code"
-                  placeholder="Enter your organization code"
-                  onKeyDown={onKeyDown}
-                  required
-                />
-
                 <Input
                   id="email"
                   type="email"

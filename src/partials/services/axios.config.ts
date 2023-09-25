@@ -20,19 +20,9 @@ service.interceptors.request.use(
   function (config) {
     // Do something before request is sent
     const token = store.getState().account?.token;
-    const organizationCode =
-      store.getState().account?.userData?.organization?.code;
 
     if (!config.data?.isNotShowToken && token) {
       config.headers!.Authorization = token;
-    }
-
-    const orgCodeFromConfig =
-      config.data?.organizationCodeHeader ||
-      config.params?.organizationCodeHeader;
-    const tenantId = orgCodeFromConfig || organizationCode;
-    if (!config.data?.isNotSendOgCode && tenantId) {
-      config.headers![OG_CODE_HEADER] = tenantId;
     }
 
     return config;
@@ -72,6 +62,7 @@ export const checkResponseStatus = (response) => {
       base_url + ORGANIZATION_PATH + "/" + organizationCode + "/apps";
 
     setTimeout(() => {
+      // Todo: remove
       window.location.href = appsUrl;
       return;
     }, 1500);

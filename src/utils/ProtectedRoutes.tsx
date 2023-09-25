@@ -113,16 +113,3 @@ export const getExternalUrl = (str, orgCode, getApp = true) => {
 
   return url;
 };
-
-export const OrganizationRoute = () => {
-  const params = useParams();
-  const organizationCode = useSelector(
-    (state: RootState) => state.account.userData.organization.code
-  );
-
-  if (organizationCode && params.organizationCode === organizationCode) {
-    return <Outlet />;
-  }
-
-  return <Navigate to="/error-404" />;
-};
