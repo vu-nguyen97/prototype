@@ -7,9 +7,11 @@ import {
   checkRangeValue,
   setRangeValue,
 } from "../../../../utils/helper/TableHelpers";
+import service from "../../../../partials/services/axios.config";
+import { toast } from "react-toastify";
 
 function CampaignTable(props) {
-  const { data } = props;
+  const { data, setData, isLoading, setIsLoading } = props;
   const defaultPageSize = 20;
   const [pageSize, setPageSize] = useState(defaultPageSize);
   const [columns, setColumns] = useState(getColumns({}));
@@ -25,11 +27,29 @@ function CampaignTable(props) {
     setSearchData({ ...searchData, [field]: value });
   };
 
+  const onChangeStatus = (rd) => {
+    let url = "/campaign/active";
+    if (rd.enabled) {
+      url = "/campaign/pause";
+    }
+    setIsLoading(true);
+    service.put(url, null, { params: { campaignId: rd.id } }).then(
+      (res: any) => {
+        const newData = data.map((el) => (el.id === rd.id ? res.results : el));
+        setData(newData);
+        toast(res.message, { type: "success" });
+        setIsLoading(false);
+      },
+      () => setIsLoading(false)
+    );
+  };
+
   useEffect(() => {
     setColumns(
       getColumns({
         onSearchTable,
         onFilterTable,
+        onChangeStatus,
       })
     );
   }, [data]);
@@ -64,6 +84,7 @@ function CampaignTable(props) {
       className="mt-6"
       getPopupContainer={() => document.getElementById("CampaignTable")!}
       rowKey={(record) => record.id}
+      loading={isLoading}
       dataSource={filteredData}
       // @ts-ignore
       columns={columns}
@@ -76,6 +97,9 @@ function CampaignTable(props) {
 
 CampaignTable.propTypes = {
   data: PropTypes.array,
+  setData: PropTypes.func,
+  setIsLoading: PropTypes.func,
+  isLoading: PropTypes.bool,
 };
 
 export default CampaignTable;

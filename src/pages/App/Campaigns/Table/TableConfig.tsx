@@ -2,16 +2,20 @@ import moment from "moment";
 import {
   capitalizeWord,
   getColumnNumber,
-  sortByBool,
   sortByDate,
   sortByString,
   sortNumberWithNullable,
 } from "../../../../utils/Helpers";
 import getColumnSearchProps from "../../../../partials/common/Table/CustomSearch";
 import searchMaxMinValue from "../../../../partials/common/Table/SearchMaxMinValue";
+import { Link } from "react-router-dom";
+import React from "react";
+import Tooltip from "antd/lib/tooltip";
+import Popconfirm from "antd/lib/popconfirm";
+import Switch from "antd/lib/switch";
 
 export const getColumns = (props) => {
-  const { onSearchTable, onFilterTable } = props;
+  const { onSearchTable, onFilterTable, onChangeStatus } = props;
 
   const getDate = (field, title) => ({
     title,
@@ -25,7 +29,6 @@ export const getColumns = (props) => {
   return [
     {
       title: "Name",
-      dataIndex: "name",
       sorter: sortByString("name"),
       ...getColumnSearchProps({
         dataIndex: "name",
@@ -33,6 +36,11 @@ export const getColumns = (props) => {
         callback: (value) => onSearchTable(value, "name"),
         customFilter: () => true,
       }),
+      render: (rd) => (
+        <Link to={rd.id} className="truncate" title={rd.name}>
+          {rd.name}
+        </Link>
+      ),
     },
     {
       title: "Total budget",
@@ -68,18 +76,41 @@ export const getColumns = (props) => {
       render: (rd) => capitalizeWord(rd.goal),
       sorter: sortByString("goal"),
     },
-    {
-      title: "Billing Strategy",
-      render: (rd) => capitalizeWord(rd.biddingStrategy),
-      sorter: sortByString("biddingStrategy"),
-    },
+    // {
+    //   title: "Billing Strategy",
+    //   render: (rd) => capitalizeWord(rd.biddingStrategy),
+    //   sorter: sortByString("biddingStrategy"),
+    // },
     getDate("createdAt", "Created at"),
-    getDate("scheduleStart", "Schedule start"),
-    getDate("scheduleEnd", "Schedule end"),
+    // getDate("scheduleStart", "Schedule start"),
+    // getDate("scheduleEnd", "Schedule end"),
     {
-      title: "Enabled",
-      render: (rd) => String(rd.enabled),
-      sorter: sortByBool("enabled"),
+      title: "Action",
+      width: 70,
+      align: "center",
+      render: (record) => {
+        const isRunning = !!record.enabled;
+
+        return (
+          <div className="flex items-center justify-center space-x-2">
+            <Tooltip title={isRunning ? "Pause" : "Run"}>
+              <Popconfirm
+                placement="left"
+                title={`${isRunning ? "Pause" : "Run"} this campaign?`}
+                onConfirm={() => onChangeStatus(record)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Switch
+                  style={{ backgroundColor: isRunning ? "#16a34a" : "#d6d3d1" }}
+                  size="small"
+                  checked={isRunning}
+                />
+              </Popconfirm>
+            </Tooltip>
+          </div>
+        );
+      },
     },
   ];
 };

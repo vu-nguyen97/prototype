@@ -5,29 +5,34 @@ import { useParams } from "react-router-dom";
 import CampaignTable from "./Table/CampaignTable";
 import Select from "antd/lib/select";
 import Button from "antd/lib/button/button";
+import Loading from "../../../utils/Loading";
 
 function Campaigns(props) {
   const urlParams = useParams();
+  const [isLoading, setIsLoading] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
   const [activedTheme, setActivedTheme] = useState();
-
-  useEffect(() => {
-    console.log("activedTheme :>> ", activedTheme);
-  }, [activedTheme]);
 
   useEffect(() => {
     getData();
   }, []);
 
   const getData = () => {
+    setIsLoading(true);
     const params = { appIds: urlParams.appId };
-    service.get("/campaigns", { params }).then((res: any) => {
-      setCampaigns(res.results);
-    });
+    service.get("/campaigns", { params }).then(
+      (res: any) => {
+        setCampaigns(res.results);
+        setIsLoading(false);
+      },
+      () => setIsLoading(false)
+    );
   };
 
   return (
     <Page>
+      {isLoading && <Loading />}
+
       <div className="flex justify-between">
         <div className="page-title">Campaigns</div>
       </div>
@@ -58,7 +63,12 @@ function Campaigns(props) {
         </Button>
       </div>
 
-      <CampaignTable data={campaigns} />
+      <CampaignTable
+        data={campaigns}
+        setData={setCampaigns}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
+      />
     </Page>
   );
 }
