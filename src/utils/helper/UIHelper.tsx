@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 // @ts-ignore
-// import logo from "../../images/logo/logo.svg";
+// import logo from "../../images/logo/logo.png";
 // @ts-ignore
 import bg from "../../images/bg.svg";
 import CheckOutlined from "@ant-design/icons/lib/icons/CheckOutlined";

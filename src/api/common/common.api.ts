@@ -18,7 +18,7 @@ export const getStoreAppById: QueryFunc = async ({ queryKey }) => {
   if (!appId) {
     return Promise.resolve({});
   }
-  return await service.get(`/store-app/${appId}`);
+  return await service.get(`/app?id=${appId}`);
 };
 
 export const getCurrency: QueryFunc = async () => {

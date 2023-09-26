@@ -20,6 +20,7 @@ import { handleErrorImage } from "../../utils/Helpers";
 import Loading from "../../utils/Loading";
 import classNames from "classnames";
 import { App } from "../../partials/interfaces/App";
+import DefaultAppImg from "../../partials/common/DefaultAppImg";
 
 const SortIds = {
   name: "0",
@@ -219,7 +220,14 @@ function Apps() {
                       state={{ sortType, search }}
                       className="shrink-0"
                     >
-                      <GamePlatformIcon app={app} />
+                      {app?.icon ? (
+                        <GamePlatformIcon app={app} />
+                      ) : (
+                        <DefaultAppImg
+                          classNames="w-14 h-14"
+                          dot={app.active}
+                        />
+                      )}
                     </Link>
 
                     <div className="ml-5 grow truncate">

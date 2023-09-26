@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 // @ts-ignore
-import logo from "../../images/logo/logo.svg";
+import logo from "../../images/logo/logo.png";
 import { APP_PATH, SIDEBAR_EXPANDED } from "../../constants/constants";
 import classNames from "classnames";
 import { useDispatch } from "react-redux";
@@ -25,6 +25,8 @@ import { updateExpanded } from "../../redux/sidebar/sidebarSlice";
 import { getStoreApps } from "../../api/apps/apps.api";
 import SelectStoreApp, { getActivedApp } from "../common/Forms/SelectStoreApp";
 import SwapOutlined from "@ant-design/icons/lib/icons/SwapOutlined";
+import DefaultAppImg from "../common/DefaultAppImg";
+import { BiLinkExternal } from "@react-icons/all-files/bi/BiLinkExternal";
 
 export function useWindowSize() {
   // https://stackoverflow.com/questions/19014250/rerender-view-on-browser-resize-with-react
@@ -86,8 +88,7 @@ function Sidebar({
     getStoreAppById,
     {
       staleTime: 5 * 60000,
-      // enabled: !!urlParams.appId,
-      enabled: false,
+      enabled: !!urlParams.appId,
     }
   );
 
@@ -238,8 +239,6 @@ function Sidebar({
     });
   };
 
-  const packageClass =
-    "text-xs2 !text-slate-400 line-clamp-2 break-words mt-3 px-2";
   const sidebarContent = (
     <>
       <div
@@ -317,11 +316,18 @@ function Sidebar({
                     <div>
                       <div className="text-white flex items-center">
                         <div className="flex-1 flex items-center">
-                          <GamePlatformIcon
-                            app={appState}
-                            imgClass="w-12 h-12 rounded-[0.75rem]"
-                            iconClass="!right-[-10px] !bottom-[-3px] !h-5 !w-5 !bg-black/50 !text-white"
-                          />
+                          {appState?.icon ? (
+                            <GamePlatformIcon
+                              app={appState}
+                              imgClass="w-12 h-12 rounded-[0.75rem]"
+                            />
+                          ) : (
+                            <DefaultAppImg
+                              dot={appState.active}
+                              dotClass="right-[2px]"
+                            />
+                          )}
+
                           <Transition
                             unmountOnExit
                             show={sidebarExpanded}
@@ -342,19 +348,6 @@ function Sidebar({
                           onClick={onEnableSelectApp}
                         />
                       </div>
-
-                      {appState.url ? (
-                        <a
-                          href={appState.url}
-                          className={packageClass}
-                          title="View the game in the store"
-                          target="_blank"
-                        >
-                          {appState.storeId}
-                        </a>
-                      ) : (
-                        <div className={packageClass}>{appState.storeId}</div>
-                      )}
                     </div>
                   )}
                 </div>
@@ -386,13 +379,31 @@ function Sidebar({
             appState={appState}
           />
 
-          <div className="border-t border-slate-600/70 mt-7 pt-5 text-white">
-            {["Theme 1", "Theme 2"].map((el, idx) => (
-              <div key={idx} className="py-1.5">
-                {el}
+          {isDetailApp && appState?.themes?.length > 0 && (
+            <div className="border-t border-slate-600/70 mt-7 pt-5 text-white px-3">
+              <div className="text-slate-400 text-xs font-semibold tracking-wide">
+                LIST THEMES
               </div>
-            ))}
-          </div>
+              <div className="mt-2">
+                {appState.themes.map((el, idx) => (
+                  <div key={idx} className="py-1.5 flex justify-between">
+                    <div className="line-clamp-2 break-words">{el.name}</div>
+
+                    {el.storeUrl && (
+                      <a
+                        href={el.storeUrl}
+                        className="shrink-0 pl-1 text-xs !text-slate-400 line-clamp-2 break-words mt-[3px]"
+                        title="View this theme in the store"
+                        target="_blank"
+                      >
+                        <BiLinkExternal size={16} />
+                      </a>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>
