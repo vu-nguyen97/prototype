@@ -6,6 +6,9 @@ import { getCountryNameFromCode } from "../../../utils/Helpers";
 import { SortData, SortMap } from "./interface";
 import { ASCEND, DESCEND } from "../../../constants/constants";
 
+export const getMax = (field, listData) =>
+  Math.max(...listData?.map((el: any) => el.data?.[field] || 0));
+
 export const getRowSelection = (
   selectedRecords,
   setSelectedRecords,

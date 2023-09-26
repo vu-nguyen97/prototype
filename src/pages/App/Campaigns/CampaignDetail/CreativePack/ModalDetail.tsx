@@ -13,7 +13,7 @@ function ModalDetail({ isOpen, onClose, rd, setPreviewData, setImgPreview }) {
   return (
     <Modal
       title={`View "${rd.name}" pack`}
-      width={1100}
+      width={900}
       open={isOpen}
       destroyOnClose
       onCancel={onCloseModal}

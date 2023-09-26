@@ -1,22 +1,9 @@
 import React, { useState } from "react";
 import Table from "antd/lib/table";
-import { ACTIVE_STATUS } from "../../../../../constants/constants";
-import {
-  getLabelFromStr,
-  sortByDate,
-  sortByString,
-  sortNumberWithNullable,
-} from "../../../../../utils/Helpers";
-import moment from "moment";
-import {
-  checkContainText,
-  checkRangeValue,
-  setRangeValue,
-} from "../../../../../utils/helper/TableHelpers";
+import { getLabelFromStr, sortByString } from "../../../../../utils/Helpers";
+import { checkContainText } from "../../../../../utils/helper/TableHelpers";
 import getColumnSearchProps from "../../../../../partials/common/Table/CustomSearch";
-import { showListData } from "../../../../../utils/helper/UIHelper";
 import { NameColumn } from "../../../../../partials/common/Table/Columns/NameColumn";
-// import { perCreativeCols } from "../ColumnsHelpers";
 
 function CreativeTable(props) {
   const { data, setPreviewData, setImgPreview } = props;
@@ -25,26 +12,18 @@ function CreativeTable(props) {
     size: 10,
     page: 0,
   });
-  const [filterByMaxMin, setFilterByMaxMin] = useState<any>({});
   const [searchData, setSearchData] = useState<any>({});
 
   const onSearchTable = (value, field) => {
     setSearchData({ ...searchData, [field]: value });
   };
 
-  const onFilterTable = (data) => {
-    setRangeValue(data, filterByMaxMin, setFilterByMaxMin);
-  };
-
   const columns = [
     {
       title: "Name",
-      width: 200,
       render: (rd) => (
         <div className="flex items-center justify-between">
           <>{NameColumn(rd, setPreviewData, setImgPreview)}</>
-          {/* Todo: current status = 'approved' */}
-          {rd.status === ACTIVE_STATUS && <div className="actived-dot" />}
         </div>
       ),
       sorter: sortByString("name"),
@@ -57,7 +36,6 @@ function CreativeTable(props) {
     },
     {
       title: "Type",
-      width: 80,
       render: (rd) => getLabelFromStr(rd.type),
       sorter: sortByString("type"),
       ...getColumnSearchProps({
@@ -67,7 +45,17 @@ function CreativeTable(props) {
         customFilter: () => true,
       }),
     },
-    // ...perCreativeCols({ onFilterTable }),
+    {
+      title: "Language",
+      render: (rd) => rd.language && rd.language.toUpperCase(),
+      sorter: sortByString("language"),
+      ...getColumnSearchProps({
+        dataIndex: "language",
+        getField: (el) => el.language,
+        callback: (value) => onSearchTable(value, "language"),
+        customFilter: () => true,
+      }),
+    },
   ];
 
   const onChange = (pagination, filters) => {
@@ -77,14 +65,11 @@ function CreativeTable(props) {
 
   const filteredData = data?.filter((el) => {
     let result = true;
-
     const isContainText = checkContainText(searchData, el);
-    const checkValue = checkRangeValue(filterByMaxMin, el);
 
-    if (!isContainText || !checkValue) {
+    if (!isContainText) {
       result = false;
     }
-
     return result;
   });
 
@@ -101,7 +86,6 @@ function CreativeTable(props) {
       dataSource={filteredData}
       rowKey={(record) => record.id}
       scroll={{ x: 600 }}
-      // scroll={{ x: 2400 }}
       onChange={onChange}
       pagination={pagination}
     />

@@ -1,11 +1,11 @@
 import React from "react";
 import { ID_COL } from "../../../../../partials/common/Table/Columns/IndexCol";
-// import { PerformanceColumns } from "../../../../../partials/common/Table/Columns/PerformanceCols";
 import getColumnSearchProps from "../../../../../partials/common/Table/CustomSearch";
 import { keepSortColumn } from "../../../../../partials/common/Table/Helper";
 import { getTotalChildrenStr } from "../../../../../utils/Helpers";
 import classNames from "classnames";
 import Tooltip from "antd/lib/tooltip";
+import { PerformanceColumns } from "../../../../../partials/common/Table/Columns/PerformanceCols";
 
 export const getCreativePackName = (rd, onClickName: any = null) => {
   let totalChildren = getTotalChildrenStr(rd, "creatives");
@@ -50,6 +50,6 @@ export function getColumns(props) {
       }),
       sorter: keepSortColumn,
     },
-    // ...PerformanceColumns({ onFilterTable, isKeepSort: true }),
+    ...PerformanceColumns({ onFilterTable, isKeepSort: true }),
   ];
 }

@@ -2,6 +2,7 @@ import moment from "moment";
 import {
   capitalizeWord,
   getColumnNumber,
+  getTableCellBg,
   sortByDate,
   sortByString,
   sortNumberWithNullable,
@@ -13,9 +14,10 @@ import React from "react";
 import Tooltip from "antd/lib/tooltip";
 import Popconfirm from "antd/lib/popconfirm";
 import Switch from "antd/lib/switch";
+import { getMax } from "../../../../partials/common/Table/Helper";
 
 export const getColumns = (props) => {
-  const { onSearchTable, onFilterTable, onChangeStatus } = props;
+  const { data, onSearchTable, onFilterTable, onChangeStatus } = props;
 
   const getDate = (field, title) => ({
     title,
@@ -76,17 +78,41 @@ export const getColumns = (props) => {
       render: (rd) => capitalizeWord(rd.goal),
       sorter: sortByString("goal"),
     },
-    // {
-    //   title: "Billing Strategy",
-    //   render: (rd) => capitalizeWord(rd.biddingStrategy),
-    //   sorter: sortByString("biddingStrategy"),
-    // },
-    getDate("createdAt", "Created at"),
+    {
+      title: "Cost",
+      render: (rd) => (
+        <div className="px-2">{getColumnNumber(rd.data?.cost, "$")}</div>
+      ),
+      ...searchMaxMinValue({
+        dataIndex: "cost",
+        placeholderSuffix: " ",
+        onFilterTable,
+        getField: (el) => el.data?.cost,
+      }),
+      sorter: (a, b) => sortNumberWithNullable(a, b, (el) => el.data?.cost),
+      onCell: (record) =>
+        getTableCellBg(record, "", getMax("cost", data), (el) => el.data?.cost),
+    },
+    {
+      title: "eCpi",
+      render: (rd) => (
+        <div className="px-2">{getColumnNumber(rd.data?.ecpi, "$")}</div>
+      ),
+      ...searchMaxMinValue({
+        dataIndex: "eCpi",
+        placeholderSuffix: " ",
+        onFilterTable,
+        getField: (el) => el.data?.ecpi,
+      }),
+      sorter: (a, b) => sortNumberWithNullable(a, b, (el) => el.data?.ecpi),
+      onCell: (record) =>
+        getTableCellBg(record, "", getMax("ecpi", data), (el) => el.data?.ecpi),
+    },
+    // getDate("createdAt", "Created at"),
     // getDate("scheduleStart", "Schedule start"),
     // getDate("scheduleEnd", "Schedule end"),
     {
       title: "Action",
-      width: 70,
       align: "center",
       render: (record) => {
         const isRunning = !!record.enabled;

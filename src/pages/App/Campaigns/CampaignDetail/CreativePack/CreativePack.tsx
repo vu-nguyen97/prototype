@@ -23,8 +23,7 @@ import {
   setRangeValue,
 } from "../../../../../utils/helper/TableHelpers";
 import InfiniteScrollTable from "../../../../../utils/hooks/InfiniteScrollTable";
-// import { performanceSortMap } from "../../../../../partials/common/Table/Columns/PerformanceCols";
-import { toast } from "react-toastify";
+import { performanceSortMap } from "../../../../../partials/common/Table/Columns/PerformanceCols";
 import ModalDetail from "./ModalDetail";
 
 function CreativePacks(props) {
@@ -47,8 +46,8 @@ function CreativePacks(props) {
 
   useEffect(() => {
     const params = {
-      // startDate: moment(dateRange[0])?.format(DATE_RANGE_FORMAT),
-      // endDate: moment(dateRange[1])?.format(DATE_RANGE_FORMAT),
+      startDate: moment(dateRange[0])?.format(DATE_RANGE_FORMAT),
+      endDate: moment(dateRange[1])?.format(DATE_RANGE_FORMAT),
       campaignId: urlParams.campId,
     };
 
@@ -108,7 +107,7 @@ function CreativePacks(props) {
       title: "Name",
       sorter: (a, b) => sortByString(a, b, "name"),
     },
-    // ...performanceSortMap,
+    ...performanceSortMap,
   ];
 
   const sortedData = getSortedData(creativePacks, sortData);

@@ -47,6 +47,7 @@ function CampaignTable(props) {
   useEffect(() => {
     setColumns(
       getColumns({
+        data,
         onSearchTable,
         onFilterTable,
         onChangeStatus,
@@ -85,6 +86,7 @@ function CampaignTable(props) {
       getPopupContainer={() => document.getElementById("CampaignTable")!}
       rowKey={(record) => record.id}
       loading={isLoading}
+      bordered
       dataSource={filteredData}
       // @ts-ignore
       columns={columns}
