@@ -27,6 +27,7 @@ export const NameColumn = (record, setPreviewData, setImgPreview) => {
       {record.name}
     </div>
   );
+  const onClickVideo = () => setPreviewData(record.files[0]);
 
   if (url) {
     const getVideoEl = () => {
@@ -39,7 +40,7 @@ export const NameColumn = (record, setPreviewData, setImgPreview) => {
               className={assetClass}
               playsInline
               src={url + "#t=1"}
-              onClick={() => setPreviewData(record)}
+              onClick={onClickVideo}
               title="Click to view the video"
             />
             {recordName}
@@ -53,7 +54,7 @@ export const NameColumn = (record, setPreviewData, setImgPreview) => {
         <div className="flex items-center truncate">
           <div
             className="shrink-0 w-10 h-10 rounded bg-antPrimary/10 hover:bg-antPrimary/20 cursor-pointer flex justify-center items-center"
-            onClick={() => setPreviewData(record)}
+            onClick={onClickVideo}
             title="Click to play"
           >
             <GiGamepad size={26} className="text-antPrimary" />
@@ -95,7 +96,7 @@ export const NameColumn = (record, setPreviewData, setImgPreview) => {
               <div
                 className="absolute top-0 left-0 w-full h-full flex justify-center items-center cursor-pointer"
                 title="Click to view the video"
-                onClick={() => setPreviewData(record)}
+                onClick={onClickVideo}
               >
                 <YoutubeOutlined className="!text-red-600 text-3xl" />
               </div>

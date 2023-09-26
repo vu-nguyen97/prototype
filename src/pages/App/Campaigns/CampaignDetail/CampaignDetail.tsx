@@ -18,6 +18,7 @@ import ImagePreview from "../../../../partials/common/Modal/ImagePreview";
 import service from "../../../../partials/services/axios.config";
 import Loading from "../../../../utils/Loading";
 import moment from "moment";
+import Stats from "./Stats/Stats";
 
 function CampaignDetail(props) {
   const urlParams = useParams();
@@ -92,16 +93,14 @@ function CampaignDetail(props) {
         />
       </div>
 
-      <div className="px-4 sm:px-6 lg:px-12 2xl:px-24 py-6">
+      <div className="px-4 sm:px-6 lg:px-12 2xl:px-24 py-6 flex flex-col space-y-4 md:space-y-6">
+        <Stats data={campaignData.data} />
         <CountryBid />
-
-        <div className="mt-6">
-          <CreativePacks
-            dateRange={dateRange}
-            setPreviewData={setPreviewData}
-            setImgPreview={setImgPreview}
-          />
-        </div>
+        <CreativePacks
+          dateRange={dateRange}
+          setPreviewData={setPreviewData}
+          setImgPreview={setImgPreview}
+        />
       </div>
 
       <VideoPopup

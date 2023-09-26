@@ -107,10 +107,10 @@ function VideoPopup(props) {
             <div className={fieldClass}>Name</div>
             <div className="truncate">{previewData.name}</div>
           </div>
-          <div>
+          {/* <div>
             <div className={fieldClass}>Type</div>
             <div className="truncate">{getLabelFromStr(previewData.type)}</div>
-          </div>
+          </div> */}
           {/* <div>
             <div className={fieldClass}>Duration</div>
             <div>0.25</div>

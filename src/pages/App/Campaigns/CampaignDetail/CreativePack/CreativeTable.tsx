@@ -56,13 +56,6 @@ function CreativeTable(props) {
       }),
     },
     {
-      title: "Campaign",
-      width: 180,
-      render: (rd) => showListData(rd.campaignNames, "campaign"),
-      sorter: (a, b) =>
-        sortNumberWithNullable(a, b, (el) => el.campaignNames?.length),
-    },
-    {
       title: "Type",
       width: 80,
       render: (rd) => getLabelFromStr(rd.type),
@@ -73,15 +66,6 @@ function CreativeTable(props) {
         callback: (value) => onSearchTable(value, "type"),
         customFilter: () => true,
       }),
-    },
-    {
-      title: "Last modified date",
-      width: 140,
-      sorter: sortByDate("lastModifiedDate"),
-      render: (record) => {
-        if (!record.lastModifiedDate) return "";
-        return moment(record.lastModifiedDate)?.format("DD-MM-YYYY HH:mm:ss");
-      },
     },
     // ...perCreativeCols({ onFilterTable }),
   ];
