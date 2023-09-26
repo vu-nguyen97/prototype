@@ -7,23 +7,26 @@ import {
   onChangeInfiniteTable,
   sortByCountry,
   sortByString,
-} from "../../../../partials/common/Table/Helper";
-import service from "../../../../partials/services/axios.config";
+} from "../../../../../partials/common/Table/Helper";
+import service from "../../../../../partials/services/axios.config";
 import { useParams } from "react-router-dom";
-import getColumnSearchProps from "../../../../partials/common/Table/CustomSearch";
+import getColumnSearchProps from "../../../../../partials/common/Table/CustomSearch";
 import {
   getColumnNumber,
   getCountryEl,
   sortNumberWithNullable,
-} from "../../../../utils/Helpers";
-import InfiniteScrollTable from "../../../../utils/hooks/InfiniteScrollTable";
-import { SortData, SortMap } from "../../../../partials/common/Table/interface";
+} from "../../../../../utils/Helpers";
+import InfiniteScrollTable from "../../../../../utils/hooks/InfiniteScrollTable";
+import {
+  SortData,
+  SortMap,
+} from "../../../../../partials/common/Table/interface";
 import {
   checkContainText,
   checkRangeValue,
-} from "../../../../utils/helper/TableHelpers";
+} from "../../../../../utils/helper/TableHelpers";
 import classNames from "classnames";
-import { ID_COL_NO_WIDTH } from "../../../../partials/common/Table/Columns/IndexCol";
+import { ID_COL_NO_WIDTH } from "../../../../../partials/common/Table/Columns/IndexCol";
 
 function CountryBid(props) {
   const urlParams = useParams();

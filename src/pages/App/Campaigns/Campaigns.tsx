@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 import CampaignTable from "./Table/CampaignTable";
 import Select from "antd/lib/select";
 import Button from "antd/lib/button/button";
-import Loading from "../../../utils/Loading";
 
 function Campaigns(props) {
   const urlParams = useParams();
@@ -31,8 +30,6 @@ function Campaigns(props) {
 
   return (
     <Page>
-      {isLoading && <Loading />}
-
       <div className="flex justify-between">
         <div className="page-title">Campaigns</div>
       </div>

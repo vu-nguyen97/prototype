@@ -385,6 +385,14 @@ function Sidebar({
             initActivedSubNav={initActivedSubNav}
             appState={appState}
           />
+
+          <div className="border-t border-slate-600/70 mt-7 pt-5 text-white">
+            {["Theme 1", "Theme 2"].map((el, idx) => (
+              <div key={idx} className="py-1.5">
+                {el}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </>
