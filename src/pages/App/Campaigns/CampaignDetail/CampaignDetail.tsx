@@ -19,6 +19,8 @@ import service from "../../../../partials/services/axios.config";
 import Loading from "../../../../utils/Loading";
 import moment from "moment";
 import Stats from "./Stats/Stats";
+import Details from "./Detail/Detail";
+import Actions from "./Actions/Actions";
 
 function CampaignDetail(props) {
   const urlParams = useParams();
@@ -94,7 +96,17 @@ function CampaignDetail(props) {
       </div>
 
       <div className="px-4 sm:px-6 lg:px-12 2xl:px-24 py-6 flex flex-col space-y-4 md:space-y-6">
+        <Actions
+          data={campaignData}
+          setIsLoading={setIsLoading}
+          setCampaignData={setCampaignData}
+        />
         <Stats data={campaignData.data} />
+        <Details
+          data={campaignData}
+          setIsLoading={setIsLoading}
+          setCampaignData={setCampaignData}
+        />
         <CountryBid />
         <CreativePacks
           dateRange={dateRange}
