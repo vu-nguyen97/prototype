@@ -252,7 +252,7 @@ export const TABLE_COLUMN_COLOR = [
   "rgb(130, 200, 213)", // #82C8D5
   "rgb(111, 216, 189", // #6FD8BD
   "rgb(134, 172, 57)",
-  "rgb(61, 132, 194)",
+  "rgb(2, 171, 127)", // Retention color
   "rgb(72, 93, 199)",
 ];
 

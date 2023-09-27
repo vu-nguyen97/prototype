@@ -10,12 +10,12 @@ import { GET_STORE_APP_BY_ID } from "../../../api/constants.api";
 import { getStoreAppById } from "../../../api/common/common.api";
 import {
   DATE_RANGE_FORMAT,
-  getLast7Day,
+  getLastDay,
   onClickRangePickerFooter,
 } from "../../../partials/common/Forms/RangePicker";
 import moment from "moment";
 import DatePicker from "antd/lib/date-picker";
-import { disabledDate } from "../../../utils/Helpers";
+import { disabledDate, sortNumberWithNullable } from "../../../utils/Helpers";
 import { EXTRA_FOOTER } from "../../../constants/constants";
 import Tag from "antd/lib/tag";
 
@@ -26,7 +26,7 @@ function Campaigns(props) {
   const [appState, setAppState] = useState<any>({});
 
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
-  const [dateRange, setDateRange] = useState<any>(getLast7Day());
+  const [dateRange, setDateRange] = useState<any>(getLastDay(2));
   const [activedThemes, setActivedThemes] = useState([]);
 
   const { data: storeAppRes } = useQuery(
@@ -56,7 +56,11 @@ function Campaigns(props) {
     };
     service.get("/campaigns", { params }).then(
       (res: any) => {
-        setCampaigns(res.results);
+        const newData = res.results;
+        newData.sort((a, b) =>
+          sortNumberWithNullable(b, a, (el) => el.data?.install)
+        );
+        setCampaigns(newData);
         setIsLoading(false);
       },
       () => setIsLoading(false)

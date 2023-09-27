@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 
 function CampaignTable(props) {
   const { data, setData, isLoading, setIsLoading } = props;
-  const defaultPageSize = 20;
+  const defaultPageSize = 10;
   const [pageSize, setPageSize] = useState(defaultPageSize);
   const [columns, setColumns] = useState(getColumns({}));
 

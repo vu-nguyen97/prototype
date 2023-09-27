@@ -15,8 +15,8 @@ export function getLTVDay() {
   return [moment().subtract(4, "days"), moment().subtract(2, "days")];
 }
 
-export function getLast3Day() {
-  return [moment().subtract(3, "days"), moment()];
+export function getLastDay(day) {
+  return [moment().subtract(day, "days"), moment()];
 }
 
 export function getLast7Day() {
@@ -79,7 +79,7 @@ export const onClickRangePickerFooter = (
 ) => {
   switch (timeValue) {
     case DATE_MILESTONES.last3Days:
-      setDateRange(getLast3Day());
+      setDateRange(getLastDay(3));
       break;
     case DATE_MILESTONES.last7Days:
       setDateRange(getLast7Day());

@@ -1,9 +1,9 @@
-import moment from "moment";
 import {
-  capitalizeWord,
+  checkNumberValue,
   getColumnNumber,
+  getShadeColor,
   getTableCellBg,
-  sortByDate,
+  roundNumber,
   sortByString,
   sortNumberWithNullable,
 } from "../../../../utils/Helpers";
@@ -15,22 +15,95 @@ import Tooltip from "antd/lib/tooltip";
 import Popconfirm from "antd/lib/popconfirm";
 import Switch from "antd/lib/switch";
 import { getMax } from "../../../../partials/common/Table/Helper";
+import { TABLE_COLUMN_COLOR } from "../../../../constants/constants";
+import classNames from "classnames";
 
 export const getColumns = (props) => {
   const { data, onSearchTable, onFilterTable, onChangeStatus } = props;
 
-  const getDate = (field, title) => ({
+  const getStatCol = (field, title, prefix = "") => ({
     title,
-    sorter: sortByDate(field),
-    render: (record) => {
-      if (!record[field]) return "";
-      return moment(record[field])?.format("DD/MM/YYYY HH:mm");
+    width: 140,
+    render: (rd) => (
+      <div className="table-cell-padding">
+        {getColumnNumber(rd.data?.[field], prefix)}
+      </div>
+    ),
+    ...searchMaxMinValue({
+      dataIndex: field,
+      placeholderSuffix: " ",
+      onFilterTable,
+      getField: (el) => el.data?.[field],
+    }),
+    sorter: (a, b) => sortNumberWithNullable(a, b, (el) => el.data?.[field]),
+    onCell: (record) =>
+      getTableCellBg(record, "", getMax(field, data), (el) => el.data?.[field]),
+  });
+
+  const getRetentionPer = (rd, field) => {
+    const installDay0 = rd.data?.retentionD0;
+
+    const dataValue = rd.data?.[field];
+    return checkNumberValue(dataValue)
+      ? roundNumber(dataValue / installDay0)
+      : -1;
+  };
+
+  const getRetetionCol = (field, title, isD0 = false) => ({
+    title,
+    width: 140,
+    render: (rd) => {
+      const installDay0 = rd.data?.retentionD0;
+      if (!installDay0) return <></>;
+
+      const dataValue = rd.data?.[field];
+      const per = checkNumberValue(dataValue)
+        ? roundNumber((dataValue / installDay0) * 100) + "%"
+        : "";
+
+      return (
+        <div className={classNames(isD0 && "table-cell-padding")}>
+          <div>{isD0 ? "100%" : per}</div>
+          <div className="text-xs">{getColumnNumber(dataValue)}</div>
+        </div>
+      );
+    },
+    ...searchMaxMinValue({
+      dataIndex: field,
+      placeholderSuffix: " ",
+      onFilterTable,
+      getField: (el) => el.data?.[field],
+    }),
+    sorter: (a, b) =>
+      sortNumberWithNullable(a, b, (el) => getRetentionPer(el, field)),
+    onCell: (record) => {
+      if (isD0) {
+        return getTableCellBg(
+          record,
+          "",
+          getMax(field, data),
+          (el) => el.data?.[field]
+        );
+      }
+
+      return {
+        className: "custom-td-bg",
+        ["style"]: {
+          backgroundColor: getShadeColor(
+            record.data?.[field],
+            record.data?.retentionD0,
+            TABLE_COLUMN_COLOR[3]
+          ),
+        },
+      };
     },
   });
 
   return [
     {
       title: "Name",
+      width: 300,
+      fixed: "left",
       sorter: sortByString("name"),
       ...getColumnSearchProps({
         dataIndex: "name",
@@ -39,80 +112,21 @@ export const getColumns = (props) => {
         customFilter: () => true,
       }),
       render: (rd) => (
-        <Link to={rd.id} className="truncate" title={rd.name}>
+        <Link to={rd.id} className="line-clamp-2" title={rd.name}>
           {rd.name}
         </Link>
       ),
     },
-    {
-      title: "Total budget",
-      render: (rd) => getColumnNumber(rd.defaultBudget?.totalBudget, "$"),
-      sorter: (a, b) =>
-        sortNumberWithNullable(a, b, (el) => el.defaultBudget?.totalBudget),
-      ...searchMaxMinValue({
-        getField: (r) => r.defaultBudget?.totalBudget,
-        dataIndex: "totalBudget",
-        placeholderSuffix: " ",
-        onFilterTable,
-      }),
-    },
-    {
-      title: "Daily budget",
-      render: (rd) => getColumnNumber(rd.defaultBudget?.dailyBudget, "$"),
-      sorter: (a, b) =>
-        sortNumberWithNullable(a, b, (el) => el.defaultBudget?.dailyBudget),
-      ...searchMaxMinValue({
-        getField: (r) => r.defaultBudget?.dailyBudget,
-        dataIndex: "dailyBudget",
-        placeholderSuffix: " ",
-        onFilterTable,
-      }),
-    },
-    {
-      title: "Billing Type",
-      render: (rd) => capitalizeWord(rd.billingType),
-      sorter: sortByString("billingType"),
-    },
-    {
-      title: "Goal",
-      render: (rd) => capitalizeWord(rd.goal),
-      sorter: sortByString("goal"),
-    },
-    {
-      title: "Cost",
-      render: (rd) => (
-        <div className="px-2">{getColumnNumber(rd.data?.cost, "$")}</div>
-      ),
-      ...searchMaxMinValue({
-        dataIndex: "cost",
-        placeholderSuffix: " ",
-        onFilterTable,
-        getField: (el) => el.data?.cost,
-      }),
-      sorter: (a, b) => sortNumberWithNullable(a, b, (el) => el.data?.cost),
-      onCell: (record) =>
-        getTableCellBg(record, "", getMax("cost", data), (el) => el.data?.cost),
-    },
-    {
-      title: "eCpi",
-      render: (rd) => (
-        <div className="px-2">{getColumnNumber(rd.data?.ecpi, "$")}</div>
-      ),
-      ...searchMaxMinValue({
-        dataIndex: "eCpi",
-        placeholderSuffix: " ",
-        onFilterTable,
-        getField: (el) => el.data?.ecpi,
-      }),
-      sorter: (a, b) => sortNumberWithNullable(a, b, (el) => el.data?.ecpi),
-      onCell: (record) =>
-        getTableCellBg(record, "", getMax("ecpi", data), (el) => el.data?.ecpi),
-    },
-    // getDate("createdAt", "Created at"),
-    // getDate("scheduleStart", "Schedule start"),
-    // getDate("scheduleEnd", "Schedule end"),
+    getStatCol("install", "Installs"),
+    getStatCol("cost", "Cost", "$"),
+    getStatCol("ecpi", "eCpi", "$"),
+    getRetetionCol("retentionD0", "Install Day", true),
+    getRetetionCol("retentionD1", "RetentionD1"),
+    getRetetionCol("retentionD2", "RetentionD2"),
+    getRetetionCol("retentionD3", "RetentionD3"),
     {
       title: "Action",
+      width: 90,
       align: "center",
       render: (record) => {
         const isRunning = !!record.enabled;
