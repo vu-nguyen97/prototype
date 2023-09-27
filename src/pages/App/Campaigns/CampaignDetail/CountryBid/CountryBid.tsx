@@ -25,6 +25,7 @@ import {
 import {
   checkContainText,
   checkRangeValue,
+  setRangeValue,
 } from "../../../../../utils/helper/TableHelpers";
 import classNames from "classnames";
 import { ID_COL_NO_WIDTH } from "../../../../../partials/common/Table/Columns/IndexCol";
@@ -33,6 +34,7 @@ import { AiOutlineEdit } from "@react-icons/all-files/ai/AiOutlineEdit";
 import Popconfirm from "antd/lib/popconfirm";
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import ModalEdit from "../../../../../partials/common/Modal/ModalEdit";
+import searchMaxMinValue from "../../../../../partials/common/Table/SearchMaxMinValue";
 
 function CountryBid(props) {
   const urlParams = useParams();
@@ -51,6 +53,10 @@ function CountryBid(props) {
 
   const onSearchTable = (value, field) => {
     setSearchData({ ...searchData, [field]: value });
+  };
+
+  const onFilterTable = (data) => {
+    setRangeValue(data, filterByMaxMin, setFilterByMaxMin);
   };
 
   useEffect(() => {
@@ -111,6 +117,12 @@ function CountryBid(props) {
       title: "Bid",
       sorter: keepSortColumn,
       render: (rd) => getColumnNumber(rd.bid, "$"),
+      ...searchMaxMinValue({
+        dataIndex: "bid",
+        placeholderSuffix: " ",
+        onFilterTable,
+        getField: (el) => el.bid,
+      }),
     },
     {
       title: "Type",

@@ -21,6 +21,7 @@ import moment from "moment";
 import Stats from "./Stats/Stats";
 import Details from "./Detail/Detail";
 import Actions from "./Actions/Actions";
+import Creatives from "./Creatives/Creatives";
 
 function CampaignDetail(props) {
   const urlParams = useParams();
@@ -31,6 +32,8 @@ function CampaignDetail(props) {
 
   const [previewData, setPreviewData] = useState({});
   const [imgPreview, setImgPreview] = useState<any>({});
+
+  const [initedCreatives, setInitedCreatives] = useState();
 
   useEffect(() => {
     const params = {
@@ -110,6 +113,12 @@ function CampaignDetail(props) {
         <CountryBid />
         <CreativePacks
           dateRange={dateRange}
+          setPreviewData={setPreviewData}
+          setImgPreview={setImgPreview}
+          setInitedCreatives={setInitedCreatives}
+        />
+        <Creatives
+          initedCreatives={initedCreatives}
           setPreviewData={setPreviewData}
           setImgPreview={setImgPreview}
         />

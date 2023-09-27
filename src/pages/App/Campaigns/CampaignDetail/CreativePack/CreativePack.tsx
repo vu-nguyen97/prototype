@@ -28,7 +28,8 @@ import ModalDetail from "./ModalDetail";
 
 function CreativePacks(props) {
   const urlParams = useParams();
-  const { dateRange, setPreviewData, setImgPreview } = props;
+  const { dateRange, setPreviewData, setImgPreview, setInitedCreatives } =
+    props;
 
   const [isLoading, setIsLoading] = useState(false);
   const [creativePacks, setCreativePacks] = useState<any>([]);
@@ -64,6 +65,16 @@ function CreativePacks(props) {
               creatives = [...creatives, ...el.creatives];
             }
           });
+
+          const listCreativeIds: any = [];
+          const newCreatives = creatives.filter((el) => {
+            if (listCreativeIds.includes(el.rawCreativeId)) {
+              return false;
+            }
+            listCreativeIds.push(el.rawCreativeId);
+            return true;
+          });
+          setInitedCreatives(newCreatives);
         }
       },
       () => setIsLoading(false)
@@ -184,6 +195,7 @@ CreativePacks.propTypes = {
   dateRange: PropTypes.array,
   setPreviewData: PropTypes.func,
   setImgPreview: PropTypes.func,
+  setInitedCreatives: PropTypes.func,
 };
 
 export default CreativePacks;
