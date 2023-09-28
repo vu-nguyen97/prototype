@@ -17,6 +17,7 @@ import Switch from "antd/lib/switch";
 import { getMax } from "../../../../partials/common/Table/Helper";
 import { TABLE_COLUMN_COLOR } from "../../../../constants/constants";
 import classNames from "classnames";
+import { BiLinkExternal } from "@react-icons/all-files/bi/BiLinkExternal";
 
 export const getColumns = (props) => {
   const { data, onSearchTable, onFilterTable, onChangeStatus } = props;
@@ -101,9 +102,43 @@ export const getColumns = (props) => {
 
   return [
     {
-      title: "Name",
-      width: 300,
-      fixed: "left",
+      title: "Theme",
+      width: 160,
+      sorter: (el1, el2) => {
+        const name1 = el1.theme?.name;
+        const name2 = el2.theme?.name;
+
+        return ("" + name1).localeCompare(name2);
+      },
+      ...getColumnSearchProps({
+        dataIndex: "theme",
+        getField: (el) => el.theme?.name,
+        callback: (value) => onSearchTable(value, "theme"),
+        customFilter: () => true,
+      }),
+      render: (rd) => {
+        const theme = rd.theme || {};
+
+        return (
+          <div className="flex justify-between">
+            <div className="line-clamp-2 break-words">{theme.name}</div>
+            {theme?.storeUrl && (
+              <a
+                href={theme.storeUrl}
+                className="shrink-0 pl-1 text-xs !text-slate-400 mt-[3px]"
+                title="View this theme in the store"
+                target="_blank"
+              >
+                <BiLinkExternal size={16} />
+              </a>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      title: "Campaign name",
+      width: 250,
       sorter: sortByString("name"),
       ...getColumnSearchProps({
         dataIndex: "name",
@@ -112,7 +147,7 @@ export const getColumns = (props) => {
         customFilter: () => true,
       }),
       render: (rd) => (
-        <Link to={rd.id} className="line-clamp-2" title={rd.name}>
+        <Link to={rd.id} className="line-clamp-2 break-words" title={rd.name}>
           {rd.name}
         </Link>
       ),
@@ -126,7 +161,8 @@ export const getColumns = (props) => {
     getRetetionCol("retentionD3", "RetentionD3"),
     {
       title: "Action",
-      width: 90,
+      width: 80,
+      fixed: "right",
       align: "center",
       render: (record) => {
         const isRunning = !!record.enabled;

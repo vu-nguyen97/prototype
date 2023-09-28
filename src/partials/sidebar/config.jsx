@@ -6,7 +6,7 @@ import { AiOutlineUsergroupAdd } from "@react-icons/all-files/ai/AiOutlineUsergr
 import { AiOutlineTool } from "@react-icons/all-files/ai/AiOutlineTool";
 import { AiOutlineNotification } from "@react-icons/all-files/ai/AiOutlineNotification";
 import { AiOutlineForm } from "@react-icons/all-files/ai/AiOutlineForm";
-import { BiPalette } from "@react-icons/all-files/bi/BiPalette";
+import { FaGooglePlay } from "@react-icons/all-files/fa/FaGooglePlay";
 
 export const SidebarConfigs = [
   {
@@ -25,6 +25,13 @@ export const SidebarConfigs = [
   },
   {
     id: 2,
+    url: "/prototype-campaigns",
+    label: "Prototype campaigns",
+    iconEl: <FaGooglePlay size={16} />,
+    preload: () => import("../../pages/PrototypeCampaigns/PrototypeCampaigns"),
+  },
+  {
+    id: 3,
     url: "/configs",
     label: "Configs",
     iconEl: <AiOutlineForm size={20} />,
@@ -67,17 +74,10 @@ export const SidebarAppConfigs = [
     iconEl: <AiOutlineDashboard size={20} />,
     preload: () => import("../../pages/App/overview/Overview"),
   },
-  // {
-  //   id: 1,
-  //   url: "/themes",
-  //   label: "Themes",
-  //   iconEl: <BiPalette size={20} />,
-  //   preload: () => import("../../pages/App/Themes/Themes"),
-  // },
   {
-    id: 2,
+    id: 1,
     url: "/campaigns",
-    label: "Campaigns",
+    label: "Unity campaigns",
     iconEl: <AiOutlineNotification size={20} />,
     preload: () => import("../../pages/App/Campaigns/Campaigns"),
   },

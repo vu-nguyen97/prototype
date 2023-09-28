@@ -379,7 +379,7 @@ function Sidebar({
             appState={appState}
           />
 
-          {isDetailApp && appState?.themes?.length > 0 && (
+          {/* {isDetailApp && appState?.themes?.length > 0 && (
             <div className="border-t border-slate-600/70 mt-7 pt-5 text-white px-3">
               <div className="text-slate-400 text-xs font-semibold tracking-wide">
                 LIST THEMES
@@ -392,7 +392,7 @@ function Sidebar({
                     {el.storeUrl && (
                       <a
                         href={el.storeUrl}
-                        className="shrink-0 pl-1 text-xs !text-slate-400 line-clamp-2 break-words mt-[3px]"
+                        className="shrink-0 pl-1 text-xs !text-slate-400 mt-[3px]"
                         title="View this theme in the store"
                         target="_blank"
                       >
@@ -403,7 +403,7 @@ function Sidebar({
                 ))}
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </>

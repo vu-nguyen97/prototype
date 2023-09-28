@@ -41,6 +41,9 @@ const Dashboard = React.lazy(() => import("../pages/Dashboard/Dashboard"));
 const Configs = React.lazy(() => import("../pages/Configs/Configs"));
 const Members = React.lazy(() => import("../pages/Members/Members"));
 const Account = React.lazy(() => import("../pages/Settings/Account"));
+const PrototypeCamp = React.lazy(
+  () => import("../pages/PrototypeCampaigns/PrototypeCampaigns")
+);
 const Apps = React.lazy(() => import("../pages/Apps/Apps"));
 const NetworkConfig = React.lazy(
   () => import("../pages/NetworkConfig/NetworkConfig")
@@ -49,7 +52,7 @@ const Campaigns = React.lazy(() => import("../pages/App/Campaigns/Campaigns"));
 const CampaignDetail = React.lazy(
   () => import("../pages/App/Campaigns/CampaignDetail/CampaignDetail")
 );
-const Themes = React.lazy(() => import("../pages/App/Themes/Themes"));
+// const Themes = React.lazy(() => import("../pages/App/Themes/Themes"));
 const Settings = React.lazy(() => import("../pages/App/setting/Settings"));
 const Overview = React.lazy(() => import("../pages/App/overview/Overview"));
 const Notifications = React.lazy(
@@ -66,6 +69,10 @@ const AppRoutes = () => (
     <Routes>
       <Route element={<ProtectedRoutes />}>
         <Route path="apps" element={getPage(<Apps />)} />
+        <Route
+          path="prototype-campaigns"
+          element={getPage(<PrototypeCamp />)}
+        />
         <Route path="apps/:appId/">
           <Route index element={getAppPage(<Overview />)} />
           <Route path="overview" element={getAppPage(<Overview />)} />
@@ -74,7 +81,7 @@ const AppRoutes = () => (
             path="campaigns/:campId"
             element={getAppPage(<CampaignDetail />, false)}
           />
-          <Route path="themes" element={getAppPage(<Themes />)} />
+          {/* <Route path="themes" element={getAppPage(<Themes />)} /> */}
           <Route path="settings" element={getAppPage(<Settings />)} />
         </Route>
 

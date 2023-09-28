@@ -42,7 +42,9 @@ function Navs(props) {
 
         const navLabel = (
           <div className="flex items-center">
-            <div className="h-5 w-5">{iconEl}</div>
+            <div className="h-5 w-5 flex justify-center items-center">
+              {iconEl}
+            </div>
             <div className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
               {label}
             </div>

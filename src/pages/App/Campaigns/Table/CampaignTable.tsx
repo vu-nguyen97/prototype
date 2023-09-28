@@ -90,7 +90,7 @@ function CampaignTable(props) {
       dataSource={filteredData}
       // @ts-ignore
       columns={columns}
-      scroll={{ x: 600 }}
+      scroll={{ x: 1550 }}
       pagination={pagination}
       onChange={onChangeTable}
     />

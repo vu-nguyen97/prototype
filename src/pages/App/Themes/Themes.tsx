@@ -13,12 +13,16 @@ import { disabledDate } from "../../../utils/Helpers";
 import { EXTRA_FOOTER } from "../../../constants/constants";
 import Tag from "antd/lib/tag";
 import Button from "antd/lib/button/button";
+import Loading from "../../../utils/Loading";
+import ThemeCard from "./ThemeCard";
 
 export default function Themes() {
   const urlParams = useParams();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
   const [dateRange, setDateRange] = useState<any>(getLastDay(2));
+  const [themes, setThemes] = useState([]);
 
   useEffect(() => {
     const params = {
@@ -28,6 +32,7 @@ export default function Themes() {
     };
     service.get("/themes", { params }).then((res: any) => {
       console.log("res :>> ", res);
+      setThemes(res.results);
     });
   }, []);
 
@@ -41,6 +46,8 @@ export default function Themes() {
 
   return (
     <Page>
+      {isLoading && <Loading />}
+
       <div className="flex justify-between">
         <div className="page-title">Themes</div>
       </div>
@@ -80,6 +87,13 @@ export default function Themes() {
         >
           Apply
         </Button>
+      </div>
+
+      <div className="mt-6">
+        {themes?.length > 0 &&
+          themes.map((el, idx) => {
+            return <ThemeCard data={el} key={idx} />;
+          })}
       </div>
     </Page>
   );
