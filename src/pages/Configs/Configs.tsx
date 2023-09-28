@@ -8,6 +8,9 @@ import {
   checkRangeValue,
   setRangeValue,
 } from "../../utils/helper/TableHelpers";
+import Button from "antd/lib/button/button";
+import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
+import ModalAddAndEdit from "./Modal/ModalAddAndEdit";
 
 export default function Configs() {
   const [configs, setConfigs] = useState([]);
@@ -18,6 +21,8 @@ export default function Configs() {
 
   const [searchData, setSearchData] = useState<any>({});
   const [filterByMaxMin, setFilterByMaxMin] = useState<any>({});
+
+  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -54,6 +59,8 @@ export default function Configs() {
     }
   };
 
+  const onSubmitConfig = () => {};
+
   const filteredData = configs?.filter((el) => {
     let result = true;
 
@@ -76,6 +83,13 @@ export default function Configs() {
     <Page>
       <div className="flex justify-between">
         <div className="page-title">Configs</div>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={(e) => setIsOpenAddModal(true)}
+        >
+          Add Config
+        </Button>
       </div>
 
       <Table
@@ -90,6 +104,13 @@ export default function Configs() {
         loading={isLoading}
         pagination={pagination}
         onChange={onChangeTable}
+      />
+
+      <ModalAddAndEdit
+        isOpen={isOpenAddModal}
+        onClose={() => setIsOpenAddModal(false)}
+        setIsLoading={setIsLoading}
+        onSubmit={onSubmitConfig}
       />
     </Page>
   );
