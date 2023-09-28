@@ -145,14 +145,14 @@ function Settings() {
       <div className="flex justify-between flex-col sm:flex-row">
         <div className="page-title">Linked Connectors</div>
 
-        <div className="flex items-center space-x-4 mt-1 sm:mt-0">
+        {/* <div className="flex items-center space-x-4 mt-1 sm:mt-0">
           <Button type="primary" onClick={onAutoLink}>
             Auto link app
           </Button>
           <Button type="primary" danger onClick={onClickDeleteApp}>
             Delete App
           </Button>
-        </div>
+        </div> */}
       </div>
 
       <div className="mt-6">

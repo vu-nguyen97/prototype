@@ -38,6 +38,7 @@ const ForgotPassword = React.lazy(() => import("../pages/ForgotPassword"));
 const Page404 = React.lazy(() => import("../pages/Page404"));
 const CreatePassword = React.lazy(() => import("../pages/CreatePassword"));
 const Dashboard = React.lazy(() => import("../pages/Dashboard/Dashboard"));
+const Configs = React.lazy(() => import("../pages/Configs/Configs"));
 const Members = React.lazy(() => import("../pages/Members/Members"));
 const Account = React.lazy(() => import("../pages/Settings/Account"));
 const Apps = React.lazy(() => import("../pages/Apps/Apps"));
@@ -48,6 +49,7 @@ const Campaigns = React.lazy(() => import("../pages/App/Campaigns/Campaigns"));
 const CampaignDetail = React.lazy(
   () => import("../pages/App/Campaigns/CampaignDetail/CampaignDetail")
 );
+const Themes = React.lazy(() => import("../pages/App/Themes/Themes"));
 const Settings = React.lazy(() => import("../pages/App/setting/Settings"));
 const Overview = React.lazy(() => import("../pages/App/overview/Overview"));
 const Notifications = React.lazy(
@@ -72,9 +74,11 @@ const AppRoutes = () => (
             path="campaigns/:campId"
             element={getAppPage(<CampaignDetail />, false)}
           />
+          <Route path="themes" element={getAppPage(<Themes />)} />
           <Route path="settings" element={getAppPage(<Settings />)} />
         </Route>
 
+        <Route path="configs" element={getPage(<Configs />)} />
         <Route path="settings/account" element={getPage(<Account />)} />
         <Route
           path="settings/notifications"

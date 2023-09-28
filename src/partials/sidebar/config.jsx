@@ -5,6 +5,8 @@ import { AiOutlineSetting } from "@react-icons/all-files/ai/AiOutlineSetting";
 import { AiOutlineUsergroupAdd } from "@react-icons/all-files/ai/AiOutlineUsergroupAdd";
 import { AiOutlineTool } from "@react-icons/all-files/ai/AiOutlineTool";
 import { AiOutlineNotification } from "@react-icons/all-files/ai/AiOutlineNotification";
+import { AiOutlineForm } from "@react-icons/all-files/ai/AiOutlineForm";
+import { BiPalette } from "@react-icons/all-files/bi/BiPalette";
 
 export const SidebarConfigs = [
   {
@@ -20,6 +22,13 @@ export const SidebarConfigs = [
     label: "Apps",
     iconEl: <AiOutlineAppstore size={20} />,
     preload: () => import("../../pages/Apps/Apps"),
+  },
+  {
+    id: 2,
+    url: "/configs",
+    label: "Configs",
+    iconEl: <AiOutlineForm size={20} />,
+    preload: () => import("../../pages/Configs/Configs"),
   },
   {
     id: 8,
@@ -58,8 +67,15 @@ export const SidebarAppConfigs = [
     iconEl: <AiOutlineDashboard size={20} />,
     preload: () => import("../../pages/App/overview/Overview"),
   },
+  // {
+  //   id: 1,
+  //   url: "/themes",
+  //   label: "Themes",
+  //   iconEl: <BiPalette size={20} />,
+  //   preload: () => import("../../pages/App/Themes/Themes"),
+  // },
   {
-    id: 3,
+    id: 2,
     url: "/campaigns",
     label: "Campaigns",
     iconEl: <AiOutlineNotification size={20} />,

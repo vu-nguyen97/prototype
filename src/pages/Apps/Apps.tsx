@@ -141,7 +141,7 @@ function Apps() {
       <div className="flex justify-between">
         <div className="page-title">Apps</div>
 
-        <div className="flex space-x-2">
+        {/* <div className="flex space-x-2">
           <Button
             type="primary"
             icon={<PlusOutlined />}
@@ -149,7 +149,7 @@ function Apps() {
           >
             New App
           </Button>
-        </div>
+        </div> */}
       </div>
 
       <div className="flex items-start md:items-center flex-col md:flex-row mt-2 bg-white p-4 rounded-sm shadow">
