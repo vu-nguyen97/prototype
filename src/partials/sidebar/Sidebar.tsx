@@ -1,46 +1,23 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  startTransition,
-  useLayoutEffect,
-} from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import React, { useState, useEffect, useRef, startTransition } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
 // @ts-ignore
 import logo from "../../images/logo/logo.png";
 import { APP_PATH, SIDEBAR_EXPANDED } from "../../constants/constants";
 import classNames from "classnames";
 import { useDispatch } from "react-redux";
-import { getLastSlug, getSubOrganizationUrl } from "../../utils/Helpers";
+import { getSubOrganizationUrl } from "../../utils/Helpers";
 import { BiArrowBack } from "@react-icons/all-files/bi/BiArrowBack";
 import GamePlatformIcon from "../common/GamePlatformIcon";
 import { useQuery } from "@tanstack/react-query";
 import { getStoreAppById } from "../../api/common/common.api";
-import { GET_STORE_APP_BY_ID, LIST_STORE_APPS } from "../../api/constants.api";
+import { GET_STORE_APP_BY_ID } from "../../api/constants.api";
 import Skeleton from "antd/lib/skeleton/Skeleton";
 import Transition from "../../utils/Transition";
 import Navs from "./Navs";
 import Drawer from "antd/lib/drawer";
 import { updateExpanded } from "../../redux/sidebar/sidebarSlice";
-import { getStoreApps } from "../../api/apps/apps.api";
-import SelectStoreApp, { getActivedApp } from "../common/Forms/SelectStoreApp";
-import SwapOutlined from "@ant-design/icons/lib/icons/SwapOutlined";
 import DefaultAppImg from "../common/DefaultAppImg";
-import { BiLinkExternal } from "@react-icons/all-files/bi/BiLinkExternal";
-
-export function useWindowSize() {
-  // https://stackoverflow.com/questions/19014250/rerender-view-on-browser-resize-with-react
-  const [size, setSize] = useState([0, 0]);
-  useLayoutEffect(() => {
-    function updateSize() {
-      setSize([window.innerWidth, window.innerHeight]);
-    }
-    window.addEventListener("resize", updateSize);
-    updateSize();
-    return () => window.removeEventListener("resize", updateSize);
-  }, []);
-  return size;
-}
+import { useWindowSize } from "../../utils/hooks/CustomHooks";
 
 function Sidebar({
   sidebarOpen,
@@ -52,7 +29,6 @@ function Sidebar({
 }) {
   const urlParams = useParams();
   const location = useLocation();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const orgUrl = "";
 
@@ -63,9 +39,6 @@ function Sidebar({
   const [activedNav, setActivedNav] = useState(-1);
   const [initActivedSubNav, setInitActivedSubNav] = useState("");
   const [appState, setAppState] = useState<any>({});
-  const [activedApp, setActivedApp] = useState<string>();
-  const [listStoreApps, setListStoreApps] = useState([]);
-  const [isShowSelectApp, setIsShowSelectApp] = useState(false);
 
   const storedSidebarExpanded = localStorage.getItem(SIDEBAR_EXPANDED);
   const [sidebarExpanded, setSidebarExpanded] = useState(
@@ -95,15 +68,6 @@ function Sidebar({
   useEffect(() => {
     setAppState(storeAppRes?.results || {});
   }, [storeAppRes]);
-
-  const { data: storeAppsRes } = useQuery([LIST_STORE_APPS], getStoreApps, {
-    staleTime: 120 * 60000,
-    enabled: !!appState?.id,
-  });
-
-  useEffect(() => {
-    setListStoreApps(storeAppsRes?.results || []);
-  }, [storeAppsRes]);
 
   // close on click outside
   useEffect(() => {
@@ -208,37 +172,6 @@ function Sidebar({
     }
   };
 
-  const onEnableSelectApp = () => {
-    setActivedApp(appState.storeId + appState.name);
-    setIsShowSelectApp(true);
-  };
-
-  const onDisableSelectApp = () => {
-    setActivedApp(undefined);
-    setIsShowSelectApp(false);
-  };
-
-  const onSelectAnotherApp = (value) => {
-    setActivedApp(value);
-    setIsShowSelectApp(false);
-
-    if (!value) return;
-    const activedAppData = getActivedApp(listStoreApps, value);
-    const lastSlug = getLastSlug(window.location.pathname);
-    let newUrl = orgUrl + APP_PATH + "/" + activedAppData.id + "/";
-
-    const isExistSlug = listConfigs.some((el) => el.url?.includes(lastSlug));
-    if (isExistSlug) {
-      newUrl += lastSlug + window.location.search;
-    } else {
-      newUrl += "overview";
-    }
-
-    startTransition(() => {
-      navigate(newUrl);
-    });
-  };
-
   const sidebarContent = (
     <>
       <div
@@ -304,52 +237,38 @@ function Sidebar({
                   </div>
                 </div>
               ) : (
-                <div className={classNames("my-7", isShowSelectApp && "mb-9")}>
-                  {isShowSelectApp ? (
-                    <SelectStoreApp
-                      listApp={listStoreApps}
-                      activedApp={activedApp}
-                      setActivedApp={onSelectAnotherApp}
-                      onBlur={onDisableSelectApp}
-                    />
-                  ) : (
-                    <div>
-                      <div className="text-white flex items-center">
-                        <div className="flex-1 flex items-center">
-                          {appState?.icon ? (
-                            <GamePlatformIcon
-                              app={appState}
-                              imgClass="w-12 h-12 rounded-[0.75rem]"
-                            />
-                          ) : (
-                            <DefaultAppImg
-                              dot={appState.active}
-                              dotClass="right-[2px]"
-                            />
-                          )}
+                <div className="my-7">
+                  <div>
+                    <div className="text-white flex items-center">
+                      <div className="flex-1 flex items-center">
+                        {appState?.icon ? (
+                          <GamePlatformIcon
+                            app={appState}
+                            imgClass="w-12 h-12 rounded-[0.75rem]"
+                          />
+                        ) : (
+                          <DefaultAppImg
+                            dot={appState.active}
+                            dotClass="right-[2px]"
+                          />
+                        )}
 
-                          <Transition
-                            unmountOnExit
-                            show={sidebarExpanded}
-                            className="text-base font-semibold ml-3.5 transform ease-in line-clamp-2"
-                            enterStart="opacity-0"
-                            entering="whitespace-nowrap"
-                            enterEndDelay="200"
-                            enterEnd="opacity-100 whitespace-normal"
-                            leaveStart="opacity-100"
-                            leaveEnd="opacity-0 whitespace-nowrap"
-                          >
-                            {appState.name}
-                          </Transition>
-                        </div>
-                        <SwapOutlined
-                          title="Select another app"
-                          className="cursor-pointer text-lg ml-0.5"
-                          onClick={onEnableSelectApp}
-                        />
+                        <Transition
+                          unmountOnExit
+                          show={sidebarExpanded}
+                          className="text-base font-semibold ml-3.5 transform ease-in line-clamp-2"
+                          enterStart="opacity-0"
+                          entering="whitespace-nowrap"
+                          enterEndDelay="200"
+                          enterEnd="opacity-100 whitespace-normal"
+                          leaveStart="opacity-100"
+                          leaveEnd="opacity-0 whitespace-nowrap"
+                        >
+                          {appState.name}
+                        </Transition>
                       </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               )}
             </>

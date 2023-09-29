@@ -5,7 +5,7 @@ import Button from "antd/lib/button/button";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
 import SearchOutlined from "@ant-design/icons/lib/icons/SearchOutlined";
 import AntInput from "antd/lib/input/Input";
-import { ModalAdd } from "../PrototypeCampaigns/ModalAdd";
+import { ModalAdd } from "./ModalAdd";
 import Empty from "antd/lib/empty";
 import service from "../../partials/services/axios.config";
 import classNames from "classnames";

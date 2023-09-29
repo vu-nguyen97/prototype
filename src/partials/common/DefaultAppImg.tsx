@@ -9,7 +9,7 @@ export default function DefaultAppImg({
 }) {
   return (
     <div
-      className={`relative w-12 h-12 p-1.5 rounded-full bg-slate-300 flex justify-center items-center ${classNames}`}
+      className={`relative w-12 h-12 p-1.5 rounded-full bg-slate-300 shrink-0 flex justify-center items-center ${classNames}`}
     >
       <img src={ChPlay} className="ml-1" />
       {dot && (
