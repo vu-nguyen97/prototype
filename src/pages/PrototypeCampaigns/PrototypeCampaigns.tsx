@@ -30,7 +30,7 @@ function Apps() {
   const [search, setSearch] = useState("");
   const [createdBy, setCreatedBy] = useState("");
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
-  const [active, setActive] = useState();
+  const [active, setActive] = useState("true");
   const [dateRange, setDateRange] = useState<any>(getLastDay(2));
 
   // Filters in BE

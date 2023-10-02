@@ -44,6 +44,9 @@ const Account = React.lazy(() => import("../pages/Settings/Account"));
 const PrototypeCamp = React.lazy(
   () => import("../pages/PrototypeCampaigns/PrototypeCampaigns")
 );
+const DataConnectors = React.lazy(
+  () => import("../pages/DataConnectors/DataConnectors")
+);
 const Apps = React.lazy(() => import("../pages/Apps/Apps"));
 const NetworkConfig = React.lazy(
   () => import("../pages/NetworkConfig/NetworkConfig")
@@ -86,6 +89,7 @@ const AppRoutes = () => (
         </Route>
 
         <Route path="configs" element={getPage(<Configs />)} />
+        <Route path="connectors" element={getPage(<DataConnectors />)} />
         <Route path="settings/account" element={getPage(<Account />)} />
         <Route
           path="settings/notifications"

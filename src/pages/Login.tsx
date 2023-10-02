@@ -55,7 +55,7 @@ const Login = () => {
 
           service.get("/user").then(
             (userRes: any) => {
-              const isAdmin = userRes.results?.role?.name === ROLES.admin;
+              const isAdmin = userRes.results?.role === ROLES.admin;
               dispatch(
                 updateUser(Object.assign({}, userRes.results, { isAdmin }))
               );

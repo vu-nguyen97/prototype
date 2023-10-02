@@ -7,6 +7,7 @@ import { AiOutlineTool } from "@react-icons/all-files/ai/AiOutlineTool";
 import { AiOutlineNotification } from "@react-icons/all-files/ai/AiOutlineNotification";
 import { AiOutlineForm } from "@react-icons/all-files/ai/AiOutlineForm";
 import { FaGooglePlay } from "@react-icons/all-files/fa/FaGooglePlay";
+import { AiOutlineNodeIndex } from "@react-icons/all-files/ai/AiOutlineNodeIndex";
 
 export const SidebarConfigs = [
   {
@@ -36,6 +37,13 @@ export const SidebarConfigs = [
     label: "Configs",
     iconEl: <AiOutlineForm size={20} />,
     preload: () => import("../../pages/Configs/Configs"),
+  },
+  {
+    id: 4,
+    url: "/connectors",
+    label: "Data Connectors",
+    iconEl: <AiOutlineNodeIndex size={20} />,
+    preload: () => import("../../pages/DataConnectors/DataConnectors"),
   },
   {
     id: 8,

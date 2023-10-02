@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 // import appSlice from "./app/appSlice";
 import sidebarSlice from "./sidebar/sidebarSlice";
 import userSlice from "./account/accountSlice";
+import connectorSlice from "./connector/connectorSlice";
 import notificationSlice from "./socket/notificationSlice";
 
 export const migrations = {
@@ -64,6 +65,7 @@ const persistConfig = {
 const appReducer = combineReducers({
   account: userSlice,
   sidebar: sidebarSlice,
+  connector: connectorSlice,
   // app: appSlice,
   notification: notificationSlice,
 });
