@@ -15,7 +15,7 @@ import google from "../../images/networks/google.png";
 import classNames from "classnames";
 import { NETWORK_CODES, PUBLIC_KEY } from "../../constants/constants";
 import { AiOutlineCopy } from "@react-icons/all-files/ai/AiOutlineCopy";
-// import CopyToClipboard from "react-copy-to-clipboard";
+import CopyToClipboard from "react-copy-to-clipboard";
 import Loading from "../../utils/Loading";
 import message from "antd/lib/message";
 import Dropdown from "antd/lib/dropdown";
@@ -451,7 +451,7 @@ function DataConnectors() {
                           getLabelFromCamelCaseStr(configName).toLowerCase()
                         }
                       />
-                      {/* {isPublicKey && (
+                      {isPublicKey && (
                         <CopyToClipboard
                           text={configData[PUBLIC_KEY]}
                           onCopy={() => message.success("Copied!")}
@@ -460,7 +460,7 @@ function DataConnectors() {
                             <AiOutlineCopy size={20} className="m-auto" />
                           </div>
                         </CopyToClipboard>
-                      )} */}
+                      )}
                     </div>
                   </div>
                 );

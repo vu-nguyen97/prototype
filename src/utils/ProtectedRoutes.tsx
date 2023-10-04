@@ -50,17 +50,12 @@ export const ExternalUrlRoutes = () => {
   const params = useParams();
   const { pageCode, appId } = params;
 
-  const organization = useSelector(
-    (state: RootState) => state.account.userData.organization
-  );
-  const orgUrl = ORGANIZATION_PATH + "/" + organization.code;
-
   let redirectedPage = <></>;
   if (!appId) {
     switch (pageCode) {
       case "1010":
         redirectedPage = (
-          <Navigate to={orgUrl + "/connectors" + window.location.search} />
+          <Navigate to={"/connectors" + window.location.search} />
         );
         break;
       default:
@@ -69,9 +64,7 @@ export const ExternalUrlRoutes = () => {
   } else {
     switch (pageCode) {
       case URL_BY_CODE.settings.code:
-        redirectedPage = (
-          <Navigate to={orgUrl + APP_PATH + "/" + appId + "/settings"} />
-        );
+        redirectedPage = <Navigate to={APP_PATH + "/" + appId + "/settings"} />;
         break;
       // Todo: add remain case?
       default:
