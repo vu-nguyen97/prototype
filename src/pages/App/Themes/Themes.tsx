@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Page from "../../../utils/composables/Page";
-import { useParams } from "react-router-dom";
+import {
+  createSearchParams,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import service from "../../../partials/services/axios.config";
 import moment from "moment";
 import {
@@ -15,29 +20,69 @@ import Tag from "antd/lib/tag";
 import Button from "antd/lib/button/button";
 import Loading from "../../../utils/Loading";
 import ThemeCard from "./ThemeCard";
+import { useQuery } from "@tanstack/react-query";
+import { getStoreAppById } from "../../../api/common/common.api";
+import { GET_STORE_APP_BY_ID } from "../../../api/constants.api";
+import Tabs from "antd/lib/tabs";
 
 export default function Themes() {
   const urlParams = useParams();
+  const navigate = useNavigate();
+  let [searchParams] = useSearchParams();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
   const [dateRange, setDateRange] = useState<any>(getLastDay(2));
-  const [themes, setThemes] = useState([]);
+  const [themes, setThemes] = useState<any>([]);
+
+  const [tab, setTab] = useState();
+  const [items, setItems] = useState<any>([]);
+
+  const { data: storeAppRes } = useQuery(
+    [GET_STORE_APP_BY_ID, urlParams.appId],
+    getStoreAppById,
+    {
+      staleTime: 5 * 60000,
+      enabled: !!urlParams.appId,
+    }
+  );
 
   useEffect(() => {
-    const params = {
-      appId: urlParams.appId,
-      startDate: moment(dateRange[0])?.format(DATE_RANGE_FORMAT),
-      endDate: moment(dateRange[1])?.format(DATE_RANGE_FORMAT),
-    };
-    service.get("/themes", { params }).then((res: any) => {
-      console.log("res :>> ", res);
-      setThemes(res.results);
-    });
-  }, []);
+    const themes = storeAppRes?.results?.themes || [];
+
+    if (themes?.length) {
+      setThemes(themes);
+      setItems(
+        themes.map((el, idx) => ({
+          key: el.id,
+          label: el.name,
+          children: <div className="p-4 sm:p-6">{el.name}</div>,
+        }))
+      );
+    }
+  }, [storeAppRes]);
+
+  useEffect(() => {
+    const themeId = searchParams.get("themeId");
+
+    if (!themes?.length) return;
+    const activedTab = themes.find((theme) => theme.id === themeId);
+
+    if (activedTab?.id === tab) return;
+    setTab(activedTab?.id || themes[0].id);
+  }, [window.location.search, themes]);
 
   const onChangeRangePicker = (values) => {
     setDateRange(values);
+  };
+
+  const onChangeTab = (themeId) => {
+    console.log("tabUrl :>> ", themeId);
+    if (tab === themeId) return;
+
+    navigate({
+      search: createSearchParams({ themeId }).toString(),
+    });
   };
 
   const onApply = () => {
@@ -90,10 +135,14 @@ export default function Themes() {
       </div>
 
       <div className="mt-6">
-        {themes?.length > 0 &&
-          themes.map((el, idx) => {
-            return <ThemeCard data={el} key={idx} />;
-          })}
+        {themes?.length > 0 && (
+          <Tabs
+            type="card"
+            items={items}
+            activeKey={tab}
+            onChange={onChangeTab}
+          />
+        )}
       </div>
     </Page>
   );

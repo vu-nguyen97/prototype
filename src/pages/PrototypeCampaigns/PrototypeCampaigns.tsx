@@ -31,7 +31,7 @@ function Apps() {
   const [createdBy, setCreatedBy] = useState("");
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
   const [active, setActive] = useState("true");
-  const [dateRange, setDateRange] = useState<any>(getLastDay(2));
+  const [dateRange, setDateRange] = useState<any>(getLastDay(20));
 
   // Filters in BE
   const defaultPageSize = 20;

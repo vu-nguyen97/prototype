@@ -8,6 +8,7 @@ import { AiOutlineNotification } from "@react-icons/all-files/ai/AiOutlineNotifi
 import { AiOutlineForm } from "@react-icons/all-files/ai/AiOutlineForm";
 import { FaGooglePlay } from "@react-icons/all-files/fa/FaGooglePlay";
 import { AiOutlineNodeIndex } from "@react-icons/all-files/ai/AiOutlineNodeIndex";
+import { BiPalette } from "@react-icons/all-files/bi/BiPalette";
 
 export const SidebarConfigs = [
   {
@@ -84,11 +85,18 @@ export const SidebarAppConfigs = [
   },
   {
     id: 1,
-    url: "/campaigns",
-    label: "Unity campaigns",
-    iconEl: <AiOutlineNotification size={20} />,
-    preload: () => import("../../pages/App/Campaigns/Campaigns"),
+    url: "/themes",
+    label: "Themes",
+    iconEl: <BiPalette size={20} />,
+    preload: () => import("../../pages/App/Themes/Themes"),
   },
+  // {
+  //   id: 2,
+  //   url: "/campaigns",
+  //   label: "Unity campaigns",
+  //   iconEl: <AiOutlineNotification size={20} />,
+  //   preload: () => import("../../pages/App/Campaigns/Campaigns"),
+  // },
   {
     id: 6,
     url: "/settings",

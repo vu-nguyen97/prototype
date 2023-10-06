@@ -55,7 +55,7 @@ const Campaigns = React.lazy(() => import("../pages/App/Campaigns/Campaigns"));
 const CampaignDetail = React.lazy(
   () => import("../pages/App/Campaigns/CampaignDetail/CampaignDetail")
 );
-// const Themes = React.lazy(() => import("../pages/App/Themes/Themes"));
+const Themes = React.lazy(() => import("../pages/App/Themes/Themes"));
 const Settings = React.lazy(() => import("../pages/App/setting/Settings"));
 const Overview = React.lazy(() => import("../pages/App/overview/Overview"));
 const Notifications = React.lazy(
@@ -84,7 +84,7 @@ const AppRoutes = () => (
             path="campaigns/:campId"
             element={getAppPage(<CampaignDetail />, false)}
           />
-          {/* <Route path="themes" element={getAppPage(<Themes />)} /> */}
+          <Route path="themes" element={getAppPage(<Themes />)} />
           <Route path="settings" element={getAppPage(<Settings />)} />
         </Route>
 

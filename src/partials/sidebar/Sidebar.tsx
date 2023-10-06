@@ -2,7 +2,10 @@ import React, { useState, useEffect, useRef, startTransition } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 // @ts-ignore
 import logo from "../../images/logo/logo.png";
-import { APP_PATH, SIDEBAR_EXPANDED } from "../../constants/constants";
+import {
+  PROTOTYPE_CAMP_PATH,
+  SIDEBAR_EXPANDED,
+} from "../../constants/constants";
 import classNames from "classnames";
 import { useDispatch } from "react-redux";
 import { getSubOrganizationUrl } from "../../utils/Helpers";
@@ -18,6 +21,7 @@ import Drawer from "antd/lib/drawer";
 import { updateExpanded } from "../../redux/sidebar/sidebarSlice";
 import DefaultAppImg from "../common/DefaultAppImg";
 import { useWindowSize } from "../../utils/hooks/CustomHooks";
+// import { BiLinkExternal } from "@react-icons/all-files/bi/BiLinkExternal";
 
 function Sidebar({
   sidebarOpen,
@@ -201,7 +205,7 @@ function Sidebar({
           {isDetailApp ? (
             <>
               <Link
-                to={orgUrl + APP_PATH}
+                to={orgUrl + PROTOTYPE_CAMP_PATH}
                 state={state}
                 className="flex items-center py-2.5 pl-4 text-sky-500 border-y border-slate-600/70 hover:text-sky-600"
               >

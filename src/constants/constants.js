@@ -2,6 +2,7 @@ export const SIDEBAR_EXPANDED = "sidebar-expanded";
 export const REMEMBER_PASSWORD = "remember-password";
 export const ORGANIZATION_PATH = "/organizations";
 export const APP_PATH = "/apps";
+export const PROTOTYPE_CAMP_PATH = "/prototype-campaigns";
 
 export const NOT_A_NUMBER = "N/A";
 export const USD = "USD";
