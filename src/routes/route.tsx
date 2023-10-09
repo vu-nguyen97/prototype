@@ -76,6 +76,10 @@ const AppRoutes = () => (
           path="prototype-campaigns"
           element={getPage(<PrototypeCamp />)}
         />
+        {/* 
+          appId thực tế trong project này là prototype campaign, 
+          params hay dùng khi truyền cho be là "campaignId"! 
+        */}
         <Route path="apps/:appId/">
           <Route index element={getAppPage(<Overview />)} />
           <Route path="overview" element={getAppPage(<Overview />)} />

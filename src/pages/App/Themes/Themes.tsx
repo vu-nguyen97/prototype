@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Page from "../../../utils/composables/Page";
 import {
   createSearchParams,
@@ -19,23 +19,25 @@ import { EXTRA_FOOTER } from "../../../constants/constants";
 import Tag from "antd/lib/tag";
 import Button from "antd/lib/button/button";
 import Loading from "../../../utils/Loading";
-import ThemeCard from "./ThemeCard";
 import { useQuery } from "@tanstack/react-query";
 import { getStoreAppById } from "../../../api/common/common.api";
 import { GET_STORE_APP_BY_ID } from "../../../api/constants.api";
 import Tabs from "antd/lib/tabs";
+import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
+import ThemeContent from "./ThemeContent";
 
 export default function Themes() {
   const urlParams = useParams();
   const navigate = useNavigate();
   let [searchParams] = useSearchParams();
+  const newTabIndex = useRef(0);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
   const [dateRange, setDateRange] = useState<any>(getLastDay(2));
   const [themes, setThemes] = useState<any>([]);
 
-  const [tab, setTab] = useState();
+  const [tab, setTab] = useState<string>();
   const [items, setItems] = useState<any>([]);
 
   const { data: storeAppRes } = useQuery(
@@ -49,40 +51,86 @@ export default function Themes() {
 
   useEffect(() => {
     const themes = storeAppRes?.results?.themes || [];
+    const filteredThemes = themes.filter((el) => el.id);
 
-    if (themes?.length) {
-      setThemes(themes);
-      setItems(
-        themes.map((el, idx) => ({
-          key: el.id,
-          label: el.name,
-          children: <div className="p-4 sm:p-6">{el.name}</div>,
-        }))
-      );
+    if (filteredThemes?.length) {
+      setThemes(filteredThemes);
+      const newItems = filteredThemes.map((el, idx) => ({
+        key: el.id,
+        label: el.name,
+        children: <ThemeContent data={el} idx={idx} />,
+      }));
+      // Fake
+      newItems.push({
+        key: "newTab",
+        label: "New Tab",
+        children: <ThemeContent idx={newItems.length} init={true} />,
+      });
+      setItems(newItems);
+      setTab(newItems[1].key);
+      // setTab(getActivedTab(filteredThemes));
     }
   }, [storeAppRes]);
 
-  useEffect(() => {
+  const getActivedTab = (listThemes = themes) => {
     const themeId = searchParams.get("themeId");
+    const defaultTab = listThemes[0]?.id;
 
-    if (!themes?.length) return;
-    const activedTab = themes.find((theme) => theme.id === themeId);
+    if (!listThemes?.length) return defaultTab;
 
-    if (activedTab?.id === tab) return;
-    setTab(activedTab?.id || themes[0].id);
-  }, [window.location.search, themes]);
+    const activedTab = listThemes.find((theme) => theme.id === themeId);
+    if (activedTab?.id === tab) return tab;
+
+    return activedTab?.id || defaultTab;
+  };
 
   const onChangeRangePicker = (values) => {
     setDateRange(values);
   };
 
   const onChangeTab = (themeId) => {
-    console.log("tabUrl :>> ", themeId);
     if (tab === themeId) return;
+    setTab(themeId);
+  };
 
-    navigate({
-      search: createSearchParams({ themeId }).toString(),
+  const onEdit = (targetKey, action) => {
+    if (action === "add") {
+      addTab();
+    } else {
+      remove(targetKey);
+    }
+  };
+
+  const addTab = () => {
+    const newActiveKey = `newTab${newTabIndex.current++}`;
+    const newPanes = [...items];
+    newPanes.push({
+      key: newActiveKey,
+      label: "New Tab",
+      children: <ThemeContent idx={items.length} init={true} />,
     });
+    setItems(newPanes);
+    setTab(newActiveKey);
+  };
+
+  const remove = (targetKey) => {
+    let newActiveKey = tab;
+    let lastIndex = -1;
+    items.forEach((item, i) => {
+      if (item.key === targetKey) {
+        lastIndex = i - 1;
+      }
+    });
+    const newPanes = items.filter((item) => item.key !== targetKey);
+    if (newPanes.length && newActiveKey === targetKey) {
+      if (lastIndex >= 0) {
+        newActiveKey = newPanes[lastIndex].key;
+      } else {
+        newActiveKey = newPanes[0].key;
+      }
+    }
+    setItems(newPanes);
+    setTab(newActiveKey);
   };
 
   const onApply = () => {
@@ -95,9 +143,20 @@ export default function Themes() {
 
       <div className="flex justify-between">
         <div className="page-title">Themes</div>
+
+        <div className="flex space-x-2">
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={(e) => {}}
+            // onClick={(e) => setIsOpenModalAddApp(true)}
+          >
+            New App
+          </Button>
+        </div>
       </div>
 
-      <div className="flex items-center flex-wrap -mx-1 2xl:-mx-2">
+      {/* <div className="flex items-center flex-wrap -mx-1 2xl:-mx-2">
         <DatePicker.RangePicker
           className="w-full xs:w-auto mx-1 2xl:!mx-2 !mt-3"
           open={isOpenDateRange}
@@ -132,15 +191,16 @@ export default function Themes() {
         >
           Apply
         </Button>
-      </div>
+      </div> */}
 
-      <div className="mt-6">
+      <div className="mt-2">
         {themes?.length > 0 && (
           <Tabs
-            type="card"
+            type="editable-card"
             items={items}
             activeKey={tab}
             onChange={onChangeTab}
+            onEdit={onEdit}
           />
         )}
       </div>

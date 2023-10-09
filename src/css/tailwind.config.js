@@ -73,6 +73,7 @@ module.exports = {
       },
       maxWidth: {
         "3xl": "32.5rem", // 520px
+        "5xl": "50rem",
         "8xl": "88rem",
         "9xl": "96rem",
       },
