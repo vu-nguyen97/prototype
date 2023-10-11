@@ -131,7 +131,7 @@ function DynamicUpload(props) {
     <div className="mb-6">
       <div className="">
         <span className="text-[#ff4d4f] mr-1 mt-2">*</span>
-        <span className="">
+        <span className={className}>
           {getLabelFromCamelCaseStr(label || field, false)}
         </span>
       </div>

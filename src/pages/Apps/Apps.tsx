@@ -10,6 +10,7 @@ import Empty from "antd/lib/empty";
 import service from "../../partials/services/axios.config";
 import classNames from "classnames";
 import StoreAppIcon from "../../partials/common/StoreAppIcon";
+import { Link } from "react-router-dom";
 
 function Apps(props) {
   const [isLoading, setIsLoading] = useState(false);
@@ -105,19 +106,9 @@ function Apps(props) {
                       <div className="text-base sm:text-lg md:text-xl font-bold !text-black overflow-auto whitespace-normal line-clamp-2">
                         {app.name}
                       </div>
-
-                      {app.url ? (
-                        <a
-                          href={app.url}
-                          className={packageClass}
-                          title="View the game in the store"
-                          target="_blank"
-                        >
-                          {app.storeId}
-                        </a>
-                      ) : (
-                        <div className={packageClass}>{app.storeId}</div>
-                      )}
+                      <Link to={ "/store-app/" + app.id}>
+                        {app.storeId}
+                      </Link>
                     </div>
                   </div>
                 </div>

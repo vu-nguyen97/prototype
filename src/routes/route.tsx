@@ -62,6 +62,11 @@ const Notifications = React.lazy(
   () => import("../pages/Settings/Notifications/Notifications")
 );
 
+
+const StoreAppDetail = React.lazy(
+  () => import("../pages/Apps/AppDetail")
+);
+
 /**
  * Refs:
  * https://stackoverflow.com/questions/62384395/protected-route-with-react-router-v6
@@ -99,6 +104,10 @@ const AppRoutes = () => (
           path="settings/notifications"
           element={getPage(<Notifications />)}
         />
+
+        <Route path="store-app/:id">
+          <Route index element={getPage(<StoreAppDetail />)} />
+        </Route>
 
         <Route element={<AdminRoutes />}>
           <Route path="networks" element={getPage(<NetworkConfig />)} />

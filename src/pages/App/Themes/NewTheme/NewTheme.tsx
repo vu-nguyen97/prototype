@@ -44,15 +44,59 @@ const ASSET_FIELDS = [
 function NewTheme(props) {
   const [form] = Form.useForm();
   const urlParams = useParams();
-  const {} = props;
+
+  const {title, target} = props;
+
+  const targetId = target === `APP` ? urlParams.id : urlParams.appId!;
+  const endpoint = target === `APP` ? `/store-app-theme` : urlParams.appId!;
+
+
+  
 
   const [isLoading, setIsLoading] = useState(false);
   const [listFiles, setListFiles] = useState<any>({});
 
   const initialValues = {
-    name: "Theme 1",
-    shortDescription: "Vu",
-    fullDescription: "Vu full",
+    name: "Falcon AI Assistant 2",
+    shortDescription: "Lead the Crowd, Control of your Army, Clash the Enemies and Take Over the Castle",
+    fullDescription: `Thrilling survival adventure! A thrilling racing experience that will have you on the edge of your seat until the very finish!
+    Lead the Crowd, Control of your Army, Clash the Enemies and Take Over the Castle!
+    
+    COLLECT THE BIGGEST CROWD to become the strongest army
+    Begin racing alone and gather others along the way to build a large crowd. Lead your army through a variety of obstacles that move, rotate, and grow. Build your tactics while on the run to save as many runners as possible.
+    The bigger crowd you have, the more powerful the army.
+    
+    RACE THROUGH A VARIETY OF OBSTACLES
+    Try to go far as much as possible you can in this crazy survival race! 
+    Defend yourself against giant bosses with swinging axes.
+    
+    WIN IN THE FINAL CLASH
+    Lead your army until you take over the castle at the level's finale. In the last fight, crush your opponents and take control of the stronghold.
+    
+    ~~~~~~~~~~~~~~~~~~
+    💪 HOW TO PLAY
+    ~~~~~~~~~~~~~~~~~~
+    - GATHER as huge a crowd as you can to build your army
+    - DODGE obstacles
+    - COLLECT the special key
+    - CLASH the enemies
+    - FIGHT against giant bosses 
+    - TAKE OVER the castles
+    ~~~~~~~~~~~~~~~~~~
+    
+    ✨ GAME FEATURES
+    ~~~~~~~~~~~~~~~~~~
+    - Amazing Graphics Experience in this game from the user’s perspective
+    - Well Game Play Control, When Our Army Cut the grass
+    - Positive Move helps you to become a strong army and take over the other enemy.
+    - Multiple Levels Added for best user experience
+    - Deadly traps and impossible obstacles
+    - Rewards and gifts
+    
+    Playing Amazing Games, Never Without Rest!
+    And this is only the beginning... More levels, as well as clever traps and obstacles, are on the way!
+    
+    Do you believe you've got what it takes to lead your army through this crazy obstacle course? Take your chances today by downloading the game!`,
     youtubeUrl: "",
   };
 
@@ -75,7 +119,7 @@ function NewTheme(props) {
     } = listFiles;
 
     const formData = new FormData();
-    formData.append("campaignId", urlParams.appId!);
+    formData.append("id", targetId!);
     formData.append("name", name);
     formData.append("shortDescription", shortDescription);
     formData.append("fullDescription", fullDescription);
@@ -94,7 +138,7 @@ function NewTheme(props) {
     });
 
     setIsLoading(true);
-    service.post("/themes", formData).then(
+    service.post(endpoint, formData).then(
       (res: any) => {
         toast(res.message, { type: "success" });
         setIsLoading(false);
@@ -119,11 +163,12 @@ function NewTheme(props) {
     >
       {isLoading && <Loading />}
 
-      <div className="font-bold text-base mb-4">Add new theme</div>
+      <div className="font-bold text-base mb-4">{title}</div>
       <div className="max-w-5xl">
         <Form.Item
+        className="font-bold"
           name="name"
-          label="Theme name"
+          label="Name"
           rules={[{ required: true, message: FIELD_REQUIRED }]}
         >
           <AntInput
@@ -134,6 +179,7 @@ function NewTheme(props) {
         </Form.Item>
 
         <Form.Item
+          className="font-bold"
           name="shortDescription"
           label="Short description"
           rules={[{ required: true, message: FIELD_REQUIRED }]}
@@ -146,6 +192,7 @@ function NewTheme(props) {
           />
         </Form.Item>
         <Form.Item
+        className="font-bold"
           name="fullDescription"
           label="Full description"
           rules={[{ required: true, message: FIELD_REQUIRED }]}
@@ -157,7 +204,7 @@ function NewTheme(props) {
             allowClear
           />
         </Form.Item>
-        <Form.Item name="youtubeUrl" label="Youtube url">
+        <Form.Item className="font-bold" name="youtubeUrl" label="Youtube url">
           <AntInput allowClear placeholder="Enter a url" />
         </Form.Item>
 
@@ -167,6 +214,7 @@ function NewTheme(props) {
           return (
             <DynamicUpload
               key={field}
+              className={'font-bold'}
               field={field}
               label={label}
               note={note}
@@ -179,12 +227,16 @@ function NewTheme(props) {
       </div>
 
       <Button type="primary" key="submit" htmlType="submit" form={id}>
-        Add
+        Save
       </Button>
     </Form>
   );
 }
 
-NewTheme.propTypes = {};
+NewTheme.propTypes = {
+  target: String,
+  title: String,
+  endpoint: String
+};
 
 export default NewTheme;
