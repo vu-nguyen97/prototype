@@ -21,21 +21,19 @@ const Members = () => {
 
   useEffect(() => {
     const getListRole = service.get("/role");
-    const getListApp = service.get("/store-app");
-    const getAllUser = service.get("/user/all");
-
+    const getListApp = service.get("/app/findAll");
+    const getAllUser = service.get("/user/findAll");
     Promise.all([getListRole, getListApp, getAllUser]).then(
       (res: any) => {
         setIsLoading(false);
-        if (!res[0].results?.length) return;
+        // if (!res[0].results?.length) return;
+        // const listRole = res[0].results.map((role) =>
+        //   Object.assign({}, role, {
+        //     label: capitalizeWord(role.name.toLowerCase()),
+        //   })
+        // );
 
-        const listRole = res[0].results.map((role) =>
-          Object.assign({}, role, {
-            label: capitalizeWord(role.name.toLowerCase()),
-          })
-        );
-
-        setListRole(listRole);
+        setListRole(res[0].results || []);
         setListApp(res[1].results || []);
         setListMember(res[2].results || []);
       },
@@ -65,7 +63,7 @@ const Members = () => {
 
   const onDeactive = (memberData) => {
     setIsLoading(true);
-    service.delete(`/user/${memberData.id}`).then(
+    service.post(`/user/deactiveUser`, {id: memberData.id}).then(
       (res: any) => {
         const newTableData = listMember.map((mem) =>
           mem.id === memberData.id
@@ -83,7 +81,7 @@ const Members = () => {
 
   const onActive = (memberData) => {
     setIsLoading(true);
-    service.post("/user/active", memberData).then(
+    service.post("/user/activeUser", {id: memberData.id}).then(
       (res: any) => {
         const newTableData = listMember.map((mem) =>
           mem.id === memberData.id

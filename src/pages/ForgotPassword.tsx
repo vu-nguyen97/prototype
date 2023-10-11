@@ -18,12 +18,7 @@ function ForgotPassword() {
 
     setIsLoading(true);
     service
-      .post("/user/reset-password", null, {
-        params: {
-          email,
-          isNotShowToken: true,
-          organizationCodeHeader: organizationCode,
-        },
+      .post("/user/resetPassword", {email}, {
       })
       .then(
         (res: any) => {

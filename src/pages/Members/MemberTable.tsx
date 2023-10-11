@@ -62,13 +62,19 @@ const MemberTable = (props) => {
     },
     {
       title: "Role",
-      filters: ROLE_FILTER,
-      filterIcon: filterIcon,
-      onFilter: (value, record) =>
-        filterColumn(value, record, "", (el) => el.role?.name),
-      sorter: (a, b) => ("" + a.role.name).localeCompare(b.role.name),
-      render: (record) => capitalizeWord(record.role.name),
+      dataIndex: "role",
+      sorter: sortByString("phone"),
     },
+    // {
+    //   title: "Role",
+    //   dataIndex: "role",
+    //   filters: ROLE_FILTER,
+    //   filterIcon: filterIcon,
+    //   onFilter: (value, record) =>
+    //     filterColumn(value, record, "", (el) => el.role?.name),
+    //   sorter: (a, b) => ("" + a.role.name).localeCompare(b.role.name),
+    //   render: (record) => capitalizeWord(record.role.name),
+    // },
     {
       title: "Status",
       filters: STATUS_FILTER,
@@ -82,9 +88,9 @@ const MemberTable = (props) => {
       title: "Apps",
       width: "30%",
       render: (record) => {
-        if (record.role.name === ROLES.admin) {
-          return "All";
-        }
+        // if (record.role.name === ROLES.admin) {
+        //   return "All";
+        // }
 
         const { storeApps } = record;
         if (!storeApps || !storeApps.length) return "";

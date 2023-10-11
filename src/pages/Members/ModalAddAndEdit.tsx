@@ -67,14 +67,13 @@ function ModalAddAndEdit(props) {
 
   const onFinish = (values) => {
     const { apps, email, role } = values;
-    const roleObj = listRole.find((el) => el.name === role);
     const storeApps = apps?.map((str) => getActivedApp(listStoreApps, str));
 
     if (isEditMode) {
-      return onSubmitEditUser(roleObj, storeApps);
+      return onSubmitEditUser(role, storeApps);
     }
 
-    onSubmitInviteUser(email, roleObj, storeApps);
+    onSubmitInviteUser(email, role, storeApps);
   };
 
   const onSubmitInviteUser = (email, role, storeApps) => {
@@ -85,7 +84,7 @@ function ModalAddAndEdit(props) {
     };
 
     setIsLoading(true);
-    service.post("/user", params).then(
+    service.post("/inviteUser", {email, role}).then(
       (res: any) => {
         toast(res.message || "Invite member success!", { type: "success" });
         setIsLoading(false);
