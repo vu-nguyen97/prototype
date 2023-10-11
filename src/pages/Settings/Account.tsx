@@ -30,7 +30,7 @@ function Account() {
 
   const onChangePassword = () => {
     service
-      .put("user/change-password", {
+      .post("user/changePassword", {
         currentPassword: password,
         newPassword,
       })
@@ -45,10 +45,10 @@ function Account() {
 
   const onUpdateInfo = () => {
     setIsLoading(true);
-    service.put("user", { name, phone }).then(
+    service.post("user/updateUser", { name, phone }).then(
       (res: any) => {
         setIsLoading(false);
-        dispatch(updateUser(res.results));
+        // dispatch(updateUser(res.results));
         toast(res.message || "Update user info success", { type: "success" });
       },
       () => setIsLoading(false)
