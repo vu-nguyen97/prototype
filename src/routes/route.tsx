@@ -61,6 +61,9 @@ const Overview = React.lazy(() => import("../pages/App/overview/Overview"));
 const Notifications = React.lazy(
   () => import("../pages/Settings/Notifications/Notifications")
 );
+const CreateNewRelease = React.lazy(
+  () => import("../pages/CreateNewRelease/CreateNewRelease")
+)
 
 /**
  * Refs:
@@ -99,6 +102,8 @@ const AppRoutes = () => (
           path="settings/notifications"
           element={getPage(<Notifications />)}
         />
+
+        <Route path="release" element={getPage(<CreateNewRelease />)} />
 
         <Route element={<AdminRoutes />}>
           <Route path="networks" element={getPage(<NetworkConfig />)} />
