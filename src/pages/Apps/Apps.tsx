@@ -106,9 +106,13 @@ function Apps(props) {
                       <div className="text-base sm:text-lg md:text-xl font-bold !text-black overflow-auto whitespace-normal line-clamp-2">
                         {app.name}
                       </div>
-                      <Link to={ "/store-app/" + app.id}>
-                        {app.storeId}
-                      </Link>
+                      <div>{app.storeId}</div>
+                      <button
+                        onClick={() => window.location.href = "/store-app/" + app.id}
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                      >
+                        Update Main Store Listing
+                      </button>
                     </div>
                   </div>
                 </div>
