@@ -11,13 +11,23 @@ import service from "../../partials/services/axios.config";
 import classNames from "classnames";
 import StoreAppIcon from "../../partials/common/StoreAppIcon";
 import { Link } from "react-router-dom";
-
+import Icon from "antd/es/icon";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import {addStoreApp} from "../../utils/helper/ReactQueryHelpers";
+import {toast} from "react-toastify";
+import Tooltip from "antd/lib/tooltip";
+import {AiOutlineEdit} from "@react-icons/all-files/ai/AiOutlineEdit";
+import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
+import ModalConfirmDelete from "../../partials/common/ModalConfirmDelete";
 function Apps(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [isOpenModalAddApp, setIsOpenModalAddApp] = useState(false);
   const [listApp, setListApp] = useState<any>([]);
-
+  const [isOpenConfirmDeleteModal, setIsOpenConfirmDeleteModal] = useState(false);
+  const [deletedAppName, setDeletedAppName] = useState<any>();
+  const [deletedAppId, setDeletedAppId] = useState<any>({});
   useEffect(() => {
     setIsLoading(true);
     service.get("/store-app").then(
@@ -29,6 +39,25 @@ function Apps(props) {
     );
   }, []);
 
+    const onDelete = (appName, appId) => {
+        setIsOpenConfirmDeleteModal(true);
+        setDeletedAppName(appName);
+        setDeletedAppId(appId);
+    };
+    const onSubmitDelete = (appId) => {
+        setIsOpenConfirmDeleteModal(true);
+        setIsLoading(true);
+        service.delete("/store-app/delete", { params: { appId } }).then(
+            (res: any) => {
+                const newApps = listApp.filter(item => item.id !== res.results?.id)
+                setListApp(newApps);
+                setIsOpenModalAddApp(false)
+                toast(res.message, { type: "success" });
+                setIsLoading(false);
+            },
+            () => setIsLoading(false)
+        );
+    };
   // Không lọc app trực tiếp ở đây
   // Sử dụng ẩn hiện bằng css (biến isHidden) giúp cải thiện performance hơn (theo thực nghiệm)
   const filteredApp = listApp;
@@ -110,6 +139,23 @@ function Apps(props) {
                         {app.storeId}
                       </Link>
                     </div>
+                      <div className="flex space-x-2 ml-2">
+                          <>
+                              <Tooltip title="Edit connector">
+                                  <AiOutlineEdit
+                                      size={20}
+                                      className="text-slate-600 hover:text-antPrimary cursor-pointer"
+                                  />
+                              </Tooltip>
+
+                              <Tooltip title="Delete connector">
+                                  <DeleteOutlined
+                                      className="icon-danger text-xl cursor-pointer"
+                                      onClick={() => onDelete(app.name, app.id)}
+                                  />
+                              </Tooltip>
+                          </>
+                      </div>
                   </div>
                 </div>
               );
@@ -124,6 +170,12 @@ function Apps(props) {
         setIsLoading={setIsLoading}
         setListApp={setListApp}
       />
+        <ModalConfirmDelete
+            isOpen={isOpenConfirmDeleteModal}
+            onClose={() => setIsOpenConfirmDeleteModal(false)}
+            onSubmit={() => onSubmitDelete(deletedAppId)}
+            targetName={deletedAppName}
+        />
     </Page>
   );
 }
