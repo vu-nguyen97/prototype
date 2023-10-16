@@ -61,6 +61,9 @@ const Overview = React.lazy(() => import("../pages/App/overview/Overview"));
 const Notifications = React.lazy(
   () => import("../pages/Settings/Notifications/Notifications")
 );
+const CreateNewRelease = React.lazy(
+  () => import("../pages/CreateNewRelease/CreateNewRelease")
+)
 
 
 const StoreAppDetail = React.lazy(
@@ -105,9 +108,12 @@ const AppRoutes = () => (
           element={getPage(<Notifications />)}
         />
 
+
         <Route path="store-app/:id">
           <Route index element={getPage(<StoreAppDetail />)} />
         </Route>
+
+        <Route path="release" element={getPage(<CreateNewRelease />)} />
 
         <Route element={<AdminRoutes />}>
           <Route path="networks" element={getPage(<NetworkConfig />)} />

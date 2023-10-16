@@ -47,6 +47,13 @@ export const SidebarConfigs = [
     preload: () => import("../../pages/DataConnectors/DataConnectors"),
   },
   {
+    id: 5,
+    url: "/release",
+    label: "Create new release",
+    iconEl: <FaGooglePlay size={16} />,
+    preload: () => import("../../pages/CreateNewRelease/CreateNewRelease"),
+  },
+  {
     id: 8,
     url: "/members",
     label: "Members",
