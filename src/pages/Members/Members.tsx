@@ -21,7 +21,7 @@ const Members = () => {
 
   useEffect(() => {
     const getListRole = service.get("/role");
-    const getListApp = service.get("/app/findAll");
+    const getListApp = service.get("/store-app");
     const getAllUser = service.get("/user/findAll");
     Promise.all([getListRole, getListApp, getAllUser]).then(
       (res: any) => {

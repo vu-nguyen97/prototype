@@ -15,22 +15,28 @@ export const ModalAdd = (props) => {
     id: "",
     name: "",
     icon: "",
+    featureGraphic: "",
+    shortDescription: "",
+    fullDescription: "",
+    screenshots: "",
+    store: "",
+    storeId: "",
+    avaiavle: false
   };
   const [appInfo, setAppInfo] = useState(defaultApp);
-  const [appUrl, setAppUrl] = useState("");
+  const [appStoreId, setAppStoreId] = useState("");
 
   const onCloseModal = () => {
     onClose();
     setTimeout(() => {
-      setAppUrl("");
+      setAppStoreId("");
       setAppInfo(defaultApp);
     }, 300);
   };
 
-  const getApp = (url = appUrl) => {
-    if (!url) return;
-
-    service.get("/store-app/information", { params: { url } }).then(
+  const getApp = (storeid = appStoreId) => {
+    if (!storeid) return;
+    service.get("/store-app/information", { params: { storeid } }).then(
       (res: any) => {
         setAppInfo(res.results);
       },
@@ -52,8 +58,9 @@ export const ModalAdd = (props) => {
   };
 
   const onSubmit = () => {
+    console.log(appInfo);
     setIsLoading(true);
-    service.post("/store-app", appInfo).then(
+    service.post("/store-app", {app: appInfo}).then(
       (res: any) => {
         setListApp((oldList) => [...oldList, res.results]);
         addStoreApp(queryClient, res.results);
@@ -72,16 +79,15 @@ export const ModalAdd = (props) => {
       onClose={onCloseModal}
       submitLabel="Add"
       onSubmit={onSubmit}
-      disabled={!appUrl || !appInfo?.name}
     >
       <div className="">
         <Input
-          id="appUrl"
-          value={appUrl}
-          onChange={setAppUrl}
+          id="appStoreId"
+          value={appStoreId}
+          onChange={setAppStoreId}
           inputClassName="input-light-antd"
-          label="URL to your app on App Store / Play Store"
-          placeholder="Store URL"
+          label="STOREID to your app on App Store / Play Store"
+          placeholder="STOREID"
           required
           className="py-2"
           onBlur={(e) => getApp()}
