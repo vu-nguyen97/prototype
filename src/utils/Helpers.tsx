@@ -516,3 +516,10 @@ export const checkMaximumValue = (
 
   return check;
 };
+
+export const getAppFromAdNetwork = (apps) => {
+  if (!apps?.length || !Array.isArray(apps)) return [];
+  return apps.filter(
+    (el) => el.networkConnector?.network?.networkType?.type === AD_NETWORK_TYPE
+  );
+};

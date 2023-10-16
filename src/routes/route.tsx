@@ -39,6 +39,7 @@ const Page404 = React.lazy(() => import("../pages/Page404"));
 const CreatePassword = React.lazy(() => import("../pages/CreatePassword"));
 const Dashboard = React.lazy(() => import("../pages/Dashboard/Dashboard"));
 const Configs = React.lazy(() => import("../pages/Configs/Configs"));
+const AddCampaign = React.lazy(() => import("../pages/AddCampaign/index"));
 const Members = React.lazy(() => import("../pages/Members/Members"));
 const Account = React.lazy(() => import("../pages/Settings/Account"));
 const PrototypeCamp = React.lazy(
@@ -63,12 +64,8 @@ const Notifications = React.lazy(
 );
 const CreateNewRelease = React.lazy(
   () => import("../pages/CreateNewRelease/CreateNewRelease")
-)
-
-
-const StoreAppDetail = React.lazy(
-  () => import("../pages/Apps/AppDetail")
 );
+const StoreAppDetail = React.lazy(() => import("../pages/Apps/AppDetail"));
 
 /**
  * Refs:
@@ -100,6 +97,7 @@ const AppRoutes = () => (
           <Route path="settings" element={getAppPage(<Settings />)} />
         </Route>
 
+        <Route path="add-campaign" element={getPage(<AddCampaign />)} />
         <Route path="configs" element={getPage(<Configs />)} />
         <Route path="connectors" element={getPage(<DataConnectors />)} />
         <Route path="settings/account" element={getPage(<Account />)} />
@@ -107,7 +105,6 @@ const AppRoutes = () => (
           path="settings/notifications"
           element={getPage(<Notifications />)}
         />
-
 
         <Route path="store-app/:id">
           <Route index element={getPage(<StoreAppDetail />)} />
