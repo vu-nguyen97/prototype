@@ -17,6 +17,8 @@ import Tag from "antd/lib/tag";
 import Button from "antd/lib/button/button";
 import moment from "moment";
 import Select from "antd/lib/select";
+import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
+import ModalAdd from './ModalAdd';
 
 const ListStatus = [
   { value: "true", label: "Active" },
@@ -26,6 +28,8 @@ const ListStatus = [
 function Apps() {
   const [isLoading, setIsLoading] = useState(false);
   const [listApp, setListApp] = useState<any>({});
+  const [listStoreApp, setListStoreApp] = useState<any>({});
+  const [isOpenModalAddApp, setIsOpenModalAddApp] = useState(false);
 
   const [search, setSearch] = useState("");
   const [createdBy, setCreatedBy] = useState("");
@@ -39,6 +43,17 @@ function Apps() {
     page: 0,
     size: defaultPageSize,
   });
+
+  useEffect(() => {  
+    const getListApp = service.get("/store-app");
+    Promise.all([ getListApp]).then(
+      (res: any) => {
+        setIsLoading(false);
+        setListStoreApp(res[0].results || []);
+      },
+      () => setIsLoading(false)
+    );
+  }, []);
 
   useEffect(() => {
     onSearchData();
@@ -78,7 +93,16 @@ function Apps() {
       {isLoading && <Loading />}
 
       <div className="flex justify-between">
-        <div className="page-title">Prototype Campaigns</div>
+        <div className="page-title">CPI Campaigns</div>
+        <div className="flex space-x-2">
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={(e) => setIsOpenModalAddApp(true)}
+          >
+            New CPI Campaign
+          </Button>
+        </div>
       </div>
 
       <div className="bg-white p-4 rounded-sm shadow mt-2">
@@ -155,6 +179,12 @@ function Apps() {
         data={listApp}
         tableFilters={tableFilters}
         setTableFilters={setTableFilters}
+      />
+      <ModalAdd
+        isOpen={isOpenModalAddApp}
+        onClose={() => setIsOpenModalAddApp(false)}
+        setIsLoading={setIsLoading}
+        listStoreApps={listStoreApp}
       />
     </Page>
   );

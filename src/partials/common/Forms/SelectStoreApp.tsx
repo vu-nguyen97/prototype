@@ -29,6 +29,7 @@ function SelectStoreApp(props) {
     getKey,
     filterOption,
     autoFocus,
+    placeholder
   } = props;
 
   const onGetKey = (data) => {
@@ -85,7 +86,7 @@ function SelectStoreApp(props) {
     <Select
       loading={loading}
       className={`w-full ${classNames}`}
-      placeholder="App name / Package name"
+      placeholder= {placeholder || "App name / Package name" }
       mode={isMultiple ? "multiple" : undefined}
       maxTagCount="responsive"
       maxTagPlaceholder={(v) => maxTagPlaceholder(v, activedApp, onChangeValue)}
@@ -114,13 +115,15 @@ SelectStoreApp.propTypes = {
   loading: PropTypes.bool,
   hasAllOpt: PropTypes.bool,
   autoFocus: PropTypes.bool,
-  listApp: PropTypes.array,
+  // listApp: PropTypes.array,
+  listApp: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   classNames: PropTypes.string,
   activedApp: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
   setActivedApp: PropTypes.func,
   onBlur: PropTypes.func,
   getKey: PropTypes.func,
   filterOption: PropTypes.func,
+  placeholder: PropTypes.string,
 };
 
 export default SelectStoreApp;
