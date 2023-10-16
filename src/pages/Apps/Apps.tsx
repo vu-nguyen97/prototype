@@ -12,12 +12,13 @@ import classNames from "classnames";
 import StoreAppIcon from "../../partials/common/StoreAppIcon";
 import { Link } from "react-router-dom";
 import Icon from "antd/es/icon";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import {addStoreApp} from "../../utils/helper/ReactQueryHelpers";
-import {toast} from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { addStoreApp } from "../../utils/helper/ReactQueryHelpers";
+import { toast } from "react-toastify";
 import Tooltip from "antd/lib/tooltip";
-import {AiOutlineEdit} from "@react-icons/all-files/ai/AiOutlineEdit";
+import { AiOutlineEdit } from "@react-icons/all-files/ai/AiOutlineEdit";
+import { AiOutlineUpload } from "@react-icons/all-files/ai/AiOutlineUpload";
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import ModalConfirmDelete from "../../partials/common/ModalConfirmDelete";
 function Apps(props) {
@@ -25,7 +26,8 @@ function Apps(props) {
   const [search, setSearch] = useState("");
   const [isOpenModalAddApp, setIsOpenModalAddApp] = useState(false);
   const [listApp, setListApp] = useState<any>([]);
-  const [isOpenConfirmDeleteModal, setIsOpenConfirmDeleteModal] = useState(false);
+  const [isOpenConfirmDeleteModal, setIsOpenConfirmDeleteModal] =
+    useState(false);
   const [deletedAppName, setDeletedAppName] = useState<any>();
   const [deletedAppId, setDeletedAppId] = useState<any>({});
   useEffect(() => {
@@ -39,25 +41,40 @@ function Apps(props) {
     );
   }, []);
 
-    const onDelete = (appName, appId) => {
-        setIsOpenConfirmDeleteModal(true);
-        setDeletedAppName(appName);
-        setDeletedAppId(appId);
-    };
-    const onSubmitDelete = (appId) => {
-        setIsOpenConfirmDeleteModal(true);
-        setIsLoading(true);
-        service.delete("/store-app/delete", { params: { appId } }).then(
-            (res: any) => {
-                const newApps = listApp.filter(item => item.id !== res.results?.id)
-                setListApp(newApps);
-                setIsOpenModalAddApp(false)
-                toast(res.message, { type: "success" });
-                setIsLoading(false);
-            },
-            () => setIsLoading(false)
-        );
-    };
+  const onDelete = (appName, appId) => {
+    setIsOpenConfirmDeleteModal(true);
+    setDeletedAppName(appName);
+    setDeletedAppId(appId);
+  };
+  const onSubmitDelete = (appId) => {
+    setIsOpenConfirmDeleteModal(true);
+    setIsLoading(true);
+    service.delete("/store-app/delete", { params: { appId } }).then(
+      (res: any) => {
+        const newApps = listApp.filter((item) => item.id !== res.results?.id);
+        setListApp(newApps);
+        setIsOpenModalAddApp(false);
+        toast(res.message, { type: "success" });
+        setIsLoading(false);
+      },
+      () => setIsLoading(false)
+    );
+  };
+
+  const createUnityApp = (app) => {
+    setIsLoading(true);
+    service.post("/create-unity-app", { store: app.store, storeId: app.storeId, adomain: app.adomain })
+    .then((res: any) => {
+        toast(res.message, { type: "success" });
+        app.unityAppId = res.results.id;
+        app.unityGameId = res.results.gameId;
+        setIsLoading(false);
+    })
+    .catch((error) => {
+        // Here you can handle your error
+        setIsLoading(false);
+    });
+}
   // Không lọc app trực tiếp ở đây
   // Sử dụng ẩn hiện bằng css (biến isHidden) giúp cải thiện performance hơn (theo thực nghiệm)
   const filteredApp = listApp;
@@ -137,29 +154,40 @@ function Apps(props) {
                       </div>
                       <div>{app.storeId}</div>
                       <button
-                        onClick={() => window.location.href = "/store-app/" + app.id}
+                        onClick={() =>
+                          (window.location.href = "/store-app/" + app.id)
+                        }
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                       >
                         Update Main Store Listing
                       </button>
                     </div>
-                      <div className="flex space-x-2 ml-2">
-                          <>
-                              <Tooltip title="Edit connector">
-                                  <AiOutlineEdit
-                                      size={20}
-                                      className="text-slate-600 hover:text-antPrimary cursor-pointer"
-                                  />
-                              </Tooltip>
+                    <div className="flex space-x-2 ml-2">
+                      <>
+                        {!app.unityAppId && (
+                          <Tooltip title="Create Unity Ads App">
+                            <AiOutlineUpload
+                              size={22}
+                              className="text-slate-600 hover:text-antPrimary cursor-pointer"
+                              onClick={() => createUnityApp(app)}
+                            />
+                          </Tooltip>
+                        )}
+                        <Tooltip title="Edit connector">
+                          <AiOutlineEdit
+                            size={20}
+                            className="text-slate-600 hover:text-antPrimary cursor-pointer"
+                          />
+                        </Tooltip>
 
-                              <Tooltip title="Delete connector">
-                                  <DeleteOutlined
-                                      className="icon-danger text-xl cursor-pointer"
-                                      onClick={() => onDelete(app.name, app.id)}
-                                  />
-                              </Tooltip>
-                          </>
-                      </div>
+                        <Tooltip title="Delete connector">
+                          <DeleteOutlined
+                            className="icon-danger text-xl cursor-pointer"
+                            onClick={() => onDelete(app.name, app.id)}
+                          />
+                        </Tooltip>
+                      </>
+                    </div>
                   </div>
                 </div>
               );
@@ -174,12 +202,12 @@ function Apps(props) {
         setIsLoading={setIsLoading}
         setListApp={setListApp}
       />
-        <ModalConfirmDelete
-            isOpen={isOpenConfirmDeleteModal}
-            onClose={() => setIsOpenConfirmDeleteModal(false)}
-            onSubmit={() => onSubmitDelete(deletedAppId)}
-            targetName={deletedAppName}
-        />
+      <ModalConfirmDelete
+        isOpen={isOpenConfirmDeleteModal}
+        onClose={() => setIsOpenConfirmDeleteModal(false)}
+        onSubmit={() => onSubmitDelete(deletedAppId)}
+        targetName={deletedAppName}
+      />
     </Page>
   );
 }
