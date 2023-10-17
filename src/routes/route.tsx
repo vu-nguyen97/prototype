@@ -40,6 +40,7 @@ const CreatePassword = React.lazy(() => import("../pages/CreatePassword"));
 const Dashboard = React.lazy(() => import("../pages/Dashboard/Dashboard"));
 const Configs = React.lazy(() => import("../pages/Configs/Configs"));
 const AddCampaign = React.lazy(() => import("../pages/AddCampaign/index"));
+const TestChart = React.lazy(() => import("../pages/Overview/Overview"));
 const Members = React.lazy(() => import("../pages/Members/Members"));
 const Account = React.lazy(() => import("../pages/Settings/Account"));
 const PrototypeCamp = React.lazy(
@@ -98,6 +99,8 @@ const AppRoutes = () => (
         </Route>
 
         <Route path="add-campaign" element={getPage(<AddCampaign />)} />
+        {/* Todo: Detete the route below */}
+        <Route path="test-chart" element={getPage(<TestChart />)} />
         <Route path="configs" element={getPage(<Configs />)} />
         <Route path="connectors" element={getPage(<DataConnectors />)} />
         <Route path="settings/account" element={getPage(<Account />)} />
