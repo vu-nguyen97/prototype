@@ -6,27 +6,46 @@ import PieChart from "./Charts/PieChart";
 import StackbarChart from "./Charts/StackbarChart";
 import Page from "../../utils/composables/Page";
 import Dropdown from "antd/lib/dropdown/dropdown";
+import MoreOutlined from "@ant-design/icons/lib/icons/MoreOutlined";
+import {
+  ChartIds,
+  getSupportedCharts,
+} from "../../partials/common/Switcher/ChartSwitcher";
 
 function Overview(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [barChartData, setBarChartData] = useState<any>([]);
+
+  const [selectedChart, setSelectedChart] = useState<string>(ChartIds.bar);
 
   useEffect(() => {
     setIsLoading(true);
 
     setTimeout(() => {
       setIsLoading(false);
-
       setBarChartData(fakedData);
-    }, 2000);
+    }, 500);
   }, []);
 
-  const charts = [
-    <BarChart isLoading={isLoading} data={barChartData} />,
-    <StackbarChart isLoading={isLoading} data={barChartData} />,
-    <LineChart isLoading={isLoading} data={barChartData} />,
-    <PieChart isLoading={isLoading} data={barChartData} />,
-  ];
+  const listActivedChart = getSupportedCharts(selectedChart);
+  let chartEl = <BarChart isLoading={isLoading} data={barChartData} />;
+
+  switch (selectedChart) {
+    case ChartIds.stackedBar:
+      chartEl = <StackbarChart isLoading={isLoading} data={barChartData} />;
+      break;
+    case ChartIds.line:
+      chartEl = <LineChart isLoading={isLoading} data={barChartData} />;
+      break;
+    case ChartIds.pie:
+      chartEl = <PieChart isLoading={isLoading} data={barChartData} />;
+      break;
+
+    case ChartIds.bar:
+    default:
+      chartEl = <BarChart isLoading={isLoading} data={barChartData} />;
+      break;
+  }
 
   return (
     <Page>
@@ -34,36 +53,48 @@ function Overview(props) {
         Overview
       </div>
 
-      {charts.map((el, id) => (
-        <div className="overview-section mt-4" key={id}>
-          <header className="section-header">
-            <div className="flex items-center space-x-2">
-              <div className="hidden xs:block">Show top</div>
+      <div className="overview-section mt-4">
+        <header className="section-header">
+          <div className="flex items-center space-x-2">
+            <div className="hidden xs:block">Show top</div>
 
-              <Dropdown
-                className="!ml-0 xs:!ml-2"
-                menu={{
-                  selectable: true,
-                  // selectedKeys: [filter],
-                  items: [
-                    { key: "key1", label: "Label1" },
-                    { key: "key2", label: "Label2" },
-                  ],
-                  onClick: (item) => console.log(item.key),
-                }}
-                trigger={["click"]}
-              >
-                <button className="custom-btn-light">
-                  Choose
-                  {/* Add state: E.g. {activedFilter?.name || "Choose"} */}
-                </button>
-              </Dropdown>
-            </div>
-          </header>
+            <Dropdown
+              className="!ml-0 xs:!ml-2"
+              menu={{
+                selectable: true,
+                // selectedKeys: [filter],
+                items: [
+                  { key: "key1", label: "Label1" },
+                  { key: "key2", label: "Label2" },
+                ],
+                onClick: (item) => console.log(item.key),
+              }}
+              trigger={["click"]}
+            >
+              <button className="custom-btn-light">
+                Choose
+                {/* Add state: E.g. {activedFilter?.name || "Choose"} */}
+              </button>
+            </Dropdown>
+          </div>
 
-          <div className="h-[420px]">{el}</div>
-        </div>
-      ))}
+          <Dropdown
+            menu={{
+              selectable: true,
+              selectedKeys: [selectedChart],
+              items: listActivedChart,
+              onClick: (item) => setSelectedChart(item.key),
+            }}
+            trigger={["click"]}
+          >
+            <button className="btn-light icon !px-1.5 !py-2">
+              <MoreOutlined />
+            </button>
+          </Dropdown>
+        </header>
+
+        <div className="h-[420px]">{chartEl}</div>
+      </div>
     </Page>
   );
 }
