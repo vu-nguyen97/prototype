@@ -29,7 +29,8 @@ function SelectStoreApp(props) {
     getKey,
     filterOption,
     autoFocus,
-    placeholder
+    placeholder,
+    onFocusFunc
   } = props;
 
   const onGetKey = (data) => {
@@ -93,6 +94,7 @@ function SelectStoreApp(props) {
       allowClear
       value={activedApp}
       onChange={onChangeValue}
+      onFocus={onFocusFunc}
       showSearch
       autoFocus={autoFocus}
       filterOption={filterOption || filterSelectGroupByKey}
@@ -124,6 +126,7 @@ SelectStoreApp.propTypes = {
   getKey: PropTypes.func,
   filterOption: PropTypes.func,
   placeholder: PropTypes.string,
+  onFocusFunc: PropTypes.func,
 };
 
 export default SelectStoreApp;
