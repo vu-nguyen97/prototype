@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import NewVariant from "./NewVariant";
+import AddCampaigns from "../../AddCampaign";
 
 function VariantDetail(props) {
   const { data, idx, init } = props;
@@ -9,8 +10,9 @@ function VariantDetail(props) {
     <div className="p-4 sm:p-6">
       {!init ? (
         <>
-          <div>{idx}</div>
-          <div>{data.name}</div>
+          <div>
+            <AddCampaigns data={data}></AddCampaigns>
+          </div>
         </>
       ) : (
         <NewVariant />

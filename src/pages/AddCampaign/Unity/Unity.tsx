@@ -13,7 +13,7 @@ import service from "../../../partials/services/axios.config";
 import { toast } from "react-toastify";
 
 function Unity(props) {
-  const { setIsLoading, stepData, setStepData } = props;
+  const { setIsLoading, stepData, setStepData, appVariantId } = props;
 
   const [current, setCurrent] = useState(0);
   const [countBackAction, setCountBackAction] = useState<number>(0);
@@ -100,22 +100,33 @@ function Unity(props) {
       //   },
       //   () => setIsLoading(false)
       // );
-      console.log("Creative files", creativeFiles)
+      let data = new FormData();
+      data.append("appVariantId", appVariantId);
+      data.append("campaignName", name);
+      data.append("goal", "installs")
+      data.append("billingType", type.toLowerCase());
+      data.append("biddingStrategy", biddingStrategy);
+      data.append("attributionClickUrl", clickUrl);
+      data.append("attributionStartUrl", startUrl);
+      data.append("attributionViewUrl", impressionUrl);
+      data.append("scheduleStart", startDate);
+      data.append("scheduleEnd", endDate || "");
+      countriesBid.forEach((countryBid, index) => {
+        data.append(`countries[${index}]`, countryBid.country);
+        data.append(`bids[${index}]`, countryBid.bid);
+      });
+      creativeFiles.forEach((element) => {
+        console.log(element);
+        data.append("files", element);
+      });
+
       setIsLoading(true);
-      service
-        .post(
-          "/campaign",
-          {
-            themeId: "652e0a82cd72a1ecbdcbc453",
-            files: creativeFiles,
-          }
-        )
-        .then(
-          (res: any) => {
-            toast(res.message, { type: "success" });
-          },
-          () => setIsLoading(false)
-        );
+      service.post("/unity-ads", data).then(
+        (res: any) => {
+          toast(res.message, { type: "success" });
+        },
+        () => setIsLoading(false)
+      );
     }
   };
 

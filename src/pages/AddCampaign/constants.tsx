@@ -12,20 +12,20 @@ export const defaultGroupIds = [defaultGroups[0].id];
 export const LONG_TIME = "longTime";
 export const TIME_DISTANCE = "timeDistance";
 export const DeliveryOpts = [
-  {
-    label: (
-      <Tooltip
-        title="If you prefer to manually stop the offer, please select long-term delivery."
-        color="white"
-        overlayClassName="tooltip-light"
-        overlayInnerStyle={{ minWidth: 270 }}
-      >
-        Long-term <ExclamationCircleOutlined className="text-xs" />
-      </Tooltip>
-    ),
-    value: LONG_TIME,
-  },
   { label: "Configure start and end time", value: TIME_DISTANCE },
+  // {
+  //   label: (
+  //     <Tooltip
+  //       title="If you prefer to manually stop the offer, please select long-term delivery."
+  //       color="white"
+  //       overlayClassName="tooltip-light"
+  //       overlayInnerStyle={{ minWidth: 270 }}
+  //     >
+  //       Long-term <ExclamationCircleOutlined className="text-xs" />
+  //     </Tooltip>
+  //   ),
+  //   value: LONG_TIME,
+  // },
 ];
 
 export const DAILY_CB = "dailyBudgetOpen";

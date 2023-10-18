@@ -56,6 +56,8 @@ export default function AppVariants() {
     console.log(filteredVariants?.length)
 
     setThemes(filteredVariants);
+
+    console.log(filteredVariants);
     
 
     const newItems = filteredVariants.map((el, idx) => ({

@@ -31,15 +31,15 @@ import { DAILY_CB, TOTAL_CB } from "../constants";
 function Step1(props) {
   const [form] = Form.useForm();
   const { next, stepData, setStepData } = props;
-  const biddingStrategies = BIDDING_TYPES;
+  const biddingStrategies = BIDDING_STRATEGIES;
   const types = TYPES;
 
   const initialValues = {
     name: "a",
     type: BID_CPI_TYPE,
-    biddingStrategy: "Cpi",
+    biddingStrategy: "manual",
     timeLabelEl: FAKED,
-    deliveryMode: LONG_TIME,
+    deliveryMode: TIME_DISTANCE,
   };
   const formDelivery = Form.useWatch("deliveryMode", form);
   const formBillingType = Form.useWatch("type", form);
