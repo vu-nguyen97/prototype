@@ -10,7 +10,8 @@ import Loading from "../../../utils/Loading";
 import service from "../../../partials/services/axios.config";
 import { toast } from "react-toastify";
 import SelectStoreApp, { getActivedApp } from "../../../partials/common/Forms/SelectStoreApp";
-import { Radio, Space, Collapse, Form, Button } from "antd";
+import { Radio, Space, Collapse, Form, Button, Divider } from "antd";
+import StoreAppIcon from "../../../partials/common/StoreAppIcon";
 
 const ASSET_FIELDS = [
   {
@@ -50,7 +51,11 @@ function NewVariant(props) {
 
   const urlParams = useParams();
 
-  const { title, target } = props;
+  const { viewOnlyMode, data, title, target } = props;
+
+  console.log(data);
+
+  // const app = data.storeApp;
 
   const [listStoreApps, setListStoreApps] = useState<object[]>();
   const [selectedApps, setSelectedApps] = useState<object[]>();
@@ -59,13 +64,15 @@ function NewVariant(props) {
   const [activeKey, setActiveKey] = useState<string[] | string>('');
   const [showCollapse, setShowCollapse] = useState(false);
   const [radioValue, setRadioValue] = useState('KEEP');
+  // const [variantNameValue, setVariantNameValue] = useState();
 
   const targetId = target === `APP` ? urlParams.id : urlParams.appId!;
-  const endpoint = target === `APP` ? `/store-app-theme` : '/cpi-campaigns/app-variants?campaignId='+urlParams.appId!;
+  const endpoint = target === `APP` ? `/store-app-theme` : '/cpi-campaigns/app-variants?campaignId=' + urlParams.appId!;
+
 
 
   const initialValues = {
-    name: "Falcon AI Assistant 2",
+    variantName: "Falcon AI Assistant 2",
     shortDescription: "Lead the Crowd, Control of your Army, Clash the Enemies and Take Over the Castle",
     fullDescription: `Thrilling survival adventure! A thrilling racing experience that will have you on the edge of your seat until the very finish!
     Lead the Crowd, Control of your Army, Clash the Enemies and Take Over the Castle!
@@ -116,8 +123,14 @@ function NewVariant(props) {
   };
 
   const onFinish = (values) => {
+    console.log('values', values);
     const { apps, name, variantName, shortDescription, fullDescription, youtubeUrl } = values;
-    const storeApp = getActivedApp(listStoreApps, apps); 
+    const storeApp = getActivedApp(listStoreApps, apps);
+    const storeAppId = storeApp.id;
+    // console.log(storeApp)
+    console.log('variantName', variantName)
+    console.log('storeAppId', storeAppId)
+    
     const useOriginalListingAssets = showCollapse ? 'false' : 'true';
 
     const {
@@ -129,7 +142,7 @@ function NewVariant(props) {
     } = listFiles;
 
     const formData = new FormData();
-    formData.append("id", targetId!);
+    // formData.append("appId", targetId!);
     formData.append("variantName", variantName);
     formData.append("appId", storeApp.id);
     formData.append("useOriginalListingAssets", useOriginalListingAssets);
@@ -161,7 +174,7 @@ function NewVariant(props) {
       },
       () => setIsLoading(false)
     );
-    
+
   };
 
   const fetchListStoreApps = () => {
@@ -190,7 +203,7 @@ function NewVariant(props) {
     fetchListStoreApps();
   }, []);
 
-  const id = "FormAddTheme";
+  const id = "FormAddVariant";
 
   return (
     <Form
@@ -204,116 +217,144 @@ function NewVariant(props) {
     >
       {isLoading && <Loading />}
 
-      <Form.Item className="font-bold mb-4 max-w-5xl"
-        name="variantName"
-        label="Variant name" rules={[{ required: true, message: FIELD_REQUIRED }]}>
-        <AntInput allowClear placeholder="Enter variant name" />
-      </Form.Item>
-      <Form.Item
-        name="apps"
-        label="Play Store App"
-        className="font-bold mb-4 max-w-5xl"
-        rules={[{ required: true, message: FIELD_REQUIRED }]}>
-        <SelectStoreApp
-          isMultiple={false}
-          listApp={listStoreApps}
-          placeholder="Please choose an app."
-          activedApp={selectedApps}
-          setActivedApp={(apps) => {
-            setSelectedApps(apps);
-            form.setFieldsValue({ apps });
-          }}
-          onFocusFunc={fetchListStoreApps}
-        />
-      </Form.Item>
-      <Form.Item
-        className="mb-10 max-w-5xl">
-        <Radio.Group onChange={handleRadioChange}>
-          <Space direction="vertical">
-            <Radio value={'KEEP'} >I want to use current store listing of selected app.</Radio>
-            <Radio value={'CHANGE'} className="mb-2">I want to change store listing of selected app.</Radio>
-          </Space>
-        </Radio.Group>
-      </Form.Item>
-      {showCollapse && (
-        <Collapse
-          defaultActiveKey={['1']}
-          onChange={onCollapseChange}
-        >
-          <Panel header="Edit your app’s name, icon, screenshots and more to present how your app looks to users on Google Play" key="1">
-            <div className="font-bold text-base mb-4">{title}</div>
-            <div className="max-w-5xl">
-              <Form.Item
-                className="font-bold"
-                name="name"
-                label="Name"
-                rules={[{ required: true, message: FIELD_REQUIRED }]}
-              >
-                <AntInput
-                  allowClear
-                  placeholder="Enter a name (max 30 characters)"
-                  maxLength={30}
-                />
-              </Form.Item>
+      {!viewOnlyMode && (
+        <>
+          <Form.Item className="font-bold mb-4 max-w-5xl"
+            name="variantName"
+            label="Variant name" rules={[{ required: true, message: FIELD_REQUIRED }]}>
+            <AntInput allowClear placeholder="Enter variant name" />
+          </Form.Item>
+          <Form.Item
+            name="apps"
+            label="Play Store App"
+            className="font-bold mb-4 max-w-5xl"
+            rules={[{ required: true, message: FIELD_REQUIRED }]}>
+            <SelectStoreApp
+              isMultiple={false}
+              listApp={listStoreApps}
+              placeholder="Please choose an app."
+              activedApp={selectedApps}
+              setActivedApp={(apps) => {
+                setSelectedApps(apps);
+                form.setFieldValue('apps', apps);
+              }}
+              onFocusFunc={fetchListStoreApps}
+            />
+          </Form.Item>
+          <Form.Item
+            className="mb-10 max-w-5xl">
+            <Radio.Group onChange={handleRadioChange}>
+              <Space direction="vertical">
+                <Radio value={'KEEP'} >I want to use current store listing of selected app.</Radio>
+                <Radio value={'CHANGE'} className="mb-2">I want to change store listing of selected app.</Radio>
+              </Space>
+            </Radio.Group>
+          </Form.Item>
+          {showCollapse && (
+            <Collapse
+              defaultActiveKey={['1']}
+              onChange={onCollapseChange}
+            >
+              <Panel header="Edit your app’s name, icon, screenshots and more to present how your app looks to users on Google Play" key="1">
+                <div className="font-bold text-base mb-4">{title}</div>
+                <div className="max-w-5xl">
+                  <Form.Item
+                    className="font-bold"
+                    name="name"
+                    label="Name"
+                    rules={[{ required: true, message: FIELD_REQUIRED }]}
+                  >
+                    <AntInput
+                      allowClear
+                      placeholder="Enter a name (max 30 characters)"
+                      maxLength={30}
+                    />
+                  </Form.Item>
 
-              <Form.Item
-                className="font-bold"
-                name="shortDescription"
-                label="Short description"
-                rules={[{ required: true, message: FIELD_REQUIRED }]}
-              >
-                <AntInput.TextArea
-                  rows={2}
-                  placeholder="Enter content (max 80 characters)"
-                  maxLength={80}
-                  allowClear
-                />
-              </Form.Item>
-              <Form.Item
-                className="font-bold"
-                name="fullDescription"
-                label="Full description"
-                rules={[{ required: true, message: FIELD_REQUIRED }]}
-              >
-                <AntInput.TextArea
-                  rows={3}
-                  placeholder="Enter content (max 4000 characters)"
-                  maxLength={4000}
-                  allowClear
-                />
-              </Form.Item>
-              <Form.Item className="font-bold" name="youtubeUrl" label="Youtube url">
-                <AntInput allowClear placeholder="Enter a url" />
-              </Form.Item>
+                  <Form.Item
+                    className="font-bold"
+                    name="shortDescription"
+                    label="Short description"
+                    rules={[{ required: true, message: FIELD_REQUIRED }]}
+                  >
+                    <AntInput.TextArea
+                      rows={2}
+                      placeholder="Enter content (max 80 characters)"
+                      maxLength={80}
+                      allowClear
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    className="font-bold"
+                    name="fullDescription"
+                    label="Full description"
+                    rules={[{ required: true, message: FIELD_REQUIRED }]}
+                  >
+                    <AntInput.TextArea
+                      rows={3}
+                      placeholder="Enter content (max 4000 characters)"
+                      maxLength={4000}
+                      allowClear
+                    />
+                  </Form.Item>
+                  <Form.Item className="font-bold" name="youtubeUrl" label="Youtube url">
+                    <AntInput allowClear placeholder="Enter a url" />
+                  </Form.Item>
 
-              {ASSET_FIELDS.map((el) => {
-                const { field, label, note, multiple } = el;
-
-                return (
-                  <DynamicUpload
-                    key={field}
-                    className={'font-bold'}
-                    field={field}
-                    label={label}
-                    note={note}
-                    multiple={multiple}
-                    listFiles={listFiles[field] || []}
-                    onSetListFiles={onSetListFiles}
-                  />
-                );
-              })}
-            </div>
-          </Panel>
-        </Collapse>
+                  {ASSET_FIELDS.map((el) => {
+                    const { field, label, note, multiple } = el;
+                    return (
+                      <DynamicUpload
+                        key={field}
+                        className={'font-bold'}
+                        field={field}
+                        label={label}
+                        note={note}
+                        multiple={multiple}
+                        listFiles={listFiles[field] || []}
+                        onSetListFiles={onSetListFiles}
+                      />
+                    );
+                  })}
+                </div>
+              </Panel>
+            </Collapse>
+          )}
+          <Button type="primary" key="submit" htmlType="submit" form={id}>
+            Save
+          </Button>
+        </>
       )}
-      <Button type="primary" key="submit" htmlType="submit" form={id}>
-        Save
-      </Button>
+      {/* {viewOnlyMode && (
+        <>
+          <div className="flex items-center grow truncate">
+            <div className="shrink-0">
+              <StoreAppIcon app={data.storeApp} />
+            </div>
+            <div className="ml-5 grow truncate">
+              <div className="text-base sm:text-lg md:text-xl font-bold !text-black overflow-auto whitespace-normal line-clamp-2">
+                {data.storeApp.name}
+              </div>
+              <div>{data.storeApp.storeId}</div>
+            </div>
+          </div>
+          {!data.update && (
+            <div className="flex items-center grow truncate font-bold mt-10">
+              You have'nt submitted new assets for the app.
+            </div>
+          )}
+
+        </>
+      )} */}
+
+
     </Form>
   );
 }
 
 NewVariant.propTypes = {
+  data: PropTypes.objectOf(PropTypes.any),
+  viewOnlyMode: PropTypes.bool,
   target: PropTypes.objectOf(PropTypes.any),
   title: PropTypes.objectOf(PropTypes.any),
   endpoint: PropTypes.objectOf(PropTypes.any),

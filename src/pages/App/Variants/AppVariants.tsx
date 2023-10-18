@@ -112,6 +112,7 @@ export default function AppVariants() {
   };
 
   const onChangeTab = (themeId) => {
+    console.log(themeId);
     if (tab === themeId) return;
     setTab(themeId);
   };
