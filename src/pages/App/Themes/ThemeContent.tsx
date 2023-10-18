@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import NewTheme from "./NewTheme/NewTheme";
+import AddCampaigns from "../../AddCampaign";
 
 function ThemeContent(props) {
   const { data, idx, init } = props;
@@ -9,8 +10,9 @@ function ThemeContent(props) {
     <div className="p-4 sm:p-6">
       {!init ? (
         <>
-          <div>{idx}</div>
-          <div>{data.name}</div>
+          <div>
+            <AddCampaigns name={data.name}></AddCampaigns>
+          </div>
         </>
       ) : (
         <NewTheme />

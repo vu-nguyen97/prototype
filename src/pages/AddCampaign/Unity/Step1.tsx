@@ -5,6 +5,7 @@ import AntInput from "antd/lib/input/Input";
 import Select from "antd/lib/select";
 import {
   AUTOMATED,
+  BIDDING_STRATEGIES,
   BIDDING_TYPES,
   DeliveryOpts,
   LONG_TIME,
@@ -33,7 +34,13 @@ function Step1(props) {
   const biddingStrategies = BIDDING_TYPES;
   const types = TYPES;
 
-  const initialValues = { timeLabelEl: FAKED, deliveryMode: LONG_TIME };
+  const initialValues = {
+    name: "a",
+    type: BID_CPI_TYPE,
+    biddingStrategy: "Cpi",
+    timeLabelEl: FAKED,
+    deliveryMode: LONG_TIME,
+  };
   const formDelivery = Form.useWatch("deliveryMode", form);
   const formBillingType = Form.useWatch("type", form);
   const formStartDate = Form.useWatch("startDate", form);
@@ -134,6 +141,7 @@ function Step1(props) {
         <Select
           placeholder="Select type"
           className={formClass}
+          disabled
           onChange={onChangeBidType}
         >
           {types?.map((type, idx) => (
@@ -150,6 +158,7 @@ function Step1(props) {
           rules={[{ required: true, message: FIELD_REQUIRED }]}
         >
           <Select
+            disabled
             placeholder="Select type"
             className={formClass}
             onChange={onChangeBidStrategy}

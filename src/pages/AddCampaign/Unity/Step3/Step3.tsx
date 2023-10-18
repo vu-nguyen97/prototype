@@ -8,6 +8,7 @@ import CreativeTable from "./CreativeTable";
 import { backActionHook } from "../../Helpers";
 import VideoPopup from "../../../../partials/common/Modal/VideoPopup";
 import ImagePreview from "../../../../partials/common/Modal/ImagePreview";
+import DynamicUpload from "../../../../partials/common/Forms/DynamicUpload";
 
 function Step3(props) {
   const [form] = Form.useForm();
@@ -18,6 +19,9 @@ function Step3(props) {
 
   const [previewData, setPreviewData] = useState({});
   const [imgPreview, setImgPreview] = useState<any>({});
+
+  const [creativeUpload, setCreativeUpload] = useState<any>({});
+  const creativeField = "creativeUploadEl";
 
   const initialValues = {
     timeLabelEl: FAKED,
@@ -30,11 +34,23 @@ function Step3(props) {
   useEffect(() => {
     const initData = stepData?.step3;
     if (initData) {
-      const { creatives } = initData;
+      const { creatives, creativeFiles } = initData;
       setCreatives(creatives);
+      console.log('creativeFiles', creativeFiles)
+      setCreativeUpload(creativeFiles || {});
       form.setFieldsValue(initData);
     }
   }, [stepData]);
+
+  const onSetCreativeListFiles = (fieldName, files: any[]) => {
+    const newListFiles = { ...creativeUpload };
+    newListFiles[fieldName] = files;
+
+    console.log(stepData);
+
+    setCreativeUpload(newListFiles);
+    console.log(newListFiles);
+  };
 
   const handleAddCreatives = (newCreatives) => {
     const newList = [...creatives];
@@ -53,8 +69,18 @@ function Step3(props) {
   };
 
   const onFinish = (values) => {
-    // console.log("values :>> ", values, creatives);
-    next({ ...values, creatives });
+    console.log(
+      "values :>> ",
+      values,
+      creatives,
+      creativeUpload[creativeField]
+    );
+
+    next({
+      ...values,
+      creatives,
+      creativeFiles: creativeUpload[creativeField],
+    });
   };
 
   return (
@@ -83,6 +109,16 @@ function Step3(props) {
           data={creatives}
           setImgPreview={setImgPreview}
           setPreviewData={setPreviewData}
+        />
+      </Form.Item>
+
+      <Form.Item label="Creative">
+        <DynamicUpload
+          className="font-bold"
+          field={creativeField}
+          multiple
+          listFiles={creativeUpload[creativeField] || []}
+          onSetListFiles={onSetCreativeListFiles}
         />
       </Form.Item>
 

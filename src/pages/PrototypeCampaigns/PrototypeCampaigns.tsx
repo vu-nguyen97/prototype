@@ -5,6 +5,7 @@ import Page from "../../utils/composables/Page";
 import Loading from "../../utils/Loading";
 import service from "../../partials/services/axios.config";
 import PrototypeTable from "./PrototypeTable/PrototypeTable";
+import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
 import {
   DATE_RANGE_FORMAT,
   getLastDay,
@@ -17,6 +18,7 @@ import Tag from "antd/lib/tag";
 import Button from "antd/lib/button/button";
 import moment from "moment";
 import Select from "antd/lib/select";
+import ModalCreate from "./ModalCreate";
 
 const ListStatus = [
   { value: "true", label: "Active" },
@@ -32,6 +34,8 @@ function Apps() {
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
   const [active, setActive] = useState("true");
   const [dateRange, setDateRange] = useState<any>(getLastDay(20));
+
+  const [isOpenModalCreate, setIsOpenModalCreate] = useState(false);
 
   // Filters in BE
   const defaultPageSize = 20;
@@ -151,10 +155,27 @@ function Apps() {
         </div>
       </div>
 
+      <div className="flex items-center justify-end mt-3 -mb-3">
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          className=""
+          onClick={() => setIsOpenModalCreate(true)}
+        >
+          Create new campaign
+        </Button>
+      </div>
+
       <PrototypeTable
         data={listApp}
         tableFilters={tableFilters}
         setTableFilters={setTableFilters}
+      />
+
+      <ModalCreate
+        isOpen={isOpenModalCreate}
+        onClose={() => setIsOpenModalCreate(false)}
+        setIsLoading={setIsLoading}
       />
     </Page>
   );
