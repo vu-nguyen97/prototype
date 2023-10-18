@@ -71,7 +71,7 @@ function Apps() {
     };
 
     setIsLoading(true);
-    service.get("/prototype-campaigns", { params }).then(
+    service.get("/cpi-campaigns", { params }).then(
       (res: any) => {
         setIsLoading(false);
         setListApp(res.results);

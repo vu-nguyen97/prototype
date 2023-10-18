@@ -27,10 +27,10 @@ export const SidebarConfigs = [
   },
   {
     id: 2,
-    url: "/prototype-campaigns",
-    label: "Prototype campaigns",
+    url: "/cpi-campaigns",
+    label: "CPI Campaigns",
     iconEl: <FaGooglePlay size={16} />,
-    preload: () => import("../../pages/PrototypeCampaigns/PrototypeCampaigns"),
+    preload: () => import("../../pages/PrototypeCampaigns/CPICampaigns"),
   },
   {
     id: 3,
@@ -93,9 +93,9 @@ export const SidebarAppConfigs = [
   {
     id: 1,
     url: "/themes",
-    label: "Themes",
+    label: "App Variants",
     iconEl: <BiPalette size={20} />,
-    preload: () => import("../../pages/App/Themes/Themes"),
+    preload: () => import("../../pages/App/Variants/AppVariants"),
   },
   // {
   //   id: 2,

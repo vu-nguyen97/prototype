@@ -20,11 +20,12 @@ import Tag from "antd/lib/tag";
 import Button from "antd/lib/button/button";
 import Loading from "../../../utils/Loading";
 import { useQuery } from "@tanstack/react-query";
-import { getStoreAppById } from "../../../api/common/common.api";
+import { getCpiCampaignById } from "../../../api/common/common.api";
 import { GET_STORE_APP_BY_ID } from "../../../api/constants.api";
 import Tabs from "antd/lib/tabs";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
-import ThemeContent from "./ThemeContent";
+// import ThemeContent from "./ThemeContent";
+import VariantDetail from "../Variants/VariantDetail";
 
 export default function Themes() {
   const urlParams = useParams();
@@ -42,7 +43,7 @@ export default function Themes() {
 
   const { data: storeAppRes } = useQuery(
     [GET_STORE_APP_BY_ID, urlParams.appId],
-    getStoreAppById,
+    getCpiCampaignById,
     {
       staleTime: 5 * 60000,
       enabled: !!urlParams.appId,
@@ -58,13 +59,13 @@ export default function Themes() {
       const newItems = filteredThemes.map((el, idx) => ({
         key: el.id,
         label: el.name,
-        children: <ThemeContent data={el} idx={idx} />,
+        children: <VariantDetail data={el} idx={idx} />,
       }));
       // Fake
       newItems.push({
         key: "newTab",
-        label: "New Tab",
-        children: <ThemeContent idx={newItems.length} init={true} />,
+        label: "New App Variant",
+        children: <VariantDetail idx={newItems.length} init={true} />,
       });
       setItems(newItems);
       setTab(newItems[1].key);
@@ -106,8 +107,8 @@ export default function Themes() {
     const newPanes = [...items];
     newPanes.push({
       key: newActiveKey,
-      label: "New Tab",
-      children: <ThemeContent idx={items.length} init={true} />,
+      label: "New App Variant",
+      children: <VariantDetail idx={items.length} init={true} />,
     });
     setItems(newPanes);
     setTab(newActiveKey);
@@ -142,17 +143,17 @@ export default function Themes() {
       {isLoading && <Loading />}
 
       <div className="flex justify-between">
-        <div className="page-title">Themes</div>
+        <div className="page-title">App Variants</div>
 
         <div className="flex space-x-2">
-          <Button
+          {/* <Button
             type="primary"
             icon={<PlusOutlined />}
             onClick={(e) => {}}
             // onClick={(e) => setIsOpenModalAddApp(true)}
           >
-            New App
-          </Button>
+            
+          </Button> */}
         </div>
       </div>
 
