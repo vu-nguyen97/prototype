@@ -33,6 +33,13 @@ function Step2(props) {
   backActionHook(form, onPrev, countBackAction, { bidGroups });
 
   useEffect(() => {
+    setBidGroups([
+      { id: 0, countries: ['US'], bid: 0.01 },
+    ]);
+    setActiveKey(bidGroups.map((el) => el.id));
+  }, []);
+  
+  useEffect(() => {
     const initData = stepData?.step2;
     if (initData) {
       const { bidGroups } = initData;

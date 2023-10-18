@@ -49,7 +49,7 @@ function Unity(props) {
         dailyBudgetOpen,
         totalBudgetOpen,
       } = step2;
-      const { creatives } = formData;
+      const { creatives, creativeFiles } = formData;
 
       let countriesBid: any = [];
       if (biddingStrategy === AUTOMATED && countries?.length) {
@@ -86,6 +86,7 @@ function Unity(props) {
         countriesBid,
         // Step 3:
         creativePackIds: creatives?.map((el) => el.id),
+        creativeFiles,
       };
 
       console.log("Check params", params);
@@ -99,6 +100,22 @@ function Unity(props) {
       //   },
       //   () => setIsLoading(false)
       // );
+      console.log("Creative files", creativeFiles)
+      setIsLoading(true);
+      service
+        .post(
+          "/campaign",
+          {
+            themeId: "652e0a82cd72a1ecbdcbc453",
+            files: creativeFiles,
+          }
+        )
+        .then(
+          (res: any) => {
+            toast(res.message, { type: "success" });
+          },
+          () => setIsLoading(false)
+        );
     }
   };
 

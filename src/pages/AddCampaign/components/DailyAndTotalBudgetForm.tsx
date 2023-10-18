@@ -48,6 +48,13 @@ export default function DailyAndTotalBudgetForm(props) {
     total = DYNAMIC_TOTAL_BUDGET + id;
   }
 
+  useEffect(() => {
+    form.setFieldsValue({
+      [daily]: 50,
+      [total]: 2000,
+    });
+  }, [props]);
+
   const formDaily = Form.useWatch(dailyCB, form);
   const formTotal = Form.useWatch(totalCB, form);
 

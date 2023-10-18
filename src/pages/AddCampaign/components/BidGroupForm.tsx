@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Collapse from "antd/lib/collapse";
 import CloseOutlined from "@ant-design/icons/lib/icons/CloseOutlined";
 import classNames from "classnames";
@@ -17,6 +17,7 @@ import {
   BID_ROAS_TYPE,
 } from "../../../constants/constants";
 import { BidGroup } from "../interface";
+import { countries } from "countries-list";
 
 export const resetBidGroupForm = (form, groupId) => {
   form.setFieldsValue({
@@ -74,12 +75,22 @@ function BidGroupForm(props) {
     title = "Bid by location",
   } = props;
 
+  useEffect(() => {
+    bidGroups.map((el) => {
+      form.setFieldsValue({
+        [DYNAMIC_COUNTRIES + el.id]: el.countries,
+        [DYNAMIC_BID + el.id]: el.bid,
+      })
+    });
+  }, [props]);
+
   const onChangeGroup = (bidGroup, value, field = "countries") => {
     const newGroup = bidGroups.map((el) => {
       if (el.id !== bidGroup.id) return el;
       return { ...el, [field]: value };
     });
     setBidGroups(newGroup);
+    console.log(newGroup);
   };
 
   const onDeleteGroup = (event, groupId) => {
