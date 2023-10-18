@@ -7,7 +7,7 @@ import Select from "antd/lib/select";
 import Button from "antd/lib/button/button";
 import { useQuery } from "@tanstack/react-query";
 import { GET_STORE_APP_BY_ID } from "../../../api/constants.api";
-import { getStoreAppById } from "../../../api/common/common.api";
+import { getCpiCampaignById } from "../../../api/common/common.api";
 import {
   DATE_RANGE_FORMAT,
   getLastDay,
@@ -31,7 +31,7 @@ function Campaigns(props) {
 
   const { data: storeAppRes } = useQuery(
     [GET_STORE_APP_BY_ID, urlParams.appId],
-    getStoreAppById,
+    getCpiCampaignById,
     {
       staleTime: 5 * 60000,
       enabled: !!urlParams.appId,

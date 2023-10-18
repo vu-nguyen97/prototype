@@ -42,7 +42,7 @@ function ModalAdd(props) {
       appIds: apps?.map((el) => el.id),
     };
     setIsLoading(true);
-    service.post("/prototype-campaigns", payload).then(
+    service.post("/cpi-campaigns", payload).then(
       (res: any) => {
         toast(res.message || "Create campaign success!", { type: "success" });
         setIsLoading(false);

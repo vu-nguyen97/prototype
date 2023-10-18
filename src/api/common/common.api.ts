@@ -21,6 +21,15 @@ export const getStoreAppById: QueryFunc = async ({ queryKey }) => {
   return await service.get(`/prototype-campaigns/${appId}`);
 };
 
+export const getCpiCampaignById: QueryFunc = async ({ queryKey }) => {
+  const appId = queryKey[1];
+
+  if (!appId) {
+    return Promise.resolve({});
+  }
+  return await service.get(`/cpi-campaigns/${appId}`);
+};
+
 export const getCurrency: QueryFunc = async () => {
   return await service.get("/rule-config/currency");
 };

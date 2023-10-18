@@ -12,7 +12,7 @@ import { getSubOrganizationUrl } from "../../utils/Helpers";
 import { BiArrowBack } from "@react-icons/all-files/bi/BiArrowBack";
 import GamePlatformIcon from "../common/GamePlatformIcon";
 import { useQuery } from "@tanstack/react-query";
-import { getStoreAppById } from "../../api/common/common.api";
+import { getCpiCampaignById } from "../../api/common/common.api";
 import { GET_STORE_APP_BY_ID } from "../../api/constants.api";
 import Skeleton from "antd/lib/skeleton/Skeleton";
 import Transition from "../../utils/Transition";
@@ -62,7 +62,7 @@ function Sidebar({
 
   const { data: storeAppRes } = useQuery(
     [GET_STORE_APP_BY_ID, urlParams.appId],
-    getStoreAppById,
+    getCpiCampaignById,
     {
       staleTime: 5 * 60000,
       enabled: !!urlParams.appId,
@@ -211,7 +211,7 @@ function Sidebar({
               >
                 <BiArrowBack
                   size={22}
-                  title="All Apps"
+                  title="All Campaigns"
                   className="flex-shrink-0"
                 />
                 <Transition
@@ -225,7 +225,7 @@ function Sidebar({
                   leaveStart="opacity-100"
                   leaveEnd="opacity-0 whitespace-nowrap"
                 >
-                  All Apps
+                  All Campaigns
                 </Transition>
               </Link>
               {!appState?.id ? (

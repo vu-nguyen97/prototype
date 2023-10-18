@@ -1,9 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import NewTheme from "./NewTheme/NewTheme";
 import NewVariant from "./NewVariant";
 
-function ThemeContent(props) {
+function VariantDetail(props) {
   const { data, idx, init } = props;
 
   return (
@@ -20,10 +19,10 @@ function ThemeContent(props) {
   );
 }
 
-ThemeContent.propTypes = {
+VariantDetail.propTypes = {
   data: PropTypes.object,
   idx: PropTypes.number,
   init: PropTypes.bool,
 };
 
-export default ThemeContent;
+export default VariantDetail;

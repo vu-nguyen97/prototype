@@ -43,7 +43,7 @@ const ASSET_FIELDS = [
   },
 ];
 
-function NewTheme(props) {
+function NewVariant(props) {
 
   const [form] = Form.useForm();
   const { Panel } = Collapse;
@@ -61,7 +61,7 @@ function NewTheme(props) {
   const [radioValue, setRadioValue] = useState('KEEP');
 
   const targetId = target === `APP` ? urlParams.id : urlParams.appId!;
-  const endpoint = target === `APP` ? `/store-app-theme` : urlParams.appId!;
+  const endpoint = target === `APP` ? `/store-app-theme` : '/cpi-campaigns/app-variants?campaignId='+urlParams.appId!;
 
 
   const initialValues = {
@@ -116,7 +116,9 @@ function NewTheme(props) {
   };
 
   const onFinish = (values) => {
-    const { name, variantName, shortDescription, fullDescription, youtubeUrl } = values;
+    const { apps, name, variantName, shortDescription, fullDescription, youtubeUrl } = values;
+    const storeApp = getActivedApp(listStoreApps, apps); 
+    const useOriginalListingAssets = showCollapse ? 'false' : 'true';
 
     const {
       featureImg,
@@ -129,6 +131,8 @@ function NewTheme(props) {
     const formData = new FormData();
     formData.append("id", targetId!);
     formData.append("variantName", variantName);
+    formData.append("appId", storeApp.id);
+    formData.append("useOriginalListingAssets", useOriginalListingAssets);
 
     if (showCollapse) {
       formData.append("shortDescription", shortDescription);
@@ -309,10 +313,10 @@ function NewTheme(props) {
   );
 }
 
-NewTheme.propTypes = {
+NewVariant.propTypes = {
   target: PropTypes.objectOf(PropTypes.any),
   title: PropTypes.objectOf(PropTypes.any),
   endpoint: PropTypes.objectOf(PropTypes.any),
 };
 
-export default NewTheme;
+export default NewVariant;

@@ -5,7 +5,6 @@ import Breadcrumb from "antd/lib/breadcrumb/Breadcrumb";
 import Loading from "../../utils/Loading";
 import service from "../../partials/services/axios.config";
 import StoreAppIcon from "../../partials/common/StoreAppIcon";
-import NewTheme from "../App/Themes/NewTheme/NewTheme";
 
 function AppDetail(props) {
     const { id } = useParams<{ id: string }>();
@@ -60,12 +59,12 @@ function AppDetail(props) {
                         </div>
 
                     </div>
-                    <div className="flex items-center bg-white p-5 rounded-sm">
-                        <NewTheme 
+                    {/* <div className="flex items-center bg-white p-5 rounded-sm">
+                        <NewVariant 
                             title="Update Main Store Listing"
                             target="APP"
-                        ></NewTheme>
-                    </div>
+                        ></NewVariant>
+                    </div> */}
 
                 </div>
             )}
