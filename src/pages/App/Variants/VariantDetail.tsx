@@ -23,10 +23,12 @@ function VariantDetail(props) {
               <Panel header="App used" key="1">
                 <NewVariant viewOnlyMode={true} data={data} />
               </Panel>
-              {/* <Panel header="Unity ads" key="2">
-                <AddCampaigns name={data.name}></AddCampaigns>
-              </Panel> */}
+              <Panel header="Unity ads" key="2">
+                <AddCampaigns data={data}></AddCampaigns>
+              </Panel>
+              
             </Collapse>
+            
           </div>
         </>
       ) : (
