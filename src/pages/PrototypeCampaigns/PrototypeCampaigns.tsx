@@ -26,7 +26,6 @@ const ListStatus = [
 function Apps() {
   const [isLoading, setIsLoading] = useState(false);
   const [listApp, setListApp] = useState<any>({});
-
   const [search, setSearch] = useState("");
   const [createdBy, setCreatedBy] = useState("");
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
