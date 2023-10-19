@@ -20,13 +20,13 @@ function AddCampaigns(props) {
     <Page>
       {isLoading && <Loading />}
 
-      <div className="px-4 sm:px-6 lg:px-12 2xl:px-24">
-        <div className="page-title">Create Unity campaign for {props.data.name}</div>
+      {/* <div className="px-4 sm:px-6 lg:px-12 2xl:px-24"> */}
+        {/* <div className="page-title">Create Unity campaign for {props.data.name}</div> */}
 
-        <div className="border rounded px-6 py-5 text-base mt-4 min-h-[200px] bg-white">
+        <div className="rounded px-6 py-5 text-base mt-4 min-h-[200px] bg-white">
           <Unity {...networkProps} />
         </div>
-      </div>
+      {/* </div> */}
     </Page>
   );
 }

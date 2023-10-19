@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-// import Button from "antd/lib/button/button";
-// import Form from "antd/lib/form";
+import Button from "antd/lib/button/button";
+import Form from "antd/lib/form";
+import Collapse from "antd/lib/collapse/collapse";
+import Space from "antd/lib/space/index";
+import Radio from "antd/lib/radio/radio";
+
 import { FIELD_REQUIRED } from "../../../constants/formMessage";
 import AntInput from "antd/lib/input";
 import { useParams } from "react-router-dom";
@@ -10,7 +14,6 @@ import Loading from "../../../utils/Loading";
 import service from "../../../partials/services/axios.config";
 import { toast } from "react-toastify";
 import SelectStoreApp, { getActivedApp } from "../../../partials/common/Forms/SelectStoreApp";
-import { Radio, Space, Collapse, Form, Button, Divider } from "antd";
 import StoreAppIcon from "../../../partials/common/StoreAppIcon";
 
 const ASSET_FIELDS = [
@@ -130,7 +133,7 @@ function NewVariant(props) {
     // console.log(storeApp)
     console.log('variantName', variantName)
     console.log('storeAppId', storeAppId)
-    
+
     const useOriginalListingAssets = showCollapse ? 'false' : 'true';
 
     const {
@@ -325,7 +328,7 @@ function NewVariant(props) {
           </Button>
         </>
       )}
-      {/* {viewOnlyMode && (
+      {viewOnlyMode && (
         <>
           <div className="flex items-center grow truncate">
             <div className="shrink-0">
@@ -345,9 +348,7 @@ function NewVariant(props) {
           )}
 
         </>
-      )} */}
-
-
+      )}
     </Form>
   );
 }
