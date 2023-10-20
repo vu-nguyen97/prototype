@@ -117,6 +117,7 @@ function Step3(props) {
           className="font-bold"
           field={creativeField}
           multiple
+          accept={".png, .jpeg, .mp4"}
           listFiles={creativeUpload[creativeField] || []}
           onSetListFiles={onSetCreativeListFiles}
         />

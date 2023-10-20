@@ -172,7 +172,7 @@ function Step1(props) {
         </Form.Item>
       )}
 
-      <Form.Item
+      {/* <Form.Item
         name="startUrl"
         label="Start url"
         rules={[{ required: true, message: VALUE_REQUIRED }]}
@@ -188,7 +188,7 @@ function Step1(props) {
       </Form.Item>
       <Form.Item name="impressionUrl" label="Impression url">
         <AntInput placeholder="Enter a link" className={formClass} />
-      </Form.Item>
+      </Form.Item> */}
 
       <Form.Item
         label="Delivery Time"

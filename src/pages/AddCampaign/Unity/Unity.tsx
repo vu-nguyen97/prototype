@@ -78,9 +78,9 @@ function Unity(props) {
         biddingStrategy,
         startDate: moment(startDate).format(DATE_RANGE_FORMAT),
         endDate: getEndDate(endDate),
-        startUrl,
-        clickUrl,
-        impressionUrl,
+        // startUrl,
+        // clickUrl,
+        // impressionUrl,
         // Step 2:
         defaultBudget,
         countriesBid,
@@ -106,9 +106,9 @@ function Unity(props) {
       data.append("goal", "installs")
       data.append("billingType", type.toLowerCase());
       data.append("biddingStrategy", biddingStrategy);
-      data.append("attributionClickUrl", clickUrl);
-      data.append("attributionStartUrl", startUrl);
-      data.append("attributionViewUrl", impressionUrl);
+      // data.append("attributionClickUrl", clickUrl);
+      // data.append("attributionStartUrl", startUrl);
+      // data.append("attributionViewUrl", impressionUrl);
       data.append("scheduleStart", startDate);
       data.append("scheduleEnd", endDate || "");
       countriesBid.forEach((countryBid, index) => {

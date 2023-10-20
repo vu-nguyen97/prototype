@@ -78,9 +78,9 @@ export default function DailyAndTotalBudgetForm(props) {
         wrapperCol={{ sm: { span: 17 }, xs: { span: 16 } }}
         valuePropName="checked"
       >
-        <Checkbox onChange={onChangeDailyMode} disabled={disableDaily}>
+        {/* <Checkbox onChange={onChangeDailyMode} disabled={disableDaily}>
           Open budget
-        </Checkbox>
+        </Checkbox> */}
       </Form.Item>
 
       <Form.Item
@@ -115,9 +115,9 @@ export default function DailyAndTotalBudgetForm(props) {
         wrapperCol={{ sm: { span: 17 }, xs: { span: 16 } }}
         valuePropName="checked"
       >
-        <Checkbox onChange={onChangeTotalMode} disabled={disableTotal}>
+        {/* <Checkbox onChange={onChangeTotalMode} disabled={disableTotal}>
           Open budget
-        </Checkbox>
+        </Checkbox> */}
       </Form.Item>
 
       <Form.Item
