@@ -30,7 +30,6 @@ function Apps() {
   const [listApp, setListApp] = useState<any>({});
   const [listStoreApp, setListStoreApp] = useState<any>({});
   const [isOpenModalAddApp, setIsOpenModalAddApp] = useState(false);
-
   const [search, setSearch] = useState("");
   const [createdBy, setCreatedBy] = useState("");
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
