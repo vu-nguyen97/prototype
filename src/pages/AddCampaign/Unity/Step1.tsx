@@ -30,9 +30,10 @@ import { DAILY_CB, TOTAL_CB } from "../constants";
 
 function Step1(props) {
   const [form] = Form.useForm();
-  const { next, stepData, setStepData } = props;
+  const { next, stepData, setStepData, unityAdsSettings } = props;
   const biddingStrategies = BIDDING_STRATEGIES;
   const types = TYPES;
+  const autoFilled = unityAdsSettings !== null;
 
   const initialValues = {
     name: "a",
@@ -50,6 +51,11 @@ function Step1(props) {
     const initData = stepData?.step1;
     if (initData) {
       form.setFieldsValue(initData);
+    }
+    if (unityAdsSettings) {
+      console.log("unityAdsSettings", unityAdsSettings);
+      form.setFieldValue("startDate", moment(unityAdsSettings.scheduleStart));
+      form.setFieldValue("endDate", moment(unityAdsSettings.scheduleEnd));
     }
   }, [stepData?.step1]);
 
@@ -131,7 +137,10 @@ function Step1(props) {
         label="Name"
         rules={[{ required: true, message: VALUE_REQUIRED }]}
       >
-        <AntInput placeholder="Enter a campaign name" className={formClass} />
+        <AntInput
+          placeholder="Enter a campaign name"
+          className={formClass}
+        />
       </Form.Item>
       <Form.Item
         name="type"
@@ -223,6 +232,7 @@ function Step1(props) {
           rules={[{ required: true, message: FIELD_REQUIRED }]}
         >
           <DatePicker
+            disabled={autoFilled}
             placeholder="Start time"
             className="min-w-[180px]"
             disabledDate={disabledStartDate}
@@ -237,6 +247,7 @@ function Step1(props) {
               rules={[{ required: true, message: FIELD_REQUIRED }]}
             >
               <DatePicker
+                disabled={autoFilled}
                 placeholder="End time"
                 className="min-w-[180px]"
                 disabledDate={disabledEndDate}

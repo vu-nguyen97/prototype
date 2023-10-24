@@ -13,7 +13,7 @@ import service from "../../../partials/services/axios.config";
 import { toast } from "react-toastify";
 
 function Unity(props) {
-  const { setIsLoading, stepData, setStepData, appVariantId } = props;
+  const { setIsLoading, stepData, setStepData, appVariantId, unityAdsSettings } = props;
 
   const [current, setCurrent] = useState(0);
   const [countBackAction, setCountBackAction] = useState<number>(0);
@@ -106,6 +106,8 @@ function Unity(props) {
       data.append("goal", "installs")
       data.append("billingType", type.toLowerCase());
       data.append("biddingStrategy", biddingStrategy);
+      data.append("dailyBudget", params.defaultBudget.dailyBudget);
+      data.append("totalBudget", params.defaultBudget.totalBudget);
       // data.append("attributionClickUrl", clickUrl);
       // data.append("attributionStartUrl", startUrl);
       // data.append("attributionViewUrl", impressionUrl);
@@ -124,6 +126,7 @@ function Unity(props) {
       service.post("/unity-ads", data).then(
         (res: any) => {
           toast(res.message, { type: "success" });
+          setIsLoading(false);
         },
         () => setIsLoading(false)
       );
@@ -147,6 +150,7 @@ function Unity(props) {
     setIsLoading,
     stepData,
     setStepData,
+    unityAdsSettings
   };
   let stepComp;
   switch (current) {

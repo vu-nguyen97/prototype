@@ -54,7 +54,7 @@ function NewVariant(props) {
 
   const urlParams = useParams();
 
-  const { viewOnlyMode, data, title, target } = props;
+  const { viewOnlyMode, data, title, target, idx } = props;
 
   console.log(data);
 
@@ -206,7 +206,7 @@ function NewVariant(props) {
     fetchListStoreApps();
   }, []);
 
-  const id = "FormAddVariant";
+  const id = "FormAddVariant" + idx;
 
   return (
     <Form
@@ -343,7 +343,7 @@ function NewVariant(props) {
           </div>
           {!data.update && (
             <div className="flex items-center grow truncate font-bold mt-10">
-              You have'nt submitted new assets for the app.
+              You haven't submitted new assets for the app.
             </div>
           )}
 
@@ -359,6 +359,7 @@ NewVariant.propTypes = {
   target: PropTypes.objectOf(PropTypes.any),
   title: PropTypes.objectOf(PropTypes.any),
   endpoint: PropTypes.objectOf(PropTypes.any),
+  idx: PropTypes.number,
 };
 
 export default NewVariant;

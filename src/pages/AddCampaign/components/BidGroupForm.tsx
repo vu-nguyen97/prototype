@@ -73,6 +73,7 @@ function BidGroupForm(props) {
     setBidGroups,
     allCountries = [],
     title = "Bid by location",
+    disabled,
   } = props;
 
   useEffect(() => {
@@ -208,6 +209,7 @@ function BidGroupForm(props) {
                   bidGroup={bidGroup}
                   onChangeGroup={onChangeGroup}
                   listCountries={listCountries}
+                  disabled={disabled}
                 />
               </div>
             </Collapse.Panel>

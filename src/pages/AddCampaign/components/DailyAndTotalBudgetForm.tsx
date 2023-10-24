@@ -27,7 +27,10 @@ export default function DailyAndTotalBudgetForm(props) {
     onChangeTotalMode,
     disableDaily,
     disableTotal,
+    unityAdsSettings,
   } = props;
+
+  const autoFilled = unityAdsSettings !== null;
 
   let dailyCB = DAILY_CB;
   let totalCB = TOTAL_CB;
@@ -49,10 +52,17 @@ export default function DailyAndTotalBudgetForm(props) {
   }
 
   useEffect(() => {
-    form.setFieldsValue({
-      [daily]: 50,
-      [total]: 2000,
-    });
+    if (unityAdsSettings) {
+      form.setFieldsValue({
+        [daily]: unityAdsSettings.dailyBudget,
+        [total]: unityAdsSettings.totalBudget,
+      });
+    } else {
+      form.setFieldsValue({
+        [daily]: 50,
+        [total]: 2000,
+      });
+    }
   }, [props]);
 
   const formDaily = Form.useWatch(dailyCB, form);
@@ -93,7 +103,7 @@ export default function DailyAndTotalBudgetForm(props) {
           placeholder={NUMBER_PLACEHOLDER}
           className="!w-full"
           addonBefore="$"
-          disabled={formDaily}
+          disabled={autoFilled}
         />
       </Form.Item>
 
@@ -131,7 +141,7 @@ export default function DailyAndTotalBudgetForm(props) {
           placeholder={NUMBER_PLACEHOLDER}
           className="!w-full"
           addonBefore="$"
-          disabled={formTotal}
+          disabled={autoFilled}
         />
       </Form.Item>
     </>

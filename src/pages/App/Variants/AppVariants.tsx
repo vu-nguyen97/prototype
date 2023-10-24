@@ -37,6 +37,8 @@ export default function AppVariants() {
   const [dateRange, setDateRange] = useState<any>(getLastDay(2));
   const [themes, setThemes] = useState<any>([]);
 
+  const [unityAdsSettings, setUnityAdsSettings] = useState(null);
+
   const [tab, setTab] = useState<string>();
   const [items, setItems] = useState<any>([]);
 
@@ -52,34 +54,54 @@ export default function AppVariants() {
   useEffect(() => {
     const appVariants = storeAppRes?.results?.appVariants || [];
     const filteredVariants = appVariants.filter((el) => el.id);
-    
-    console.log(filteredVariants?.length)
+
+    console.log(filteredVariants?.length);
 
     setThemes(filteredVariants);
 
-    console.log(filteredVariants);
+    let tempUnityAds = null;
     
+    for (let i = 0; i < filteredVariants.length; i++) {
+      if (filteredVariants[i].unityAds) {
+        setUnityAdsSettings(filteredVariants[i].unityAds);
+        tempUnityAds = filteredVariants[i].unityAds;
+        break;
+      }
+    }
+
 
     const newItems = filteredVariants.map((el, idx) => ({
       key: el.id,
       label: el.name,
-      children: <VariantDetail data={el} idx={idx} />,
+      children: (
+        <VariantDetail
+          data={el}
+          idx={idx}
+          unityAdsSettings={tempUnityAds}
+          setUnityAdsSettings={setUnityAdsSettings}
+        />
+      ),
     }));
     // Fake
     newItems.push({
       key: "newTab",
       label: "New App Variant",
-      children: <VariantDetail idx={newItems.length} init={true} />,
+      children: (
+        <VariantDetail
+          idx={newItems.length}
+          init={true}
+          unityAdsSettings={tempUnityAds}
+          setUnityAdsSettings={setUnityAdsSettings}
+        />
+      ),
     });
-    console.log(newItems)
     setItems(newItems);
     setTab(newItems[0].key);
-    
 
     // if (filteredVariants?.length) {
 
     //   console.log("go")
-      
+
     //   const newItems = filteredVariants.map((el, idx) => ({
     //     key: el.id,
     //     label: el.name,
