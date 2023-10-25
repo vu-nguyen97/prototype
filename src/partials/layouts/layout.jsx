@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import Header from "../Header";
-import { SidebarAppConfigs, SidebarConfigs } from "../sidebar/config";
+import {SidebarAppConfigs, SidebarConfigs, SidebarStoreAppConfigs} from "../sidebar/config";
 import Sidebar from "../sidebar/Sidebar";
 
 function DefaultLayout({
   children = <></>,
   isDetailApp = false,
+  isStoreApp = false,
   padding = true,
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isOpenMobileMenu, setIsOpenMobileMenu] = useState(false);
+  const listConfigs= isDetailApp? SidebarAppConfigs: (isStoreApp? SidebarStoreAppConfigs: SidebarConfigs);
 
-  const listConfigs = isDetailApp ? SidebarAppConfigs : SidebarConfigs;
 
   const onClickMobileMenu = () => {
     setIsOpenMobileMenu(!isOpenMobileMenu);
@@ -26,6 +27,7 @@ function DefaultLayout({
         setIsOpenMobileMenu={setIsOpenMobileMenu}
         listConfigs={listConfigs}
         isDetailApp={isDetailApp}
+        isStoreApp={isStoreApp}
       />
 
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">

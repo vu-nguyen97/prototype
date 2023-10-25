@@ -23,6 +23,14 @@ const getAppPage = (comp, padding = true) => (
   </Suspense>
 );
 
+const getStoreAppPage = (comp, padding = true) => (
+    <Suspense fallback={<DefaultLayout isStoreApp/>}>
+      <DefaultLayout isStoreApp padding={padding}>
+        {comp}
+      </DefaultLayout>
+    </Suspense>
+)
+
 // https://loadable-components.com/docs/loadable-vs-react-lazy/
 // https://github.com/vitejs/vite/issues/1931
 // const AsyncPage = loadable(
@@ -67,7 +75,8 @@ const CreateNewRelease = React.lazy(
   () => import("../pages/CreateNewRelease/CreateNewRelease")
 );
 const StoreAppDetail = React.lazy(() => import("../pages/Apps/AppDetail"));
-
+const CustomStoreListing = React.lazy(() => import("../pages/Apps/AppDetails/CustomStoreListing"));
+const MainStoreListing = React.lazy(() => import("../pages/Apps/AppDetails/MainStoreListing"));
 /**
  * Refs:
  * https://stackoverflow.com/questions/62384395/protected-route-with-react-router-v6
@@ -89,6 +98,8 @@ const AppRoutes = () => (
         <Route path="apps/:appId/">
           <Route index element={getAppPage(<Overview />)} />
           <Route path="overview" element={getAppPage(<Overview />)} />
+          <Route path="main-store-listing" element={getStoreAppPage(<MainStoreListing/>)}/>
+          <Route path="custom-store-listing" element={getStoreAppPage(<CustomStoreListing/>)}/>
           <Route path="campaigns" element={getAppPage(<Campaigns />)} />
           <Route
             path="campaigns/:campId"

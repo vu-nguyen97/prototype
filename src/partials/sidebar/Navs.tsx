@@ -16,6 +16,7 @@ function Navs(props) {
   const {
     listConfigs,
     isDetailApp,
+    isStoreApp,
     sidebarExpanded,
     setSidebarExpanded,
     onClickTab,
@@ -27,7 +28,7 @@ function Navs(props) {
 
   const orgUrl = "";
   const appUrl = APP_PATH + "/" + urlParams.appId;
-  const baseUrl = isDetailApp ? orgUrl + appUrl : orgUrl;
+  const baseUrl = isDetailApp ? orgUrl + appUrl : (isStoreApp? orgUrl + appUrl : orgUrl);
 
   return (
     <ul className="mt-3">

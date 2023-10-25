@@ -27,6 +27,7 @@ function PrototypeTable(props) {
   const id = "PrototypeTable";
 
   return (
+      <div>
     <Table
       id={id}
       className="mt-6"
@@ -40,6 +41,7 @@ function PrototypeTable(props) {
       pagination={pagination}
       onChange={onChangeTable}
     />
+      </div>
   );
 }
 

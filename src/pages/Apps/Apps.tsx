@@ -155,38 +155,12 @@ function Apps(props) {
                       <div>{app.storeId}</div>
                       <button
                         onClick={() =>
-                          (window.location.href = "/store-app/" + app.id)
+                          (window.location.href = "/apps/" + app.id + "/main-store-listing")
                         }
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                       >
-                        Update Main Store Listing
+                        App Details
                       </button>
-                    </div>
-                    <div className="flex space-x-2 ml-2">
-                      <>
-                        {!app.unityAppId && (
-                          <Tooltip title="Create Unity Ads App">
-                            <AiOutlineUpload
-                              size={22}
-                              className="text-slate-600 hover:text-antPrimary cursor-pointer"
-                              onClick={() => createUnityApp(app)}
-                            />
-                          </Tooltip>
-                        )}
-                        <Tooltip title="Edit connector">
-                          <AiOutlineEdit
-                            size={20}
-                            className="text-slate-600 hover:text-antPrimary cursor-pointer"
-                          />
-                        </Tooltip>
-
-                        <Tooltip title="Delete connector">
-                          <DeleteOutlined
-                            className="icon-danger text-xl cursor-pointer"
-                            onClick={() => onDelete(app.name, app.id)}
-                          />
-                        </Tooltip>
-                      </>
                     </div>
                   </div>
                 </div>

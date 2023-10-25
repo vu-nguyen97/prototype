@@ -5,6 +5,7 @@ import logo from "../../images/logo/logo.png";
 import {
   PROTOTYPE_CAMP_PATH,
   SIDEBAR_EXPANDED,
+  APP_PATH
 } from "../../constants/constants";
 import classNames from "classnames";
 import { useDispatch } from "react-redux";
@@ -28,6 +29,7 @@ function Sidebar({
   setSidebarOpen,
   listConfigs,
   isDetailApp,
+  isStoreApp,
   isOpenMobileMenu,
   setIsOpenMobileMenu,
 }) {
@@ -127,14 +129,6 @@ function Sidebar({
     let activedTab;
     let activedSubTab = "";
 
-    if (isDetailApp) {
-      // (isDetailApp = true) when the routes of the apps is matched
-      // E.g: lastSlug = apps/637def4fd3fd723d7448aaa2/overview
-      // E.g: lastSlug = apps/637def4fd3fd723d7448aaa2/campaign-control/635b85ccd5a1ee08ad55e13a
-      // -> Remove logic that get data with last of slug
-      // lastSlug = "/" + getLastSlug(pathname);
-    }
-
     listTab.forEach((tab) => {
       if (!tab.children?.length) {
         if (lastSlug.includes(tab.url)) {
@@ -181,7 +175,7 @@ function Sidebar({
       <div
         className={classNames(
           "flex items-center mt-2",
-          isDetailApp ? "mb-5" : "mb-6 md:mb-10"
+          isDetailApp ? "mb-5" : (isStoreApp? "mb-5" : "mb-6 md:mb-10")
         )}
       >
         <img src={logo} alt=" " className="w-11 h-11" />
@@ -202,6 +196,81 @@ function Sidebar({
 
       <div className="space-y-8">
         <div>
+          {isStoreApp && (
+          <>
+            <Link
+                to={orgUrl + APP_PATH}
+                state={state}
+                className="flex items-center py-2.5 pl-4 text-sky-500 border-y border-slate-600/70 hover:text-sky-600"
+            >
+              <BiArrowBack
+                  size={22}
+                  title="All Apps"
+                  className="flex-shrink-0"
+              />
+              <Transition
+                  unmountOnExit
+                  show={sidebarExpanded}
+                  className="transform ease-in ml-2"
+                  enterStart="opacity-0"
+                  entering="whitespace-nowrap"
+                  enterEndDelay="200"
+                  enterEnd="opacity-100 whitespace-normal"
+                  leaveStart="opacity-100"
+                  leaveEnd="opacity-0 whitespace-nowrap"
+              >
+                All Apps
+              </Transition>
+            </Link>
+            {!appState?.id ? (
+                <div className="my-7 flex items-center">
+                  <Skeleton.Avatar active size={48} />
+                  <div className="flex-1 ml-3.5">
+                    <Skeleton.Node className="rounded !h-3 !w-full" active>
+                      {" "}
+                    </Skeleton.Node>
+                    <Skeleton.Node className="rounded !h-3 !w-2/3 mt-1" active>
+                      {" "}
+                    </Skeleton.Node>
+                  </div>
+                </div>
+            ) : (
+                <div className="my-7">
+                  <div>
+                    <div className="text-white flex items-center">
+                      <div className="flex-1 flex items-center">
+                        {appState?.icon ? (
+                            <GamePlatformIcon
+                                app={appState}
+                                imgClass="w-12 h-12 rounded-[0.75rem]"
+                            />
+                        ) : (
+                            <DefaultAppImg
+                                dot={appState.active}
+                                dotClass="right-[2px]"
+                            />
+                        )}
+
+                        <Transition
+                            unmountOnExit
+                            show={sidebarExpanded}
+                            className="text-base font-semibold ml-3.5 transform ease-in line-clamp-2"
+                            enterStart="opacity-0"
+                            entering="whitespace-nowrap"
+                            enterEndDelay="200"
+                            enterEnd="opacity-100 whitespace-normal"
+                            leaveStart="opacity-100"
+                            leaveEnd="opacity-0 whitespace-nowrap"
+                        >
+                          {appState.name}
+                        </Transition>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            )}
+          </>
+          )}
           {isDetailApp ? (
             <>
               <Link
@@ -293,6 +362,7 @@ function Sidebar({
           <Navs
             listConfigs={listConfigs}
             isDetailApp={isDetailApp}
+            isStoreApp = {isStoreApp}
             sidebarExpanded={sidebarExpanded}
             setSidebarExpanded={setSidebarExpanded}
             onMouseEnter={onMouseEnter}
@@ -301,32 +371,6 @@ function Sidebar({
             initActivedSubNav={initActivedSubNav}
             appState={appState}
           />
-
-          {/* {isDetailApp && appState?.themes?.length > 0 && (
-            <div className="border-t border-slate-600/70 mt-7 pt-5 text-white px-3">
-              <div className="text-slate-400 text-xs font-semibold tracking-wide">
-                LIST THEMES
-              </div>
-              <div className="mt-2">
-                {appState.themes.map((el, idx) => (
-                  <div key={idx} className="py-1.5 flex justify-between">
-                    <div className="line-clamp-2 break-words">{el.name}</div>
-
-                    {el.storeUrl && (
-                      <a
-                        href={el.storeUrl}
-                        className="shrink-0 pl-1 text-xs !text-slate-400 mt-[3px]"
-                        title="View this theme in the store"
-                        target="_blank"
-                      >
-                        <BiLinkExternal size={16} />
-                      </a>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )} */}
         </div>
       </div>
     </>

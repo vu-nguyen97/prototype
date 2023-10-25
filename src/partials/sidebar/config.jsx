@@ -112,3 +112,20 @@ export const SidebarAppConfigs = [
     preload: () => import("../../pages/App/setting/Settings"),
   },
 ];
+
+export const SidebarStoreAppConfigs = [
+  {
+    id: 0,
+    url: "/main-store-listing",
+    label: "Main Store Listing",
+    iconEl: <AiOutlineDashboard size={20} />,
+    preload: () => import("../../pages/Apps/AppDetails/MainStoreListing"),
+  },
+  {
+    id: 1,
+    url: "/custom-store-listing",
+    label: "Custom Store Listing",
+    iconEl: <BiPalette size={20} />,
+    preload: () => import("../../pages/Apps/AppDetails/CustomStoreListing"),
+  },
+];
