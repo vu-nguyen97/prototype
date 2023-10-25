@@ -6,62 +6,57 @@ import { AiOutlineEdit } from "@react-icons/all-files/ai/AiOutlineEdit";
 import { capitalizeWord, sortByString } from "../../../utils/Helpers";
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 
-function ConnectorTable(props) {
+function CustomStoreListingTable(props) {
     const defaultPageSize = 20;
     const [pageSize, setPageSize] = useState(defaultPageSize);
 
-    const { isAdmin, listData, onEdit, onDelete, isLoading } = props;
+    const {listData, onEdit, onDelete, isLoading} = props;
 
-    const columns: any = [
+    const columns = [
         {
             title: "Name",
-            sorter: (a, b) => ("" + a.network?.name).localeCompare(b.network?.name),
             render: (record) => (
                 <div className="flex items-center">
-                    {record.network?.imageUrl && (
-                        <img
-                            alt=" "
-                            src={record.network.imageUrl}
-                            className="h-8 w-8 rounded mr-2 shrink-0"
-                        />
-                    )}
                     <div>
                         <div className="font-semibold text-black text-base">
-                            {record.network?.name}
+                            {record.name}
                         </div>
-                        <div className="italic text-xs">{record.name}</div>
                     </div>
                 </div>
             ),
         },
         {
-            title: "Type",
-            sorter: (a, b) =>
-                ("" + a.network?.networkType?.name).localeCompare(
-                    b.network?.networkType?.name
-                ),
+            title: "Group",
             render: (record) => (
                 <div className="whitespace-nowrap md:whitespace-normal">
-                    {record.network?.networkType?.name}
+                    {record.group}
                 </div>
             ),
         },
         {
-            title: "Status",
-            sorter: sortByString("status"),
-            render: (record) => capitalizeWord(record.status),
+            title: "Targeting",
+            render: (record) => (
+                <div className="whitespace-nowrap md:whitespace-normal">
+                    {record.url}
+                </div>
+            )
         },
-    ];
-
-    if (isAdmin) {
-        columns.push({
+        {
+            title: "Experiment type",
+            render: (record) => (
+                <div className="whitespace-nowrap md:whitespace-normal">
+                    {record.extype}
+                </div>
+            )
+        },
+        {
             title: "Action",
             width: 140,
-            render: (text, record, idx) => {
+            render: (text, record) => {
                 return (
                     <div className="flex space-x-2 ml-2">
                         <>
-                            <Tooltip title="Edit connector">
+                            <Tooltip title="Edit store listing">
                                 <AiOutlineEdit
                                     size={20}
                                     className="text-slate-600 hover:text-antPrimary cursor-pointer"
@@ -69,7 +64,7 @@ function ConnectorTable(props) {
                                 />
                             </Tooltip>
 
-                            <Tooltip title="Delete connector">
+                            <Tooltip title="Delete store listing">
                                 <DeleteOutlined
                                     className="icon-danger text-xl cursor-pointer"
                                     onClick={() => onDelete(record)}
@@ -79,8 +74,8 @@ function ConnectorTable(props) {
                     </div>
                 );
             },
-        });
-    }
+        }
+    ];
 
     const pagination = {
         hideOnSinglePage: true,
@@ -90,9 +85,8 @@ function ConnectorTable(props) {
 
     return (
         <Table
-            id="connector-table"
-            getPopupContainer={() => document.getElementById("connector-table")!}
-            rowKey={(record) => record.id + record.totalApps}
+            id="custom-store-listing-table"
+            rowKey={(record) => record.id}
             columns={columns}
             loading={isLoading}
             dataSource={[...listData]}
@@ -106,15 +100,14 @@ function ConnectorTable(props) {
     );
 }
 
-ConnectorTable.defaultProps = {
+CustomStoreListingTable.defaultProps = {
     listData: [],
 };
-ConnectorTable.propTypes = {
-    isAdmin: PropTypes.bool,
+CustomStoreListingTable.propTypes = {
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
     isLoading: PropTypes.bool,
     listData: PropTypes.array,
 };
 
-export default ConnectorTable;
+export default CustomStoreListingTable;
