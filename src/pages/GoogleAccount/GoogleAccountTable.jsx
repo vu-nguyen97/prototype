@@ -71,6 +71,13 @@ function GoogleAccountTable(props) {
                 return (
                     <div className="flex space-x-2 ml-2">
                         <>
+                            <Tooltip title="Open">
+                                <AiOutlineEdit
+                                    size={20}
+                                    className="text-slate-600 hover:text-antPrimary cursor-pointer"
+                                    onClick={() => onEdit(record)}
+                                />
+                            </Tooltip>
                             <Tooltip title="Edit account">
                                 <AiOutlineEdit
                                     size={20}
