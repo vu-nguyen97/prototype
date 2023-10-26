@@ -54,6 +54,20 @@ export const SidebarConfigs = [
     preload: () => import("../../pages/CreateNewRelease/CreateNewRelease"),
   },
   {
+    id: 6,
+    url: "/google-play-account",
+    label: "Google Play Account",
+    iconEl: <FaGooglePlay size={16} />,
+    preload: () => import("../../pages/GoogleAccount/GoogleAccount"),
+  },
+  {
+    id: 7,
+    url: "/chrome-standalone",
+    label: "Chrome Standalone",
+    iconEl: <FaGooglePlay size={16} />,
+    preload: () => import("../../pages/ChromeStandalone/ChromeStandalone"),
+  },
+  {
     id: 8,
     url: "/members",
     label: "Members",

@@ -48,7 +48,7 @@ const CustomStoreListing = () =>{
                 <p style={{paddingTop: 10, fontSize: 16}}>Users who are targeted by more than 1 listing will be shown the highest relevant listing in the list. Reorder the list to change the priority.</p>
                 <p style={{fontSize:16}}>Users who aren't being targeted specifically will be shown your main store listing.</p>
                 <div className="mt-1 sm:mt-0" >
-                    <div style={{marginLeft:800}}>
+                    <div>
                         <Button type="primary" style={{marginRight:10}}>
                             Create Group
                         </Button>

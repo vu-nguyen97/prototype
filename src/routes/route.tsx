@@ -77,6 +77,8 @@ const CreateNewRelease = React.lazy(
 const StoreAppDetail = React.lazy(() => import("../pages/Apps/AppDetail"));
 const CustomStoreListing = React.lazy(() => import("../pages/Apps/AppDetails/CustomStoreListing"));
 const MainStoreListing = React.lazy(() => import("../pages/Apps/AppDetails/MainStoreListing"));
+const GoogleAccount = React.lazy(() => import("../pages/GoogleAccount/GoogleAccount"));
+const ChromeStandalone = React.lazy(() => import("../pages/ChromeStandalone/ChromeStandalone"));
 /**
  * Refs:
  * https://stackoverflow.com/questions/62384395/protected-route-with-react-router-v6
@@ -114,6 +116,8 @@ const AppRoutes = () => (
         <Route path="test-chart" element={getPage(<TestChart />)} />
         <Route path="configs" element={getPage(<Configs />)} />
         <Route path="connectors" element={getPage(<DataConnectors />)} />
+        <Route path="google-play-account" element={getPage(<GoogleAccount/>)}></Route>
+        <Route path="chrome-standalone" element={getPage(<ChromeStandalone/>)}></Route>
         <Route path="settings/account" element={getPage(<Account />)} />
         <Route
           path="settings/notifications"
