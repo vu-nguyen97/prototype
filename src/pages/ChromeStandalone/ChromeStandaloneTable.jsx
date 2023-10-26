@@ -16,7 +16,7 @@ function ChromeStandaloneTable(props) {
             title: "IP",
             render: (record) => (
                 <div className="whitespace-nowrap md:whitespace-normal">
-                    {record.IP}
+                    {record.ip}
                 </div>
             )
         },
@@ -40,7 +40,7 @@ function ChromeStandaloneTable(props) {
             title: "VNC PWD",
             render: (record) => (
                 <div className="whitespace-nowrap md:whitespace-normal">
-                    {record.vncpwd}
+                    {record.vncPassword}
                 </div>
             )
         },

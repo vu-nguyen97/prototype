@@ -1,12 +1,25 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import Page from "../../utils/composables/Page";
 import Loading from "../../utils/Loading";
 import Button from "antd/lib/button";
 import ChromeStandaloneTable from "./ChromeStandaloneTable";
 import ModalAddChromeStandalone from "./ModalAddChromeStandalone";
+import service from "../../partials/services/axios.config";
+import { toast } from "react-toastify";
 const ChromeStandalone = () => {
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [isOpenModalAddApp, setIsOpenModalAddApp] = useState(false);
+    const [listContainer, setListContainer] = useState<any>([]);
+    useEffect(() => {
+        setIsLoading(true);
+        service.get("/chrome-standalone-containers").then(
+          (res: any) => {
+            setListContainer(res.results);
+            setIsLoading(false);
+          },
+          () => setIsLoading(false)
+        );
+      }, []);
     const listData = [
         {
             id:1,
@@ -30,6 +43,7 @@ const ChromeStandalone = () => {
             vncpwd: "vnc-pwd-3"
         },
     ]
+    
     const onEditData = (record) => {
 
     }
@@ -37,6 +51,20 @@ const ChromeStandalone = () => {
     const onDelete = (record) => {
 
     }
+
+    const onAddContainer = (values) =>{
+        const {ip , chromePort, vncPort, vncPassword} = values;
+
+        setIsLoading(true);
+        service.post("/chrome-standalone-containers",{ip, chromePort, vncPort, vncPassword}).then(
+          (res: any) => {
+            toast(res.message || "Add container success!", { type: "success" });
+            setIsLoading(false);
+          },
+          () => setIsLoading(false)
+        );
+    }
+
     return(
         <Page>
             {isLoading && <Loading />}
@@ -52,14 +80,15 @@ const ChromeStandalone = () => {
                     isLoading = {isLoading}
                     onEdit={onEditData}
                     onDelete={onDelete}
-                    listData={listData}
+                    listData={listContainer}
                 />
             </div>
         </div>
         <ModalAddChromeStandalone
         isOpen={isOpenModalAddApp}
         onClose={() => setIsOpenModalAddApp(false)}
-        setIsLoading={setIsLoading}/>
+        setIsLoading={setIsLoading}
+        onFinish={onAddContainer}/>
         </Page>
     )
 }

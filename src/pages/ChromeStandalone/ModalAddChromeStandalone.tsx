@@ -4,7 +4,8 @@ import Button from "antd/lib/button";
 import Modal from "antd/lib/modal/Modal";
 import Form from "antd/lib/form";
 import AntInput from "antd/lib/input";
-
+import { toast } from "react-toastify";
+import service from "../../partials/services/axios.config";
 function ModalAddChromeStandalone(props) {
     const [listFiles, setListFiles] = useState({});
     const [form] = Form.useForm();
@@ -20,12 +21,18 @@ function ModalAddChromeStandalone(props) {
         }, 300);
     };
 
-    const onFinish = () => {
-    };
+    const onAddContainer = (values) =>{
+        const {ip , chromePort, vncPort, vncPassword} = values;
 
-    const onSubmit = () => {
-        console.log("submit");
-    };
+        setIsLoading(true);
+        service.post("/chrome-standalone-containers",{ip, chromePort, vncPort, vncPassword}).then(
+          (res: any) => {
+            toast(res.message || "Add container success!", { type: "success" });
+            setIsLoading(false);
+          },
+          () => setIsLoading(false)
+        );
+    }
 
     return (
         <Form
@@ -34,8 +41,7 @@ function ModalAddChromeStandalone(props) {
             form={form}
             labelCol={{ span: 24 }}
             wrapperCol={{ span: 24 }}
-            onFinish={onFinish}
-            onSubmit={onSubmit}
+            onFinish={onAddContainer}
         >
             <Modal
                 title="Add New Container"
@@ -50,6 +56,7 @@ function ModalAddChromeStandalone(props) {
                         type="primary"
                         htmlType="submit"
                         form="FormAddNewContainer"
+                        onClick={onCloseModal}
                     >
                         Save
                     </Button>,
