@@ -79,6 +79,7 @@ const CustomStoreListing = React.lazy(() => import("../pages/Apps/AppDetails/Cus
 const MainStoreListing = React.lazy(() => import("../pages/Apps/AppDetails/MainStoreListing"));
 const GoogleAccount = React.lazy(() => import("../pages/GoogleAccount/GoogleAccount"));
 const ChromeStandalone = React.lazy(() => import("../pages/ChromeStandalone/ChromeStandalone"));
+const VncViewer = React.lazy(() => import("../pages/GoogleAccount/VncViewer"));
 /**
  * Refs:
  * https://stackoverflow.com/questions/62384395/protected-route-with-react-router-v6
@@ -116,6 +117,7 @@ const AppRoutes = () => (
         <Route path="test-chart" element={getPage(<TestChart />)} />
         <Route path="configs" element={getPage(<Configs />)} />
         <Route path="connectors" element={getPage(<DataConnectors />)} />
+        <Route path="vnc-viewer" element={getPage(<VncViewer/>)}></Route>
         <Route path="google-play-account" element={getPage(<GoogleAccount/>)}></Route>
         <Route path="chrome-standalone" element={getPage(<ChromeStandalone/>)}></Route>
         <Route path="settings/account" element={getPage(<Account />)} />
