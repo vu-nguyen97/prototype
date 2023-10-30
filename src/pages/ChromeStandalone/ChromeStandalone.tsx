@@ -6,10 +6,16 @@ import ChromeStandaloneTable from "./ChromeStandaloneTable";
 import ModalAddChromeStandalone from "./ModalAddChromeStandalone";
 import service from "../../partials/services/axios.config";
 import { toast } from "react-toastify";
+import ModalEditChromeStandalone from "./ModalEditChromeStandalone";
+import ModalConfirmDelete from "./ModalConfirmDelete";
 const ChromeStandalone = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isOpenModalAddApp, setIsOpenModalAddApp] = useState(false);
     const [listContainer, setListContainer] = useState<any>([]);
+    const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
+    const [editedContainer, setEditedContainer] = useState<any>({});
+    const [deleteContainer, setDeleteContainer] = useState<any>({});
+    const [isOpenModalConfirmDelete, setIsOpenModalConfirmDelete] = useState(false);
     useEffect(() => {
         setIsLoading(true);
         service.get("/chrome-standalone-containers").then(
@@ -20,36 +26,16 @@ const ChromeStandalone = () => {
           () => setIsLoading(false)
         );
       }, []);
-    const listData = [
-        {
-            id:1,
-            IP: "ip-1",
-            chromePort: "chrome-port-1",
-            vncPort: "vnc-port-1",
-            vncpwd: "vnc-pwd-1"
-        },
-        {
-            id:2,
-            IP: "ip-2",
-            chromePort: "chrome-port-2",
-            vncPort: "vnc-port-2",
-            vncpwd: "vnc-pwd-2"
-        },
-        {
-            id:3,
-            IP: "ip-3",
-            chromePort: "chrome-port-3",
-            vncPort: "vnc-port-3",
-            vncpwd: "vnc-pwd-3"
-        },
-    ]
+
     
     const onEditData = (record) => {
-
+        setEditedContainer(record);
+        setIsOpenModalEdit(true);
     }
 
     const onDelete = (record) => {
-
+        setDeleteContainer(record);
+        setIsOpenModalConfirmDelete(true);
     }
 
     const onAddContainer = (values) =>{
@@ -89,6 +75,20 @@ const ChromeStandalone = () => {
         onClose={() => setIsOpenModalAddApp(false)}
         setIsLoading={setIsLoading}
         onFinish={onAddContainer}/>
+
+        <ModalEditChromeStandalone
+        isOpen={isOpenModalEdit}
+        onClose={() => setIsOpenModalEdit(false)}
+        setIsLoading={setIsLoading}
+        data={editedContainer}
+        />
+
+        <ModalConfirmDelete
+        isOpen={isOpenModalConfirmDelete}
+        onClose={() => setIsOpenModalConfirmDelete(false)}
+        setIsLoading={setIsLoading}
+        data={deleteContainer}
+        />
         </Page>
     )
 }

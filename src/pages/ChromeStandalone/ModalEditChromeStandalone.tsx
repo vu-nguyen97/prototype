@@ -4,13 +4,15 @@ import Button from "antd/lib/button";
 import Modal from "antd/lib/modal/Modal";
 import Form from "antd/lib/form";
 import AntInput from "antd/lib/input";
-function ModalAddChromeStandalone(props) {
+import service from "../../partials/services/axios.config";
+import { toast } from "react-toastify";
+function ModalEditChromeStandalone(props) {
     const [form] = Form.useForm();
     const {
         isOpen,
         onClose,
         setIsLoading,
-        onFinish
+        data
     } = props;
     const onCloseModal = () => {
         onClose();
@@ -18,18 +20,43 @@ function ModalAddChromeStandalone(props) {
             form.resetFields();
         }, 300);
     };
+    useEffect(() => {
+        if (!data?.id) return;
+    
+        const { ip, chromePort, vncPort, vncPassword } = data;
+        
+        form.setFieldsValue({
+          ip,
+          chromePort,
+          vncPort,
+          vncPassword
+        });
+        
+      }, [data?.id]);
+    
 
+      const onEditContainer = (values) => {
+        const {ip, chromePort, vncPort, vncPassword} = values;
+        setIsLoading(true)
+        service.put("/chrome-standalone-containers/" + data.id,{ip, chromePort, vncPort, vncPassword}).then(
+            (res: any) => {
+              toast(res.message || "Edit container success!", { type: "success" });
+              setIsLoading(false);
+            },
+            () => setIsLoading(false)
+          );
+    }
     return (
         <Form
-            id="FormAddNewContainer"
+            id="ModalEdit"
             labelAlign="left"
             form={form}
             labelCol={{ span: 24 }}
             wrapperCol={{ span: 24 }}
-            onFinish={onFinish}
+            onFinish={onEditContainer}
         >
             <Modal
-                title="Add New Container"
+                title="Edit Container"
                 open={isOpen}
                 onCancel={onCloseModal}
                 footer={[
@@ -40,7 +67,7 @@ function ModalAddChromeStandalone(props) {
                         key="submit"
                         type="primary"
                         htmlType="submit"
-                        form="FormAddNewContainer"
+                        form="ModalEdit"
                         onClick={onCloseModal}
                     >
                         Save
@@ -55,7 +82,6 @@ function ModalAddChromeStandalone(props) {
                 >
                     <AntInput
                         allowClear
-                        placeholder="Enter an IP (max 20 characters)"
                         className="w-full"
                         maxLength={20}
                     />
@@ -67,7 +93,6 @@ function ModalAddChromeStandalone(props) {
                 >
                     <AntInput
                         allowClear
-                        placeholder="Enter an URL (max 20 characters)"
                         className="w-full"
                         maxLength={20}
                     />
@@ -79,7 +104,6 @@ function ModalAddChromeStandalone(props) {
                 >
                     <AntInput.TextArea
                         rows={2}
-                        placeholder="Enter content (max 20 characters)"
                         maxLength={20}
                         allowClear
                     />
@@ -91,7 +115,6 @@ function ModalAddChromeStandalone(props) {
                 >
                     <AntInput.TextArea
                         rows={3}
-                        placeholder="Enter content (max 20 characters)"
                         maxLength={20}
                         allowClear
                     />
@@ -101,11 +124,11 @@ function ModalAddChromeStandalone(props) {
     );
 }
 
-ModalAddChromeStandalone.propTypes = {
+ModalEditChromeStandalone.propTypes = {
     isOpen: PropTypes.bool,
     onClose: PropTypes.func,
     setIsLoading: PropTypes.func,
-    onFinish: PropTypes.func
+    data: PropTypes.any
 };
 
-export default ModalAddChromeStandalone;
+export default ModalEditChromeStandalone;

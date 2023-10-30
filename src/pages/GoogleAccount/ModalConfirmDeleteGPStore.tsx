@@ -6,7 +6,7 @@ import Form from "antd/lib/form";
 import AntInput from "antd/lib/input";
 import service from "../../partials/services/axios.config";
 import { toast } from "react-toastify";
-function ModalConfirmDelete(props) {
+function ModalConfirmDeleteGPStore(props) {
     const [form] = Form.useForm();
     const {
         isOpen,
@@ -23,9 +23,9 @@ function ModalConfirmDelete(props) {
 
     const onFinish = () => {
         setIsLoading(true)
-        service.delete("/chrome-standalone-containers/" + data.id).then(
+        service.delete("/google-play-stores/" + data.id).then(
             (res: any) => {
-              toast(res.message || "Delete container success!", { type: "success" });
+              toast(res.message || "Delete Google Play Store success!", { type: "success" });
               setIsLoading(false);
             },
             () => setIsLoading(false)
@@ -42,7 +42,7 @@ function ModalConfirmDelete(props) {
             onFinish={onFinish}
         >
             <Modal
-                title="Are you sure to delete this container?"
+                title="Are you sure to delete this store?"
                 open={isOpen}
                 onCancel={onCloseModal}
                 footer={[
@@ -65,11 +65,11 @@ function ModalConfirmDelete(props) {
     );
 }
 
-ModalConfirmDelete.propTypes = {
+ModalConfirmDeleteGPStore.propTypes = {
     isOpen: PropTypes.bool,
     onClose: PropTypes.func,
     setIsLoading: PropTypes.func,
     data: PropTypes.any
 };
 
-export default ModalConfirmDelete;
+export default ModalConfirmDeleteGPStore;

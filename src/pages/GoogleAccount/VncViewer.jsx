@@ -1,17 +1,21 @@
 import React, { useState } from "react";
 import Page from "../../utils/composables/Page";
 import PropTypes from "prop-types";
-
-const VncViewer = (props) => {
+import { useLocation } from 'react-router-dom';
+const VncViewer = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const { vncIp, vncPort, vncPass } = props;
+  const location = useLocation();
+  // const { ip, vncPort, vncPassword } = location.state;
+  const ip = location.state.ip;
+  const vncPort = location.state.vncPort;
+  const vncPassword = location.state.vncPassword;
   const vncViewUrl =
     `http://` +
-    vncIp +
+    ip +
     ":" +
-    vncPass +
+    vncPort +
     "/?scaling=local&autoconnect=1&password=" +
-    vncPass;
+    vncPassword;
   return (
     <Page>
       <div>

@@ -3,14 +3,16 @@ import PropTypes from "prop-types";
 import Table from "antd/lib/table";
 import Tooltip from "antd/lib/tooltip";
 import { AiOutlineEdit } from "@react-icons/all-files/ai/AiOutlineEdit";
+import {AiFillEye} from "@react-icons/all-files/ai/AiFillEye"
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
+import { Link } from 'react-router-dom';
 
 function GoogleAccountTable(props) {
     const defaultPageSize = 20;
     const [pageSize, setPageSize] = useState(defaultPageSize);
 
-    const {listData, onEdit, onDelete, isLoading} = props;
-
+    const {listData, onEdit, onDelete, onOpen, isLoading} = props;
+    
     const columns = [
         {
             title: "Account",
@@ -18,7 +20,7 @@ function GoogleAccountTable(props) {
                 <div className="flex items-center">
                     <div>
                         <div className="font-semibold text-black text-base">
-                            {record.account}
+                            {record.name}
                         </div>
                     </div>
                 </div>
@@ -36,7 +38,7 @@ function GoogleAccountTable(props) {
             title: "IP",
             render: (record) => (
                 <div className="whitespace-nowrap md:whitespace-normal">
-                    {record.IP}
+                    {record.container.ip}
                 </div>
             )
         },
@@ -44,7 +46,7 @@ function GoogleAccountTable(props) {
             title: "Chrome Port",
             render: (record) => (
                 <div className="whitespace-nowrap md:whitespace-normal">
-                    {record.chromePort}
+                    {record.container.chromePort}
                 </div>
             )
         },
@@ -52,7 +54,7 @@ function GoogleAccountTable(props) {
             title: "VNC Port",
             render: (record) => (
                 <div className="whitespace-nowrap md:whitespace-normal">
-                    {record.vncPort}
+                    {record.container.vncPort}
                 </div>
             )
         },
@@ -60,7 +62,7 @@ function GoogleAccountTable(props) {
             title: "VNC PWD",
             render: (record) => (
                 <div className="whitespace-nowrap md:whitespace-normal">
-                    {record.vncpwd}
+                    {record.container.vncPassword}
                 </div>
             )
         },
@@ -72,11 +74,12 @@ function GoogleAccountTable(props) {
                     <div className="flex space-x-2 ml-2">
                         <>
                             <Tooltip title="Open">
-                                <AiOutlineEdit
+                                <Link to="/vnc-viewer" state ={{ip: record.container.ip, vncPort: record.container.vncPort,  vncPassword: record.container.vncPassword}}>
+                                <AiFillEye
                                     size={20}
                                     className="text-slate-600 hover:text-antPrimary cursor-pointer"
-                                    onClick={() => onEdit(record)}
                                 />
+                                </Link>
                             </Tooltip>
                             <Tooltip title="Edit account">
                                 <AiOutlineEdit
@@ -128,6 +131,7 @@ GoogleAccountTable.defaultProps = {
 GoogleAccountTable.propTypes = {
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
+    onOpen: PropTypes.func,
     isLoading: PropTypes.bool,
     listData: PropTypes.array,
 };
