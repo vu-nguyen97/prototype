@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Page from "../../utils/composables/Page";
 import PropTypes from "prop-types";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 const VncViewer = () => {
   const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
@@ -22,7 +22,6 @@ const VncViewer = () => {
         <iframe
           id="vncFrame"
           src={vncViewUrl}
-          frameBorder="0"
           style={{ width: "100%", height: "900px" }}
         ></iframe>
       </div>

@@ -7,8 +7,10 @@ import { AiOutlineTool } from "@react-icons/all-files/ai/AiOutlineTool";
 import { AiOutlineNotification } from "@react-icons/all-files/ai/AiOutlineNotification";
 import { AiOutlineForm } from "@react-icons/all-files/ai/AiOutlineForm";
 import { FaGooglePlay } from "@react-icons/all-files/fa/FaGooglePlay";
+import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
 import { AiOutlineNodeIndex } from "@react-icons/all-files/ai/AiOutlineNodeIndex";
 import { BiPalette } from "@react-icons/all-files/bi/BiPalette";
+
 
 export const SidebarConfigs = [
   {
@@ -56,7 +58,7 @@ export const SidebarConfigs = [
   {
     id: 6,
     url: "/google-play-account",
-    label: "Google Play Account",
+    label: "Google Play Console",
     iconEl: <FaGooglePlay size={16} />,
     preload: () => import("../../pages/GoogleAccount/GoogleAccount"),
   },
@@ -64,7 +66,7 @@ export const SidebarConfigs = [
     id: 7,
     url: "/chrome-standalone",
     label: "Chrome Standalone",
-    iconEl: <FaGooglePlay size={16} />,
+    iconEl: <FaDocker size={16} />,
     preload: () => import("../../pages/ChromeStandalone/ChromeStandalone"),
   },
   {
