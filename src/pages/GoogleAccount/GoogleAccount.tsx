@@ -41,7 +41,16 @@ const GoogleAccount = () => {
     setIsOpenModalConfirmDelete(true);
   };
 
-  const onOpen = (record) => {};
+  const onSyncApp = (record) => {
+    setIsLoading(true);
+    service.post("/sync",{storeId: record.id}).then(
+      (res: any) => {
+        toast(res.message || "Sync App success!", { type: "success" });
+        setIsLoading(false);
+      },
+      () => setIsLoading(false)
+    );
+  };
 
   return (
     <Page>
@@ -67,7 +76,7 @@ const GoogleAccount = () => {
             isLoading={isLoading}
             onEdit={onEditData}
             onDelete={onDelete}
-            onOpen={onOpen}
+            onSyncApp={onSyncApp}
             listData={listGPStore}
             
           />

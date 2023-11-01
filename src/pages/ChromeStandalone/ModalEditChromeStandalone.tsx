@@ -45,6 +45,7 @@ function ModalEditChromeStandalone(props) {
             },
             () => setIsLoading(false)
           );
+        window.location.reload();
     }
     return (
         <Form

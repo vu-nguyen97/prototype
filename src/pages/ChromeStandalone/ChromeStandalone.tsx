@@ -49,6 +49,7 @@ const ChromeStandalone = () => {
           },
           () => setIsLoading(false)
         );
+        window.location.reload();
     }
 
     return(
