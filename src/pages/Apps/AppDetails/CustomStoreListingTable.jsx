@@ -45,7 +45,9 @@ function CustomStoreListingTable(props) {
       title: "Custom URL",
       render: (record) => (
         <div className="whitespace-nowrap md:whitespace-normal">
-          {record.customUrl}
+          <a href={record.customUrl} target="_blank" rel="noreferrer">
+            {record.customUrl}
+          </a>
         </div>
       ),
     },
