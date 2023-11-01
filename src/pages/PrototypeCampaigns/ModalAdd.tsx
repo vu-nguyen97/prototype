@@ -31,15 +31,19 @@ function ModalAdd(props) {
   const onFinish = (values) => {
     
     const { name , apps} = values;
-    const storeApps = apps?.map((str) => getActivedApp(listStoreApps, str));
-    onSubmit(name, storeApps);
+    // console.log(apps);
+    // const storeApps = apps?.map((str) => getActivedApp(listStoreApps, str));
+    // console.log(storeApps)
+    const storeApp = getActivedApp(listStoreApps, apps);
+    console.log(storeApp);
+    onSubmit(name, storeApp);
 
   };
 
-  const onSubmit = (name: any , apps: any[]) => {
+  const onSubmit = (name: any , apps: any) => {
     const payload = {
       name,
-      appIds: apps?.map((el) => el.id),
+      appId: apps?.packageId,
     };
     setIsLoading(true);
     service.post("/cpi-campaigns", payload).then(
@@ -91,16 +95,15 @@ function ModalAdd(props) {
             className="w-full"
           />
         </Form.Item>
-        <Form.Item name="apps" label="Apps">
+        <Form.Item name="apps" label="App" rules={[{ required: true, message: "Please select an app" }]}>
           <SelectStoreApp
-            isMultiple={true}
+            isMultiple={false}
             listApp={listStoreApps}
-            placeholder="You can add this later by providing a theme."    
             activedApp={activedApp}
             setActivedApp={(apps) => {
               setActivedApp(apps);
               form.setFieldsValue({ apps });
-            }}   
+            }}
           />
         </Form.Item>
 

@@ -20,7 +20,8 @@ import SelectCountry from "../../../partials/common/Forms/SelectCountry";
 
 function Step2(props) {
   const [form] = Form.useForm();
-  const { next, stepData, onPrev, countBackAction } = props;
+  const { next, stepData, onPrev, countBackAction, unityAdsSettings } = props;
+  const autoFilled = unityAdsSettings !== null;
 
   const [activeKey, setActiveKey] = useState<any>([defaultGroups[0].id]);
   const [bidGroups, setBidGroups] = useState<BidGroup[]>(defaultGroups);
@@ -33,12 +34,22 @@ function Step2(props) {
   backActionHook(form, onPrev, countBackAction, { bidGroups });
 
   useEffect(() => {
-    setBidGroups([
-      { id: 0, countries: ['US'], bid: 0.01 },
-    ]);
+    if (unityAdsSettings) {
+      const bidGroups = unityAdsSettings.countryBids.map((item, index) => {
+        return {
+          id: index,
+          countries: [item.country],
+          bid: parseFloat(item.bid),
+        };
+      });
+
+      setBidGroups(bidGroups);
+    } else {
+      setBidGroups([{ id: 0, countries: ["US"], bid: 0.01 }]);
+    }
     setActiveKey(bidGroups.map((el) => el.id));
   }, []);
-  
+
   useEffect(() => {
     const initData = stepData?.step2;
     if (initData) {
@@ -119,10 +130,11 @@ function Step2(props) {
             bidGroups={bidGroups}
             setBidGroups={setBidGroups}
             allCountries={COUNTRIES}
+            disabled={autoFilled}
           />
         ) : (
           <Form.Item name="countries">
-            <SelectCountry hasAllOpt={false} classNames={formClass} />
+            <SelectCountry hasAllOpt={false} classNames={formClass} disabled={autoFilled} />
           </Form.Item>
         )}
       </Form.Item>
@@ -143,6 +155,7 @@ function Step2(props) {
           onChangeTotalMode={onChangeTotalMode}
           disableDaily={isAutomated}
           disableTotal={isAutomated}
+          unityAdsSettings={unityAdsSettings}
         />
       </div>
     </Form>
