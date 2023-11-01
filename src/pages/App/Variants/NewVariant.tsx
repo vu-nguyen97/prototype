@@ -56,7 +56,14 @@ function NewVariant(props) {
 
   const urlParams = useParams();
 
-  const { viewOnlyMode = false, data, title, target, pickedVariant, idx } = props;
+  const {
+    viewOnlyMode = false,
+    data,
+    title,
+    target,
+    pickedVariant,
+    idx,
+  } = props;
 
   // const app = data.storeApp;
 
@@ -149,7 +156,6 @@ function NewVariant(props) {
     );
   };
 
-
   const fetchCustomListings = () => {
     setIsLoading(true);
     const params = {};
@@ -165,7 +171,9 @@ function NewVariant(props) {
           for (let i = 0; i < allCustomListings.length; i++) {
             let exist = false;
             for (let j = 0; j < pickedVariant?.length; j++) {
-              if (allCustomListings[i].id === pickedVariant[j].customListing.id) {
+              if (
+                allCustomListings[i].id === pickedVariant[j].customListing.id
+              ) {
                 exist = true;
               }
             }
@@ -208,11 +216,6 @@ function NewVariant(props) {
 
       {!viewOnlyMode && (
         <>
-          {/* <Form.Item className="font-bold mb-4 max-w-5xl"
-            name="variantName"
-            label="Variant name" rules={[{ required: true, message: FIELD_REQUIRED }]}>
-            <AntInput allowClear placeholder="Enter variant name" />
-          </Form.Item> */}
           <Form.Item
             name="listing"
             label="Custom Listing"
@@ -231,85 +234,6 @@ function NewVariant(props) {
               onFocusFunc={fetchCustomListings}
             />
           </Form.Item>
-          {/* <Form.Item
-            className="mb-10 max-w-5xl">
-            <Radio.Group onChange={handleRadioChange}>
-              <Space direction="vertical">
-                <Radio value={'KEEP'} >I want to use current store listing of selected app.</Radio>
-                <Radio value={'CHANGE'} className="mb-2">I want to change store listing of selected app.</Radio>
-              </Space>
-            </Radio.Group>
-          </Form.Item>
-          {showCollapse && (
-            <Collapse
-              defaultActiveKey={['1']}
-              onChange={onCollapseChange}
-            >
-              <Panel header="Edit your app’s name, icon, screenshots and more to present how your app looks to users on Google Play" key="1">
-                <div className="font-bold text-base mb-4">{title}</div>
-                <div className="max-w-5xl">
-                  <Form.Item
-                    className="font-bold"
-                    name="name"
-                    label="Name"
-                    rules={[{ required: true, message: FIELD_REQUIRED }]}
-                  >
-                    <AntInput
-                      allowClear
-                      placeholder="Enter a name (max 30 characters)"
-                      maxLength={30}
-                    />
-                  </Form.Item>
-
-                  <Form.Item
-                    className="font-bold"
-                    name="shortDescription"
-                    label="Short description"
-                    rules={[{ required: true, message: FIELD_REQUIRED }]}
-                  >
-                    <AntInput.TextArea
-                      rows={2}
-                      placeholder="Enter content (max 80 characters)"
-                      maxLength={80}
-                      allowClear
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    className="font-bold"
-                    name="fullDescription"
-                    label="Full description"
-                    rules={[{ required: true, message: FIELD_REQUIRED }]}
-                  >
-                    <AntInput.TextArea
-                      rows={3}
-                      placeholder="Enter content (max 4000 characters)"
-                      maxLength={4000}
-                      allowClear
-                    />
-                  </Form.Item>
-                  <Form.Item className="font-bold" name="youtubeUrl" label="Youtube url">
-                    <AntInput allowClear placeholder="Enter a url" />
-                  </Form.Item>
-
-                  {ASSET_FIELDS.map((el) => {
-                    const { field, label, note, multiple } = el;
-                    return (
-                      <DynamicUpload
-                        key={field}
-                        className={'font-bold'}
-                        field={field}
-                        label={label}
-                        note={note}
-                        multiple={multiple}
-                        listFiles={listFiles[field] || []}
-                        onSetListFiles={onSetListFiles}
-                      />
-                    );
-                  })}
-                </div>
-              </Panel>
-            </Collapse>
-          )} */}
           <Button type="primary" key="submit" htmlType="submit" form={id}>
             Save
           </Button>
@@ -318,14 +242,11 @@ function NewVariant(props) {
       {viewOnlyMode && (
         <>
           <div className="flex items-center grow truncate">
-            {/* <div className="shrink-0">
-              <StoreAppIcon app={data.storeApp} />
-            </div> */}
             <div className="ml-5 grow truncate">
               <div className="text-base sm:text-lg md:text-xl font-bold !text-black overflow-auto whitespace-normal line-clamp-2">
                 {data.customListing.listingName}
               </div>
-              <div>{data.customListing.customUrl}</div>
+              <a href={data.customListing.customUrl} target="_blank">{data.customListing.customUrl}</a>
             </div>
           </div>
         </>

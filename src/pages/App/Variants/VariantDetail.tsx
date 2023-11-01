@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import NewVariant from "./NewVariant";
+import NewListing from "./NewVariant";
 import AddCampaigns from "../../AddCampaign";
 import { Collapse } from "antd";
+import UnityAdsDetail from "./UnityAdsDetail";
 const { Panel } = Collapse;
 
 const onCollapseChange = () => {};
 
 function VariantDetail(props) {
-  const { data, idx, init, pickedVariant } = props;
+  const { data, idx, init, unityAdsSettings, setUnityAdsSettings, pickedVariant } = props;
+
+  console.log("data", data);
+  
+  console.log("unity Ads");
+  console.log(unityAdsSettings);
 
   return (
     <div className="p-4 sm:p-6">
@@ -17,16 +23,20 @@ function VariantDetail(props) {
           <div>
             <Collapse defaultActiveKey={["1"]} onChange={onCollapseChange}>
               <Panel header="App used" key="1">
-                <NewVariant viewOnlyMode={true} data={data} idx={idx} />
+                <NewListing viewOnlyMode={true} data={data} idx={idx} />
               </Panel>
               <Panel header="Unity ads" key="2">
-                <AddCampaigns data={data}></AddCampaigns>
+                {data && data.unityAds && data.unityAds.unityCampaignId ? (
+                  <UnityAdsDetail data={data.unityAds} />
+                ) : (
+                  <AddCampaigns data={data} unityAdsSettings={unityAdsSettings} setUnityAdsSettings={setUnityAdsSettings}></AddCampaigns>
+                )}
               </Panel>
             </Collapse>
           </div>
         </>
       ) : (
-        <NewVariant pickedVariant={pickedVariant} idx={idx}/>
+        <NewListing pickedVariant={pickedVariant} idx={idx}/>
       )}
     </div>
   );
@@ -37,6 +47,9 @@ VariantDetail.propTypes = {
   idx: PropTypes.number,
   init: PropTypes.bool,
   pickedVariant: PropTypes.arrayOf(PropTypes.any),
+  unityAdsSettings: PropTypes.object,
+  setUnityAdsSettings: PropTypes.func,
+  
 };
 
 export default VariantDetail;
