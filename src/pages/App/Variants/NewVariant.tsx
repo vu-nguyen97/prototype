@@ -13,8 +13,11 @@ import DynamicUpload from "../../../partials/common/Forms/DynamicUpload";
 import Loading from "../../../utils/Loading";
 import service from "../../../partials/services/axios.config";
 import { toast } from "react-toastify";
-import SelectStoreApp, { getActivedApp } from "../../../partials/common/Forms/SelectStoreApp";
+import SelectStoreApp, {
+  getActivedApp,
+} from "../../../partials/common/Forms/SelectStoreApp";
 import StoreAppIcon from "../../../partials/common/StoreAppIcon";
+import SelectCustomListing from "../../../partials/common/Forms/SelectCustomListing";
 
 const ASSET_FIELDS = [
   {
@@ -48,35 +51,34 @@ const ASSET_FIELDS = [
 ];
 
 function NewVariant(props) {
-
   const [form] = Form.useForm();
   const { Panel } = Collapse;
 
   const urlParams = useParams();
 
-  const { viewOnlyMode, data, title, target } = props;
-
-  console.log(data);
+  const { viewOnlyMode = false, data, title, target, pickedVariant, idx } = props;
 
   // const app = data.storeApp;
 
-  const [listStoreApps, setListStoreApps] = useState<object[]>();
+  const [listCustomListings, setListCustomListings] = useState<object[]>();
   const [selectedApps, setSelectedApps] = useState<object[]>();
   const [isLoading, setIsLoading] = useState(false);
-  const [listFiles, setListFiles] = useState<any>({});
-  const [activeKey, setActiveKey] = useState<string[] | string>('');
-  const [showCollapse, setShowCollapse] = useState(false);
-  const [radioValue, setRadioValue] = useState('KEEP');
+  // const [listFiles, setListFiles] = useState<any>({});
+  const [activeKey, setActiveKey] = useState<string[] | string>("");
+  // const [showCollapse, setShowCollapse] = useState(false);
+  const [radioValue, setRadioValue] = useState("KEEP");
   // const [variantNameValue, setVariantNameValue] = useState();
 
   const targetId = target === `APP` ? urlParams.id : urlParams.appId!;
-  const endpoint = target === `APP` ? `/store-app-theme` : '/cpi-campaigns/app-variants?campaignId=' + urlParams.appId!;
-
-
+  const endpoint =
+    target === `APP`
+      ? `/store-app-theme`
+      : "/cpi-campaigns/app-variants?campaignId=" + urlParams.appId!;
 
   const initialValues = {
     variantName: "Falcon AI Assistant 2",
-    shortDescription: "Lead the Crowd, Control of your Army, Clash the Enemies and Take Over the Castle",
+    shortDescription:
+      "Lead the Crowd, Control of your Army, Clash the Enemies and Take Over the Castle",
     fullDescription: `Thrilling survival adventure! A thrilling racing experience that will have you on the edge of your seat until the very finish!
     Lead the Crowd, Control of your Army, Clash the Enemies and Take Over the Castle!
     
@@ -118,55 +120,23 @@ function NewVariant(props) {
     youtubeUrl: "",
   };
 
-  const onSetListFiles = (fieldName, files: any[]) => {
-    const newListFiles = { ...listFiles };
-    newListFiles[fieldName] = files;
+  // const onSetListFiles = (fieldName, files: any[]) => {
+  //   const newListFiles = { ...listFiles };
+  //   newListFiles[fieldName] = files;
 
-    setListFiles(newListFiles);
-  };
+  //   setListFiles(newListFiles);
+  // };
 
   const onFinish = (values) => {
-    console.log('values', values);
-    const { apps, name, variantName, shortDescription, fullDescription, youtubeUrl } = values;
-    const storeApp = getActivedApp(listStoreApps, apps);
+    console.log("values", values);
+    const { listing } = values;
+    console.log("listing", listing);
+    const storeApp = getActivedApp(listCustomListings, listing);
     const storeAppId = storeApp.id;
-    // console.log(storeApp)
-    console.log('variantName', variantName)
-    console.log('storeAppId', storeAppId)
-
-    const useOriginalListingAssets = showCollapse ? 'false' : 'true';
-
-    const {
-      featureImg,
-      iconImg,
-      phoneScreenshots,
-      sevenInchScreenshots,
-      tenInchScreenshots,
-    } = listFiles;
 
     const formData = new FormData();
-    // formData.append("appId", targetId!);
-    formData.append("variantName", variantName);
-    formData.append("appId", storeApp.id);
-    formData.append("useOriginalListingAssets", useOriginalListingAssets);
 
-    if (showCollapse) {
-      formData.append("shortDescription", shortDescription);
-      formData.append("fullDescription", fullDescription);
-      formData.append("youtubeUrl", youtubeUrl);
-
-      formData.append("featureImg", featureImg[0]);
-      formData.append("iconImg", iconImg[0]);
-      phoneScreenshots.forEach((el) => {
-        formData.append("phoneScreenshots", el);
-      });
-      sevenInchScreenshots.forEach((el) => {
-        formData.append("sevenInchScreenshots", el);
-      });
-      tenInchScreenshots.forEach((el) => {
-        formData.append("tenInchScreenshots", el);
-      });
-    }
+    formData.append("customListingId", listing);
 
     setIsLoading(true);
 
@@ -177,16 +147,34 @@ function NewVariant(props) {
       },
       () => setIsLoading(false)
     );
-
   };
 
-  const fetchListStoreApps = () => {
+
+  const fetchCustomListings = () => {
     setIsLoading(true);
     const params = {};
-    service.get("/store-app", { params }).then(
+    const appId = "4974125892606071286"; //MONSTER RUN APP ID
+    service.get("/" + appId + "/custom_listings", { params }).then(
       (res: any) => {
         setIsLoading(false);
-        setListStoreApps(res.results);
+        // check if res.results element already existed in pickedVariant, if not then add to list
+        let allCustomListings = res.results;
+
+        let toBeAddedCustomListings = [];
+        if (allCustomListings) {
+          for (let i = 0; i < allCustomListings.length; i++) {
+            let exist = false;
+            for (let j = 0; j < pickedVariant?.length; j++) {
+              if (allCustomListings[i].id === pickedVariant[j].customListing.id) {
+                exist = true;
+              }
+            }
+            if (!exist) {
+              toBeAddedCustomListings.push(allCustomListings[i]);
+            }
+          }
+        }
+        setListCustomListings(toBeAddedCustomListings);
       },
       () => setIsLoading(false)
     );
@@ -194,19 +182,17 @@ function NewVariant(props) {
 
   const handleRadioChange = (e) => {
     const value = e.target.value;
-    setShowCollapse(value === 'CHANGE');
+    // setShowCollapse(value === 'CHANGE');
     setRadioValue(value);
   };
 
-  const onCollapseChange = () => {
-
-  }
+  const onCollapseChange = () => {};
 
   useEffect(() => {
-    fetchListStoreApps();
+    fetchCustomListings();
   }, []);
 
-  const id = "FormAddVariant";
+  const id = "FormAddVariant" + idx;
 
   return (
     <Form
@@ -222,29 +208,30 @@ function NewVariant(props) {
 
       {!viewOnlyMode && (
         <>
-          <Form.Item className="font-bold mb-4 max-w-5xl"
+          {/* <Form.Item className="font-bold mb-4 max-w-5xl"
             name="variantName"
             label="Variant name" rules={[{ required: true, message: FIELD_REQUIRED }]}>
             <AntInput allowClear placeholder="Enter variant name" />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
-            name="apps"
-            label="Play Store App"
+            name="listing"
+            label="Custom Listing"
             className="font-bold mb-4 max-w-5xl"
-            rules={[{ required: true, message: FIELD_REQUIRED }]}>
-            <SelectStoreApp
+            rules={[{ required: true, message: FIELD_REQUIRED }]}
+          >
+            <SelectCustomListing
               isMultiple={false}
-              listApp={listStoreApps}
-              placeholder="Please choose an app."
+              listApp={listCustomListings}
+              placeholder="Please choose a custom listing."
               activedApp={selectedApps}
               setActivedApp={(apps) => {
                 setSelectedApps(apps);
-                form.setFieldValue('apps', apps);
+                form.setFieldValue("listing", apps);
               }}
-              onFocusFunc={fetchListStoreApps}
+              onFocusFunc={fetchCustomListings}
             />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             className="mb-10 max-w-5xl">
             <Radio.Group onChange={handleRadioChange}>
               <Space direction="vertical">
@@ -322,7 +309,7 @@ function NewVariant(props) {
                 </div>
               </Panel>
             </Collapse>
-          )}
+          )} */}
           <Button type="primary" key="submit" htmlType="submit" form={id}>
             Save
           </Button>
@@ -331,22 +318,16 @@ function NewVariant(props) {
       {viewOnlyMode && (
         <>
           <div className="flex items-center grow truncate">
-            <div className="shrink-0">
+            {/* <div className="shrink-0">
               <StoreAppIcon app={data.storeApp} />
-            </div>
+            </div> */}
             <div className="ml-5 grow truncate">
               <div className="text-base sm:text-lg md:text-xl font-bold !text-black overflow-auto whitespace-normal line-clamp-2">
-                {data.storeApp.name}
+                {data.customListing.listingName}
               </div>
-              <div>{data.storeApp.storeId}</div>
+              <div>{data.customListing.customUrl}</div>
             </div>
           </div>
-          {!data.update && (
-            <div className="flex items-center grow truncate font-bold mt-10">
-              You have'nt submitted new assets for the app.
-            </div>
-          )}
-
         </>
       )}
     </Form>
@@ -359,6 +340,8 @@ NewVariant.propTypes = {
   target: PropTypes.objectOf(PropTypes.any),
   title: PropTypes.objectOf(PropTypes.any),
   endpoint: PropTypes.objectOf(PropTypes.any),
+  pickedVariant: PropTypes.arrayOf(PropTypes.any),
+  idx: PropTypes.number,
 };
 
 export default NewVariant;

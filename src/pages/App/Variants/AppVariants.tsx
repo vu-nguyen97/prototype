@@ -52,49 +52,33 @@ export default function AppVariants() {
   useEffect(() => {
     const appVariants = storeAppRes?.results?.appVariants || [];
     const filteredVariants = appVariants.filter((el) => el.id);
-    
-    console.log(filteredVariants?.length)
+
+    console.log(filteredVariants?.length);
 
     setThemes(filteredVariants);
 
-    console.log(filteredVariants);
-    
+    console.log("Filtered Variants", filteredVariants);
 
     const newItems = filteredVariants.map((el, idx) => ({
-      key: el.id,
-      label: el.name,
+      key: el.customListing.id,
+      label: el.customListing.listingName,
       children: <VariantDetail data={el} idx={idx} />,
     }));
     // Fake
     newItems.push({
       key: "newTab",
       label: "New App Variant",
-      children: <VariantDetail idx={newItems.length} init={true} />,
+      children: (
+        <VariantDetail
+          idx={newItems.length}
+          init={true}
+          pickedVariant={filteredVariants}
+        />
+      ),
     });
-    console.log(newItems)
+    console.log(newItems);
     setItems(newItems);
     setTab(newItems[0].key);
-    
-
-    // if (filteredVariants?.length) {
-
-    //   console.log("go")
-      
-    //   const newItems = filteredVariants.map((el, idx) => ({
-    //     key: el.id,
-    //     label: el.name,
-    //     children: <VariantDetail data={el} idx={idx} />,
-    //   }));
-    //   // Fake
-    //   newItems.push({
-    //     key: "newTab",
-    //     label: "New App Variant",
-    //     children: <VariantDetail idx={newItems.length} init={true} />,
-    //   });
-    //   setItems(newItems);
-    //   setTab(newItems[1].key);
-    //   // setTab(getActivedTab(filteredThemes));
-    // }
   }, [storeAppRes]);
 
   const getActivedTab = (listThemes = themes) => {

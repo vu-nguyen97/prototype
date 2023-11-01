@@ -107,7 +107,7 @@ export const SidebarAppConfigs = [
   {
     id: 1,
     url: "/themes",
-    label: "App Variants",
+    label: "Custom Listings",
     iconEl: <BiPalette size={20} />,
     preload: () => import("../../pages/App/Variants/AppVariants"),
   },
