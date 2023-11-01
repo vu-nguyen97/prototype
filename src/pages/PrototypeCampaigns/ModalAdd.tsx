@@ -35,6 +35,7 @@ function ModalAdd(props) {
     // const storeApps = apps?.map((str) => getActivedApp(listStoreApps, str));
     // console.log(storeApps)
     const storeApp = getActivedApp(listStoreApps, apps);
+    console.log(storeApp);
     onSubmit(name, storeApp);
 
   };
@@ -42,7 +43,7 @@ function ModalAdd(props) {
   const onSubmit = (name: any , apps: any) => {
     const payload = {
       name,
-      appId: apps?.id,
+      appId: apps?.packageId,
     };
     setIsLoading(true);
     service.post("/cpi-campaigns", payload).then(

@@ -136,7 +136,7 @@ function Apps(props) {
               return (
                 <div
                   // Dùng id của app thay vì idx sẽ giúp tối ưu số lần render
-                  key={app.id}
+                  key={app.packageId}
                   className={classNames(
                     isHidden
                       ? "hidden"

@@ -35,7 +35,8 @@ export default function AppVariants() {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
   const [dateRange, setDateRange] = useState<any>(getLastDay(2));
-  const [themes, setThemes] = useState<any>([]);``
+  const [themes, setThemes] = useState<any>([]);
+  ``;
 
   const [unityAdsSettings, setUnityAdsSettings] = useState(null);
 
@@ -54,6 +55,7 @@ export default function AppVariants() {
   useEffect(() => {
     const appVariants = storeAppRes?.results?.appVariants || [];
     const filteredVariants = appVariants.filter((el) => el.id);
+    const consoleAppId = storeAppRes?.results?.storeApp?.consoleAppId;
 
     console.log(filteredVariants?.length);
 
@@ -62,7 +64,7 @@ export default function AppVariants() {
     setThemes(filteredVariants);
 
     let tempUnityAds = null;
-    
+
     for (let i = 0; i < filteredVariants.length; i++) {
       if (filteredVariants[i].unityAds) {
         setUnityAdsSettings(filteredVariants[i].unityAds);
@@ -70,7 +72,6 @@ export default function AppVariants() {
         break;
       }
     }
-
 
     const newItems = filteredVariants.map((el, idx) => ({
       key: el.customListing.id,
@@ -81,6 +82,7 @@ export default function AppVariants() {
           idx={idx}
           unityAdsSettings={tempUnityAds}
           setUnityAdsSettings={setUnityAdsSettings}
+          consoleAppId={consoleAppId}
         />
       ),
     }));
@@ -89,18 +91,14 @@ export default function AppVariants() {
       key: "newTab",
       label: "Add Listing",
       children: (
-        (
         <VariantDetail
-         
           idx={newItems.length}
-         
           init={true}
           pickedVariant={filteredVariants}
-       
           unityAdsSettings={tempUnityAds}
           setUnityAdsSettings={setUnityAdsSettings}
+          consoleAppId={consoleAppId}
         />
-      )
       ),
     });
     console.log(newItems);
@@ -144,7 +142,13 @@ export default function AppVariants() {
     newPanes.push({
       key: newActiveKey,
       label: "Add Listing",
-      children: <VariantDetail idx={items.length} init={true} />,
+      children: (
+        <VariantDetail
+          idx={items.length}
+          init={true}
+          consoleAppId={storeAppRes?.results?.storeApp?.consoleAppId}
+        />
+      ),
     });
     setItems(newPanes);
     setTab(newActiveKey);

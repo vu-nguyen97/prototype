@@ -9,7 +9,7 @@ const { Panel } = Collapse;
 const onCollapseChange = () => {};
 
 function VariantDetail(props) {
-  const { data, idx, init, unityAdsSettings, setUnityAdsSettings, pickedVariant } = props;
+  const { data, idx, init, unityAdsSettings, setUnityAdsSettings, pickedVariant, consoleAppId } = props;
 
   console.log("data", data);
   
@@ -36,7 +36,7 @@ function VariantDetail(props) {
           </div>
         </>
       ) : (
-        <NewListing pickedVariant={pickedVariant} idx={idx}/>
+        <NewListing pickedVariant={pickedVariant} idx={idx} consoleAppId={consoleAppId}/>
       )}
     </div>
   );
@@ -49,7 +49,7 @@ VariantDetail.propTypes = {
   pickedVariant: PropTypes.arrayOf(PropTypes.any),
   unityAdsSettings: PropTypes.object,
   setUnityAdsSettings: PropTypes.func,
-  
+  consoleAppId: PropTypes.string
 };
 
 export default VariantDetail;

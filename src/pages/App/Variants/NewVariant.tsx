@@ -63,6 +63,7 @@ function NewVariant(props) {
     target,
     pickedVariant,
     idx,
+    consoleAppId
   } = props;
 
   // const app = data.storeApp;
@@ -159,7 +160,7 @@ function NewVariant(props) {
   const fetchCustomListings = () => {
     setIsLoading(true);
     const params = {};
-    const appId = "4974125892606071286"; //MONSTER RUN APP ID
+    const appId = consoleAppId; //MONSTER RUN APP ID
     service.get("/" + appId + "/custom_listings", { params }).then(
       (res: any) => {
         setIsLoading(false);
@@ -197,6 +198,7 @@ function NewVariant(props) {
   const onCollapseChange = () => {};
 
   useEffect(() => {
+    if (viewOnlyMode) return;
     fetchCustomListings();
   }, []);
 
@@ -263,6 +265,7 @@ NewVariant.propTypes = {
   endpoint: PropTypes.objectOf(PropTypes.any),
   pickedVariant: PropTypes.arrayOf(PropTypes.any),
   idx: PropTypes.number,
+  consoleAppId: PropTypes.string,
 };
 
 export default NewVariant;
