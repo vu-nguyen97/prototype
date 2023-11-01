@@ -17,6 +17,7 @@ function SelectCountryFromList(props) {
     placeholder,
     isMultiple,
     listCountries,
+    disabled
   } = props;
 
   const inputRef = useRef(null);
@@ -51,6 +52,7 @@ function SelectCountryFromList(props) {
       className={`w-full ${classNames}`}
       value={value}
       onChange={onChange}
+      disabled={disabled}
       // onChange={(listCountryCode) => {
       //   if (isMultiple) {
       //     return onSelectWithAllOpt(
@@ -127,6 +129,7 @@ SelectCountryFromList.propTypes = {
   onChange: PropTypes.func,
   isMultiple: PropTypes.bool,
   listCountries: PropTypes.array,
+  disabled: PropTypes.bool
 };
 
 export default SelectCountryFromList;

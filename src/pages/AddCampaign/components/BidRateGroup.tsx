@@ -25,7 +25,7 @@ export const DYNAMIC_BASE_BID = "dynamicBaseBid";
 export const DYNAMIC_MAX_BID = "dynamicMaxBid";
 
 function BidRateGroup(props) {
-  const { bidGroup, onChangeGroup, listCountries, type } = props;
+  const { bidGroup, onChangeGroup, listCountries, type, disabled } = props;
   const { id, countries, bid } = bidGroup;
 
   return (
@@ -39,6 +39,7 @@ function BidRateGroup(props) {
           listCountries={listCountries}
           value={countries}
           onChange={(value) => onChangeGroup(bidGroup, value)}
+          disabled={disabled}
         />
       </Form.Item>
 
@@ -56,6 +57,7 @@ function BidRateGroup(props) {
             placeholder={BID_PLACEHOLDER}
             className="!w-full"
             addonBefore="$"
+            disabled={disabled}
           />
         </Form.Item>
       )}
@@ -74,6 +76,7 @@ function BidRateGroup(props) {
             placeholder={BASE_BID_PLACEHOLDER}
             className="!w-full"
             addonBefore="$"
+            disabled={disabled}
           />
         </Form.Item>
       )}
@@ -91,6 +94,7 @@ function BidRateGroup(props) {
             placeholder={GOAL_PLACEHOLDER}
             className="!w-full"
             addonBefore="$"
+            disabled={disabled}
           />
         </Form.Item>
       )}
@@ -108,6 +112,7 @@ function BidRateGroup(props) {
             placeholder={MAX_BID_PLACEHOLDER}
             className="!w-full"
             addonBefore="$"
+            disabled={disabled}
           />
         </Form.Item>
       )}
@@ -126,6 +131,7 @@ BidRateGroup.propTypes = {
   listCountries: PropTypes.array,
   onChangeGroup: PropTypes.func,
   type: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 export default BidRateGroup;

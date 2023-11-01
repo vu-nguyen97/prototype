@@ -35,7 +35,9 @@ export default function AppVariants() {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
   const [dateRange, setDateRange] = useState<any>(getLastDay(2));
-  const [themes, setThemes] = useState<any>([]);
+  const [themes, setThemes] = useState<any>([]);``
+
+  const [unityAdsSettings, setUnityAdsSettings] = useState(null);
 
   const [tab, setTab] = useState<string>();
   const [items, setItems] = useState<any>([]);
@@ -52,49 +54,58 @@ export default function AppVariants() {
   useEffect(() => {
     const appVariants = storeAppRes?.results?.appVariants || [];
     const filteredVariants = appVariants.filter((el) => el.id);
-    
-    console.log(filteredVariants?.length)
+
+    console.log(filteredVariants?.length);
+
+    console.log(filteredVariants?.length);
 
     setThemes(filteredVariants);
 
-    console.log(filteredVariants);
+    let tempUnityAds = null;
     
+    for (let i = 0; i < filteredVariants.length; i++) {
+      if (filteredVariants[i].unityAds) {
+        setUnityAdsSettings(filteredVariants[i].unityAds);
+        tempUnityAds = filteredVariants[i].unityAds;
+        break;
+      }
+    }
+
 
     const newItems = filteredVariants.map((el, idx) => ({
-      key: el.id,
-      label: el.name,
-      children: <VariantDetail data={el} idx={idx} />,
+      key: el.customListing.id,
+      label: el.customListing.listingName,
+      children: (
+        <VariantDetail
+          data={el}
+          idx={idx}
+          unityAdsSettings={tempUnityAds}
+          setUnityAdsSettings={setUnityAdsSettings}
+        />
+      ),
     }));
     // Fake
     newItems.push({
       key: "newTab",
-      label: "New App Variant",
-      children: <VariantDetail idx={newItems.length} init={true} />,
+      label: "Add Listing",
+      children: (
+        (
+        <VariantDetail
+         
+          idx={newItems.length}
+         
+          init={true}
+          pickedVariant={filteredVariants}
+       
+          unityAdsSettings={tempUnityAds}
+          setUnityAdsSettings={setUnityAdsSettings}
+        />
+      )
+      ),
     });
-    console.log(newItems)
+    console.log(newItems);
     setItems(newItems);
     setTab(newItems[0].key);
-    
-
-    // if (filteredVariants?.length) {
-
-    //   console.log("go")
-      
-    //   const newItems = filteredVariants.map((el, idx) => ({
-    //     key: el.id,
-    //     label: el.name,
-    //     children: <VariantDetail data={el} idx={idx} />,
-    //   }));
-    //   // Fake
-    //   newItems.push({
-    //     key: "newTab",
-    //     label: "New App Variant",
-    //     children: <VariantDetail idx={newItems.length} init={true} />,
-    //   });
-    //   setItems(newItems);
-    //   setTab(newItems[1].key);
-    //   // setTab(getActivedTab(filteredThemes));
-    // }
   }, [storeAppRes]);
 
   const getActivedTab = (listThemes = themes) => {
@@ -132,7 +143,7 @@ export default function AppVariants() {
     const newPanes = [...items];
     newPanes.push({
       key: newActiveKey,
-      label: "New App Variant",
+      label: "Add Listing",
       children: <VariantDetail idx={items.length} init={true} />,
     });
     setItems(newPanes);
@@ -168,7 +179,7 @@ export default function AppVariants() {
       {isLoading && <Loading />}
 
       <div className="flex justify-between">
-        <div className="page-title">App Variants</div>
+        <div className="page-title">Included Listings</div>
 
         <div className="flex space-x-2">
           {/* <Button
