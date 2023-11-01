@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 import Table from "antd/lib/table";
 import Tooltip from "antd/lib/tooltip";
 import { AiOutlineEdit } from "@react-icons/all-files/ai/AiOutlineEdit";
-import {AiFillEye} from "@react-icons/all-files/ai/AiFillEye"
+import {AiFillEye} from "@react-icons/all-files/ai/AiFillEye";
+import {AiOutlineReload} from "@react-icons/all-files/ai/AiOutlineReload";
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import { Link } from 'react-router-dom';
 
@@ -11,7 +12,7 @@ function GoogleAccountTable(props) {
     const defaultPageSize = 20;
     const [pageSize, setPageSize] = useState(defaultPageSize);
 
-    const {listData, onEdit, onDelete, onOpen, isLoading} = props;
+    const {listData, onEdit, onDelete, onSyncApp, isLoading} = props;
     
     const columns = [
         {
@@ -91,8 +92,17 @@ function GoogleAccountTable(props) {
 
                             <Tooltip title="Delete account">
                                 <DeleteOutlined
+                                    size={20}
                                     className="icon-danger text-xl cursor-pointer"
                                     onClick={() => onDelete(record)}
+                                />
+                            </Tooltip>
+
+                            <Tooltip title="Sync app">
+                                <AiOutlineReload
+                                    size={20}
+                                    className="icon-danger text-xl cursor-pointer"
+                                    onClick={() => onSyncApp(record)}
                                 />
                             </Tooltip>
                         </>
@@ -131,7 +141,7 @@ GoogleAccountTable.defaultProps = {
 GoogleAccountTable.propTypes = {
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
-    onOpen: PropTypes.func,
+    onSyncApp: PropTypes.func,
     isLoading: PropTypes.bool,
     listData: PropTypes.array,
 };

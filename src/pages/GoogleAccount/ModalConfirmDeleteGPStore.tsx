@@ -30,6 +30,7 @@ function ModalConfirmDeleteGPStore(props) {
             },
             () => setIsLoading(false)
           );
+        window.location.reload();
     }
     
     return (

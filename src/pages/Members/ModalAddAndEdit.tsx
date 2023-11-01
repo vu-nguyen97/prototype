@@ -92,6 +92,7 @@ function ModalAddAndEdit(props) {
       },
       () => setIsLoading(false)
     );
+    window.location.reload();
   };
 
   const onSubmitEditUser = (role, storeApps) => {
@@ -119,6 +120,7 @@ function ModalAddAndEdit(props) {
       },
       () => setIsLoading(false)
     );
+    window.location.reload();
   };
 
   return (

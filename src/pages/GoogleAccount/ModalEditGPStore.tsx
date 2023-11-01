@@ -59,6 +59,7 @@ function ModalEditGPStore(props) {
             },
             () => setIsLoading(false)
           );
+        window.location.reload();
     }
     return (
         <Form
