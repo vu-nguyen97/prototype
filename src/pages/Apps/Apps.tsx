@@ -22,46 +22,58 @@ import { AiOutlineUpload } from "@react-icons/all-files/ai/AiOutlineUpload";
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import ModalConfirmDelete from "../../partials/common/ModalConfirmDelete";
 import AppTable from "./AppTable";
+import { Select } from "antd";
 function Apps(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState("");
-  const [isOpenModalAddApp, setIsOpenModalAddApp] = useState(false);
-  const [listApp, setListApp] = useState<any>([]);  
- 
+  const [listApp, setListApp] = useState<any>([]);
+  const [listDeveloper, setListDeveloper] = useState<any>([]);
+  const [selectedValue, setSelectedValue] = useState<any>([]);
+  const [selectedValueName, setSelectedValueName] = useState<any>([]);
+
   useEffect(() => {
-    setIsLoading(true);
-    service.get("/store-app").then(
+    service.get("/google-play-stores").then(
       (res: any) => {
-        console.log(res.results);
-        setListApp(res.results);
+        setListDeveloper(res.results);
+        setSelectedValue(res.results[0]?.id);
+        setSelectedValueName(res.results[0]?.name);
         setIsLoading(false);
       },
-      () => setIsLoading(false)
+      () => { setIsLoading(false) }
     );
   }, []);
 
-
-const onSearch = (devId) => {
-  setListApp(listApp.filter((app) => app.consoleAppId.includes(devId)))
-}
-
-  const createUnityApp = (app) => {
+  useEffect(() => {
     setIsLoading(true);
-    service.post("/create-unity-app", { store: app.store, storeId: app.storeId, adomain: app.adomain })
-    .then((res: any) => {
-        toast(res.message, { type: "success" });
-        app.unityAppId = res.results.id;
-        app.unityGameId = res.results.gameId;
-        setIsLoading(false);
-    })
-    .catch((error) => {
-        // Here you can handle your error
-        setIsLoading(false);
-    });
-}
-  // Không lọc app trực tiếp ở đây
-  // Sử dụng ẩn hiện bằng css (biến isHidden) giúp cải thiện performance hơn (theo thực nghiệm)
-  const filteredApp = listApp;
+    console.log(selectedValue);
+    service.get("/store-app/"+selectedValue).then(
+      (res: any) => {
+        setListApp(res.results);
+        setIsLoading(false)
+      },
+      () => { setIsLoading(false) }
+    );
+  }, [selectedValue]);
+
+  const getApp = (value) => {
+    setIsLoading(true);
+    service.get("/store-app/"+value).then(
+      (res: any) => {
+        setListApp(res.results);
+        setIsLoading(false)
+      },
+      () => { setIsLoading(false) }
+    );
+  }
+
+  const handleSelectChange = (value) => {
+    setSelectedValue(value);
+    getApp(value);
+  };
+
+  const onSearch = (devId) => {
+    setListApp(listApp.filter((app) => app.consoleAppId.includes(devId)))
+  };
 
   return (
     <Page>
@@ -69,23 +81,26 @@ const onSearch = (devId) => {
 
       <div >
         <div className="page-title">Apps</div>
+        <div className="flex space-x-2 ml-2">
+          <div style={{ fontSize: 20, fontWeight: "bold" }}>Choose Account</div>
+          <Select value={selectedValue} onChange={handleSelectChange} placeholder={selectedValueName}>
+            {listDeveloper.map((item) => (
+              <Select.Option key={item.id} value={item.id}>
+                {item.name}
+              </Select.Option>
+            ))}
+          </Select>
+        </div>
 
         <div>
           <AppTable
-            isLoading = {isLoading}
+            isLoading={isLoading}
             onSearch={onSearch}
             listData={listApp}
-        />
+          />
         </div>
-        
-      </div>
 
-      <ModalAdd
-        isOpen={isOpenModalAddApp}
-        onClose={() => setIsOpenModalAddApp(false)}
-        setIsLoading={setIsLoading}
-        setListApp={setListApp}
-      />
+      </div>
     </Page>
   );
 }

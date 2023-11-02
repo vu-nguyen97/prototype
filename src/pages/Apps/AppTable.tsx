@@ -10,7 +10,7 @@ import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import {AiFillEye} from "@react-icons/all-files/ai/AiFillEye";
 import { Select } from "antd";
 function AppTable(props) {
-    const defaultPageSize = 20;
+    const defaultPageSize = 10;
     const [pageSize, setPageSize] = useState(defaultPageSize);
     const [searchByDevId, setSearchByDevId] = useState("");
     const {listData, onSearch, isLoading} = props;
