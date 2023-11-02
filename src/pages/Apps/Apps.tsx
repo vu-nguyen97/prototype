@@ -34,9 +34,14 @@ function Apps(props) {
   useEffect(() => {
     service.get("/google-play-stores").then(
       (res: any) => {
+<<<<<<< HEAD
         setListDeveloper(res.results);
         setSelectedValue(res.results[0]?.id);
         setSelectedValueName(res.results[0]?.name);
+=======
+        console.log("List App",res.results);
+        setListApp(res.results);
+>>>>>>> 9ed7bc277ee20e5bd772007a045d907c7885cb63
         setIsLoading(false);
       },
       () => { setIsLoading(false) }

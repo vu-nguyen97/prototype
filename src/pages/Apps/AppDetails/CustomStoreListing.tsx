@@ -7,6 +7,7 @@ import ConnectorTable from "../../DataConnectors/ConnectorTable/ConnectorTable";
 import CustomStoreListingTable from "./CustomStoreListingTable";
 import { useParams } from "react-router-dom";
 import service from "../../../partials/services/axios.config";
+import { toast } from "react-toastify";
 const CustomStoreListing = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenModalAddApp, setIsOpenModalAddApp] = useState(false);
@@ -39,17 +40,33 @@ const CustomStoreListing = () => {
   ];
 
   useEffect(() => {
-    const consoleAppId = urlParams.appId;
+    reloadCustomListings();
+  }, []);
+
+  const sendUpdateListingRequest = () => {
     setIsLoading(true);
-    service.get("/" + consoleAppId + "/custom_listings").then(
+    service
+      .post("/" + urlParams.appId + "/custom_listings")
+      .then((res: any) => {
+        toast(res.message, { type: "success" });
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        toast(error.message, { type: "error" });
+        setIsLoading(false);
+      });
+  };
+
+  const reloadCustomListings = () => {
+    setIsLoading(true);
+    service.get("/" + urlParams.appId + "/custom_listings").then(
       (res: any) => {
-        console.log(res.results);
         setCustomListings(res.results);
         setIsLoading(false);
       },
       () => setIsLoading(false)
     );
-  }, []);
+  };
 
   return (
     <Page>
@@ -85,7 +102,16 @@ const CustomStoreListing = () => {
               </Button>
             </div>
 
-            <div className="mt-6">
+            <div className="flex justify-end my-3 gap-4">
+              <Button type="primary" onClick={reloadCustomListings}>
+                Reload
+              </Button>
+              <Button type="primary" onClick={sendUpdateListingRequest}>
+                Update
+              </Button>
+            </div>
+
+            <div>
               <CustomStoreListingTable
                 isLoading={isLoading}
                 onEdit={onEditData}

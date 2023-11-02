@@ -86,6 +86,11 @@ function AppTable(props) {
                                 <AiFillEye
                                     className="text-slate-600 hover:text-antPrimary cursor-pointer"
                                     size={20}
+                                    onClick={() => {
+                                        window.open(
+                                            `/apps/${record.consoleAppId}/main-store-listing`, "_current"
+                                        )
+                                    }}
                                 />
                             </Tooltip>
                         </>
