@@ -32,7 +32,7 @@ function Apps(props) {
     setIsLoading(true);
     service.get("/store-app").then(
       (res: any) => {
-        console.log(res.results);
+        console.log("List App",res.results);
         setListApp(res.results);
         setIsLoading(false);
       },
