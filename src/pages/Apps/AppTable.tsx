@@ -19,7 +19,8 @@ function AppTable(props) {
         {
             title: "Name",
             render: (record) => (
-                <div className="whitespace-nowrap md:whitespace-normal">
+                <div className="flex space-x-2 ml-2">
+                    <img src={record.icon} style={{width:22, height:22, marginRight: 10}}/>
                     {record.name}
                 </div>
             )
@@ -108,6 +109,7 @@ function AppTable(props) {
 
     return (
         <Table
+        className="mt-6"
             id="app-table"
             rowKey={(record) => record.id}
             columns={columns}

@@ -21,27 +21,24 @@ import { AiOutlineEdit } from "@react-icons/all-files/ai/AiOutlineEdit";
 import { AiOutlineUpload } from "@react-icons/all-files/ai/AiOutlineUpload";
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import ModalConfirmDelete from "../../partials/common/ModalConfirmDelete";
+import Input from "antd/lib/input/Input";
+import {AiOutlineSearch} from "@react-icons/all-files/ai/AiOutlineSearch"
 import AppTable from "./AppTable";
 import { Select } from "antd";
 function Apps(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [listApp, setListApp] = useState<any>([]);
+  const [listAppRender, setListAppRender] = useState<any>([]);
   const [listDeveloper, setListDeveloper] = useState<any>([]);
   const [selectedValue, setSelectedValue] = useState<any>([]);
   const [selectedValueName, setSelectedValueName] = useState<any>([]);
-
   useEffect(() => {
     service.get("/google-play-stores").then(
       (res: any) => {
-<<<<<<< HEAD
         setListDeveloper(res.results);
         setSelectedValue(res.results[0]?.id);
         setSelectedValueName(res.results[0]?.name);
-=======
-        console.log("List App",res.results);
-        setListApp(res.results);
->>>>>>> 9ed7bc277ee20e5bd772007a045d907c7885cb63
         setIsLoading(false);
       },
       () => { setIsLoading(false) }
@@ -54,6 +51,7 @@ function Apps(props) {
     service.get("/store-app/"+selectedValue).then(
       (res: any) => {
         setListApp(res.results);
+        setListAppRender(res.results);
         setIsLoading(false)
       },
       () => { setIsLoading(false) }
@@ -65,6 +63,7 @@ function Apps(props) {
     service.get("/store-app/"+value).then(
       (res: any) => {
         setListApp(res.results);
+        setListAppRender(res.results);
         setIsLoading(false)
       },
       () => { setIsLoading(false) }
@@ -76,8 +75,12 @@ function Apps(props) {
     getApp(value);
   };
 
-  const onSearch = (devId) => {
-    setListApp(listApp.filter((app) => app.consoleAppId.includes(devId)))
+  const onSearch = (value) => {
+    if(value==null){
+        setListAppRender(listApp);
+    }else{
+      setListAppRender(listApp.filter((app) => app.name.toLowerCase().includes(value.toLowerCase())))
+    }
   };
 
   return (
@@ -86,22 +89,44 @@ function Apps(props) {
 
       <div >
         <div className="page-title">Apps</div>
-        <div className="flex space-x-2 ml-2">
-          <div style={{ fontSize: 20, fontWeight: "bold" }}>Choose Account</div>
-          <Select value={selectedValue} onChange={handleSelectChange} placeholder={selectedValueName}>
+        <div className="bg-white p-4 rounded-sm shadow mt-2" style={{marginBottom: 20}}>
+        <div className="flex items-center flex-wrap -mx-1 2xl:-mx-2 -mt-3">
+          <Select 
+          value={selectedValue} 
+          onChange={handleSelectChange} 
+          placeholder={selectedValueName}
+          className="xs:!w-[110px] !mx-1 2xl:!mx-2 !mt-3"
+          >
             {listDeveloper.map((item) => (
               <Select.Option key={item.id} value={item.id}>
                 {item.name}
               </Select.Option>
             ))}
           </Select>
+          <AntInput
+            allowClear
+            placeholder="Search name"
+            className="xs:!w-[200px] mx-1 2xl:!mx-2 mt-3"
+            prefix={<SearchOutlined />}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+      
+          <Button
+            type="primary"
+            className="mx-1 2xl:!mx-2 mt-3"
+            onClick={()=>onSearch(search)}
+          >
+            Apply
+          </Button>
         </div>
-
+      </div>
+        
         <div>
           <AppTable
             isLoading={isLoading}
             onSearch={onSearch}
-            listData={listApp}
+            listData={listAppRender}
           />
         </div>
 
