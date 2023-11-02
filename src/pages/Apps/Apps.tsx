@@ -22,7 +22,7 @@ import { AiOutlineUpload } from "@react-icons/all-files/ai/AiOutlineUpload";
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import ModalConfirmDelete from "../../partials/common/ModalConfirmDelete";
 import Input from "antd/lib/input/Input";
-import {AiOutlineSearch} from "@react-icons/all-files/ai/AiOutlineSearch"
+import { AiOutlineSearch } from "@react-icons/all-files/ai/AiOutlineSearch";
 import AppTable from "./AppTable";
 import { Select } from "antd";
 function Apps(props) {
@@ -33,6 +33,7 @@ function Apps(props) {
   const [listDeveloper, setListDeveloper] = useState<any>([]);
   const [selectedValue, setSelectedValue] = useState<any>([]);
   const [selectedValueName, setSelectedValueName] = useState<any>([]);
+  
   useEffect(() => {
     service.get("/google-play-stores").then(
       (res: any) => {
@@ -41,34 +42,40 @@ function Apps(props) {
         setSelectedValueName(res.results[0]?.name);
         setIsLoading(false);
       },
-      () => { setIsLoading(false) }
+      () => {
+        setIsLoading(false);
+      }
     );
   }, []);
 
   useEffect(() => {
     setIsLoading(true);
     console.log(selectedValue);
-    service.get("/store-app/"+selectedValue).then(
+    service.get("/store-app?devId=" + selectedValue).then(
       (res: any) => {
         setListApp(res.results);
         setListAppRender(res.results);
-        setIsLoading(false)
+        setIsLoading(false);
       },
-      () => { setIsLoading(false) }
+      () => {
+        setIsLoading(false);
+      }
     );
   }, [selectedValue]);
 
   const getApp = (value) => {
     setIsLoading(true);
-    service.get("/store-app/"+value).then(
+    service.get("/store-app?devId=" + value).then(
       (res: any) => {
         setListApp(res.results);
         setListAppRender(res.results);
-        setIsLoading(false)
+        setIsLoading(false);
       },
-      () => { setIsLoading(false) }
+      () => {
+        setIsLoading(false);
+      }
     );
-  }
+  };
 
   const handleSelectChange = (value) => {
     setSelectedValue(value);
@@ -76,10 +83,14 @@ function Apps(props) {
   };
 
   const onSearch = (value) => {
-    if(value==null){
-        setListAppRender(listApp);
-    }else{
-      setListAppRender(listApp.filter((app) => app.name.toLowerCase().includes(value.toLowerCase())))
+    if (value == null) {
+      setListAppRender(listApp);
+    } else {
+      setListAppRender(
+        listApp.filter((app) =>
+          app.name.toLowerCase().includes(value.toLowerCase())
+        )
+      );
     }
   };
 
@@ -87,41 +98,44 @@ function Apps(props) {
     <Page>
       {isLoading && <Loading />}
 
-      <div >
+      <div>
         <div className="page-title">Apps</div>
-        <div className="bg-white p-4 rounded-sm shadow mt-2" style={{marginBottom: 20}}>
-        <div className="flex items-center flex-wrap -mx-1 2xl:-mx-2 -mt-3">
-          <Select 
-          value={selectedValue} 
-          onChange={handleSelectChange} 
-          placeholder={selectedValueName}
-          className="xs:!w-[110px] !mx-1 2xl:!mx-2 !mt-3"
-          >
-            {listDeveloper.map((item) => (
-              <Select.Option key={item.id} value={item.id}>
-                {item.name}
-              </Select.Option>
-            ))}
-          </Select>
-          <AntInput
-            allowClear
-            placeholder="Search name"
-            className="xs:!w-[200px] mx-1 2xl:!mx-2 mt-3"
-            prefix={<SearchOutlined />}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-      
-          <Button
-            type="primary"
-            className="mx-1 2xl:!mx-2 mt-3"
-            onClick={()=>onSearch(search)}
-          >
-            Apply
-          </Button>
+        <div
+          className="bg-white p-4 rounded-sm shadow mt-2"
+          style={{ marginBottom: 20 }}
+        >
+          <div className="flex items-center flex-wrap -mx-1 2xl:-mx-2 -mt-3">
+            <Select
+              value={selectedValue}
+              onChange={handleSelectChange}
+              placeholder={selectedValueName}
+              className="xs:!w-[110px] !mx-1 2xl:!mx-2 !mt-3"
+            >
+              {listDeveloper.map((item) => (
+                <Select.Option key={item.id} value={item.id}>
+                  {item.name}
+                </Select.Option>
+              ))}
+            </Select>
+            <AntInput
+              allowClear
+              placeholder="Search name"
+              className="xs:!w-[200px] mx-1 2xl:!mx-2 mt-3"
+              prefix={<SearchOutlined />}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+
+            <Button
+              type="primary"
+              className="mx-1 2xl:!mx-2 mt-3"
+              onClick={() => onSearch(search)}
+            >
+              Apply
+            </Button>
+          </div>
         </div>
-      </div>
-        
+
         <div>
           <AppTable
             isLoading={isLoading}
@@ -129,7 +143,6 @@ function Apps(props) {
             listData={listAppRender}
           />
         </div>
-
       </div>
     </Page>
   );
