@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 import Button from "antd/lib/button/button";
 import Form from "antd/lib/form";
 import Collapse from "antd/lib/collapse/collapse";
-import Space from "antd/lib/space/index";
-import Radio from "antd/lib/radio/radio";
 
 import { FIELD_REQUIRED } from "../../../constants/formMessage";
 import AntInput from "antd/lib/input";

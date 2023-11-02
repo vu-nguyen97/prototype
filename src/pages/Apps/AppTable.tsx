@@ -10,7 +10,7 @@ import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import {AiFillEye} from "@react-icons/all-files/ai/AiFillEye";
 import { Select } from "antd";
 function AppTable(props) {
-    const defaultPageSize = 20;
+    const defaultPageSize = 10;
     const [pageSize, setPageSize] = useState(defaultPageSize);
     const [searchByDevId, setSearchByDevId] = useState("");
     const {listData, onSearch, isLoading} = props;
@@ -19,7 +19,8 @@ function AppTable(props) {
         {
             title: "Name",
             render: (record) => (
-                <div className="whitespace-nowrap md:whitespace-normal">
+                <div className="flex space-x-2 ml-2">
+                    <img src={record.icon} style={{width:22, height:22, marginRight: 10}}/>
                     {record.name}
                 </div>
             )
@@ -108,6 +109,7 @@ function AppTable(props) {
 
     return (
         <Table
+        className="mt-6"
             id="app-table"
             rowKey={(record) => record.id}
             columns={columns}

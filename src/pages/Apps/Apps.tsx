@@ -21,47 +21,67 @@ import { AiOutlineEdit } from "@react-icons/all-files/ai/AiOutlineEdit";
 import { AiOutlineUpload } from "@react-icons/all-files/ai/AiOutlineUpload";
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import ModalConfirmDelete from "../../partials/common/ModalConfirmDelete";
+import Input from "antd/lib/input/Input";
+import {AiOutlineSearch} from "@react-icons/all-files/ai/AiOutlineSearch"
 import AppTable from "./AppTable";
+import { Select } from "antd";
 function Apps(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState("");
-  const [isOpenModalAddApp, setIsOpenModalAddApp] = useState(false);
-  const [listApp, setListApp] = useState<any>([]);  
- 
+  const [listApp, setListApp] = useState<any>([]);
+  const [listAppRender, setListAppRender] = useState<any>([]);
+  const [listDeveloper, setListDeveloper] = useState<any>([]);
+  const [selectedValue, setSelectedValue] = useState<any>([]);
+  const [selectedValueName, setSelectedValueName] = useState<any>([]);
   useEffect(() => {
-    setIsLoading(true);
-    service.get("/store-app").then(
+    service.get("/google-play-stores").then(
       (res: any) => {
-        console.log("List App",res.results);
-        setListApp(res.results);
+        setListDeveloper(res.results);
+        setSelectedValue(res.results[0]?.id);
+        setSelectedValueName(res.results[0]?.name);
         setIsLoading(false);
       },
-      () => setIsLoading(false)
+      () => { setIsLoading(false) }
     );
   }, []);
 
-
-const onSearch = (devId) => {
-  setListApp(listApp.filter((app) => app.consoleAppId.includes(devId)))
-}
-
-  const createUnityApp = (app) => {
+  useEffect(() => {
     setIsLoading(true);
-    service.post("/create-unity-app", { store: app.store, storeId: app.storeId, adomain: app.adomain })
-    .then((res: any) => {
-        toast(res.message, { type: "success" });
-        app.unityAppId = res.results.id;
-        app.unityGameId = res.results.gameId;
-        setIsLoading(false);
-    })
-    .catch((error) => {
-        // Here you can handle your error
-        setIsLoading(false);
-    });
-}
-  // Không lọc app trực tiếp ở đây
-  // Sử dụng ẩn hiện bằng css (biến isHidden) giúp cải thiện performance hơn (theo thực nghiệm)
-  const filteredApp = listApp;
+    console.log(selectedValue);
+    service.get("/store-app/"+selectedValue).then(
+      (res: any) => {
+        setListApp(res.results);
+        setListAppRender(res.results);
+        setIsLoading(false)
+      },
+      () => { setIsLoading(false) }
+    );
+  }, [selectedValue]);
+
+  const getApp = (value) => {
+    setIsLoading(true);
+    service.get("/store-app/"+value).then(
+      (res: any) => {
+        setListApp(res.results);
+        setListAppRender(res.results);
+        setIsLoading(false)
+      },
+      () => { setIsLoading(false) }
+    );
+  }
+
+  const handleSelectChange = (value) => {
+    setSelectedValue(value);
+    getApp(value);
+  };
+
+  const onSearch = (value) => {
+    if(value==null){
+        setListAppRender(listApp);
+    }else{
+      setListAppRender(listApp.filter((app) => app.name.toLowerCase().includes(value.toLowerCase())))
+    }
+  };
 
   return (
     <Page>
@@ -69,23 +89,48 @@ const onSearch = (devId) => {
 
       <div >
         <div className="page-title">Apps</div>
-
+        <div className="bg-white p-4 rounded-sm shadow mt-2" style={{marginBottom: 20}}>
+        <div className="flex items-center flex-wrap -mx-1 2xl:-mx-2 -mt-3">
+          <Select 
+          value={selectedValue} 
+          onChange={handleSelectChange} 
+          placeholder={selectedValueName}
+          className="xs:!w-[110px] !mx-1 2xl:!mx-2 !mt-3"
+          >
+            {listDeveloper.map((item) => (
+              <Select.Option key={item.id} value={item.id}>
+                {item.name}
+              </Select.Option>
+            ))}
+          </Select>
+          <AntInput
+            allowClear
+            placeholder="Search name"
+            className="xs:!w-[200px] mx-1 2xl:!mx-2 mt-3"
+            prefix={<SearchOutlined />}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+      
+          <Button
+            type="primary"
+            className="mx-1 2xl:!mx-2 mt-3"
+            onClick={()=>onSearch(search)}
+          >
+            Apply
+          </Button>
+        </div>
+      </div>
+        
         <div>
           <AppTable
-            isLoading = {isLoading}
+            isLoading={isLoading}
             onSearch={onSearch}
-            listData={listApp}
-        />
+            listData={listAppRender}
+          />
         </div>
-        
-      </div>
 
-      <ModalAdd
-        isOpen={isOpenModalAddApp}
-        onClose={() => setIsOpenModalAddApp(false)}
-        setIsLoading={setIsLoading}
-        setListApp={setListApp}
-      />
+      </div>
     </Page>
   );
 }
