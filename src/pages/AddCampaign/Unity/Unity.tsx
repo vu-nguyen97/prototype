@@ -130,6 +130,7 @@ function Unity(props) {
         (res: any) => {
           toast(res.message, { type: "success" });
           setIsLoading(false);
+          window.location.reload();
         },
         () => setIsLoading(false)
       );

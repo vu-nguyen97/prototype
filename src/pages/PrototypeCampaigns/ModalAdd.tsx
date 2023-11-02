@@ -7,16 +7,20 @@ import { toast } from "react-toastify";
 import service from "../../partials/services/axios.config";
 import AntInput from "antd/lib/input/Input";
 import SelectStoreApp, {getActivedApp} from "../../partials/common/Forms/SelectStoreApp";
+import { useNavigate } from 'react-router-dom'; // Import useHistory from React Router
+
 
 function ModalAdd(props) {
+  
+  const navigate = useNavigate();
   const [form] = Form.useForm();
+
   const {
     isOpen,
     onClose,
     setIsLoading,
     listStoreApps
   } = props;
-
 
   const [activedApp, setActivedApp] = useState<object[]>();
 
@@ -29,15 +33,9 @@ function ModalAdd(props) {
   };
 
   const onFinish = (values) => {
-    
     const { name , apps} = values;
-    // console.log(apps);
-    // const storeApps = apps?.map((str) => getActivedApp(listStoreApps, str));
-    // console.log(storeApps)
     const storeApp = getActivedApp(listStoreApps, apps);
-    console.log(storeApp);
     onSubmit(name, storeApp);
-
   };
 
   const onSubmit = (name: any , apps: any) => {
@@ -51,6 +49,9 @@ function ModalAdd(props) {
         toast(res.message || "Create campaign success!", { type: "success" });
         setIsLoading(false);
         onCloseModal();
+        setTimeout(() => {
+          navigate('/apps/'+ res.results.id +'/themes');
+        }, 1000);
       },
       () => setIsLoading(false)
     );

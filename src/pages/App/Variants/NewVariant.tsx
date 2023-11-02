@@ -152,8 +152,10 @@ function NewVariant(props) {
       (res: any) => {
         toast(res.message, { type: "success" });
         setIsLoading(false);
+        window.location.reload()
       },
       () => setIsLoading(false)
+      
     );
   };
 
@@ -237,7 +239,7 @@ function NewVariant(props) {
             />
           </Form.Item>
           <Button type="primary" key="submit" htmlType="submit" form={id}>
-            Save
+            Next
           </Button>
         </>
       )}

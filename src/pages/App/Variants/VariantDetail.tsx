@@ -15,6 +15,12 @@ function VariantDetail(props) {
   
   console.log("unity Ads");
   console.log(unityAdsSettings);
+  var unityPanelHeader =  "Unity ads";
+  // if(data && data.unityAds){
+
+  // } else {
+  //   unityPanelHeader = unityPanelHeader + " - Not set"
+  // }
 
   return (
     <div className="p-4 sm:p-6">
@@ -22,10 +28,10 @@ function VariantDetail(props) {
         <>
           <div>
             <Collapse defaultActiveKey={["1"]} onChange={onCollapseChange}>
-              <Panel header="App used" key="1">
+              <Panel header="Custom listing" key="1">
                 <NewListing viewOnlyMode={true} data={data} idx={idx} />
               </Panel>
-              <Panel header="Unity ads" key="2">
+              <Panel header={unityPanelHeader} key="2">
                 {data && data.unityAds && data.unityAds.unityCampaignId ? (
                   <UnityAdsDetail data={data.unityAds} />
                 ) : (

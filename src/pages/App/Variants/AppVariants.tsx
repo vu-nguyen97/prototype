@@ -183,7 +183,7 @@ export default function AppVariants() {
       {isLoading && <Loading />}
 
       <div className="flex justify-between">
-        <div className="page-title">Included Listings</div>
+        <div className="page-title">Comparing Themes</div>
 
         <div className="flex space-x-2">
           {/* <Button
