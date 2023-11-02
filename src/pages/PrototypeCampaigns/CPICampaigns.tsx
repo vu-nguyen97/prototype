@@ -48,7 +48,12 @@ function Apps() {
     Promise.all([ getListApp]).then(
       (res: any) => {
         setIsLoading(false);
-        setListStoreApp(res[0].results || []);
+        // set list store apps to be apps that has unity appId
+        let chooseableList = res[0].results.filter(
+          (app: any) => app.unityAppId !== null
+        )
+        console.log("chooseableList",chooseableList);
+        setListStoreApp(chooseableList);
       },
       () => setIsLoading(false)
     );
