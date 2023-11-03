@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import NewListing from "./NewVariant";
 import AddCampaigns from "../../AddCampaign";
@@ -9,13 +9,24 @@ const { Panel } = Collapse;
 const onCollapseChange = () => {};
 
 function VariantDetail(props) {
-  const { data, idx, init, unityAdsSettings, setUnityAdsSettings, pickedVariant, consoleAppId } = props;
+  const {
+    data,
+    idx,
+    init,
+    unityAdsSettings,
+    setUnityAdsSettings,
+    pickedVariant,
+    consoleAppId,
+  } = props;
 
   console.log("data", data);
-  
+
   console.log("unity Ads");
   console.log(unityAdsSettings);
-  var unityPanelHeader =  "Unity ads";
+  var unityPanelHeader = "Unity ads";
+
+  const [initing, setIniting] = useState(init);
+  const [unityAds, setUnityAds] = useState(data?.unityAds);
   // if(data && data.unityAds){
 
   // } else {
@@ -29,20 +40,33 @@ function VariantDetail(props) {
           <div>
             <Collapse defaultActiveKey={["1"]} onChange={onCollapseChange}>
               <Panel header="Custom listing" key="1">
-                <NewListing viewOnlyMode={true} data={data} idx={idx} />
+                <NewListing viewOnlyMode={true} customListing={data.customListing} idx={idx} />
               </Panel>
               <Panel header={unityPanelHeader} key="2">
-                {data && data.unityAds && data.unityAds.unityCampaignId ? (
-                  <UnityAdsDetail data={data.unityAds} />
+                {data && unityAds ? (
+                  unityAds.unityCampaignId ? (
+                    <UnityAdsDetail data={unityAds} />
+                  ) : (
+                    <UnityAdsDetail data={unityAds} finished={false} appVariantId={data.id} setUnityAds={setUnityAds} />
+                  )
                 ) : (
-                  <AddCampaigns data={data} unityAdsSettings={unityAdsSettings} setUnityAdsSettings={setUnityAdsSettings}></AddCampaigns>
+                  <AddCampaigns
+                    data={data}
+                    unityAdsSettings={unityAdsSettings}
+                    setUnityAdsSettings={setUnityAdsSettings}
+                    setUnityAds={setUnityAds}
+                  ></AddCampaigns>
                 )}
               </Panel>
             </Collapse>
           </div>
         </>
       ) : (
-        <NewListing pickedVariant={pickedVariant} idx={idx} consoleAppId={consoleAppId}/>
+        <NewListing
+          pickedVariant={pickedVariant}
+          idx={idx}
+          consoleAppId={consoleAppId}
+        />
       )}
     </div>
   );
@@ -55,7 +79,7 @@ VariantDetail.propTypes = {
   pickedVariant: PropTypes.arrayOf(PropTypes.any),
   unityAdsSettings: PropTypes.object,
   setUnityAdsSettings: PropTypes.func,
-  consoleAppId: PropTypes.string
+  consoleAppId: PropTypes.string,
 };
 
 export default VariantDetail;

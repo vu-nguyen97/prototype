@@ -56,12 +56,14 @@ function NewVariant(props) {
 
   const {
     viewOnlyMode = false,
-    data,
+    customListing,
+    setCustomListing,
     title,
     target,
     pickedVariant,
     idx,
-    consoleAppId
+    consoleAppId,
+    setIniting,
   } = props;
 
   // const app = data.storeApp;
@@ -150,10 +152,9 @@ function NewVariant(props) {
       (res: any) => {
         toast(res.message, { type: "success" });
         setIsLoading(false);
-        window.location.reload()
+        window.location.reload();
       },
       () => setIsLoading(false)
-      
     );
   };
 
@@ -237,7 +238,7 @@ function NewVariant(props) {
             />
           </Form.Item>
           <Button type="primary" key="submit" htmlType="submit" form={id}>
-            Next
+            Add
           </Button>
         </>
       )}
@@ -246,9 +247,11 @@ function NewVariant(props) {
           <div className="flex items-center grow truncate">
             <div className="ml-5 grow truncate">
               <div className="text-base sm:text-lg md:text-xl font-bold !text-black overflow-auto whitespace-normal line-clamp-2">
-                {data.customListing.listingName}
+                {customListing.listingName}
               </div>
-              <a href={data.customListing.customUrl} target="_blank">{data.customListing.customUrl}</a>
+              <a href={customListing.customUrl} target="_blank">
+                {customListing.customUrl}
+              </a>
             </div>
           </div>
         </>
@@ -258,7 +261,8 @@ function NewVariant(props) {
 }
 
 NewVariant.propTypes = {
-  data: PropTypes.objectOf(PropTypes.any),
+  customListing: PropTypes.objectOf(PropTypes.any),
+  setCustomListing: PropTypes.func,
   viewOnlyMode: PropTypes.bool,
   target: PropTypes.objectOf(PropTypes.any),
   title: PropTypes.objectOf(PropTypes.any),
@@ -266,6 +270,7 @@ NewVariant.propTypes = {
   pickedVariant: PropTypes.arrayOf(PropTypes.any),
   idx: PropTypes.number,
   consoleAppId: PropTypes.string,
+  setIniting: PropTypes.func,
 };
 
 export default NewVariant;

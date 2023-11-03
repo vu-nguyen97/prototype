@@ -9,6 +9,7 @@ function AddCampaigns(props) {
   const [stepData, setStepData] = useState({});
   const [appVariantId, setAppVariantId] = useState(props.data.id);
   const unityAdsSettings = props.unityAdsSettings;
+  const setUnityAds = props.setUnityAds;
 
   const networkProps = {
     stepData,
@@ -16,6 +17,7 @@ function AddCampaigns(props) {
     setStepData,
     appVariantId,
     unityAdsSettings,
+    setUnityAds
   };
 
   return (
@@ -37,6 +39,7 @@ AddCampaigns.propTypes = {
   data: PropTypes.object,
   unityAdsSettings: PropTypes.object,
   setUnityAdsSettings: PropTypes.func,
+  setUnityAds: PropTypes.func,
 };
 
 export default AddCampaigns;

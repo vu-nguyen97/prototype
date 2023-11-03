@@ -14,7 +14,14 @@ import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 
 function Unity(props) {
-  const { setIsLoading, stepData, setStepData, appVariantId, unityAdsSettings } = props;
+  const {
+    setIsLoading,
+    stepData,
+    setStepData,
+    appVariantId,
+    unityAdsSettings,
+    setUnityAds,
+  } = props;
   const urlParams = useParams();
 
   const [current, setCurrent] = useState(0);
@@ -106,7 +113,7 @@ function Unity(props) {
       data.append("appVariantId", appVariantId);
       data.append("cpiCampaignId", urlParams.appId);
       data.append("campaignName", name);
-      data.append("goal", "installs")
+      data.append("goal", "installs");
       data.append("billingType", type.toLowerCase());
       data.append("biddingStrategy", biddingStrategy);
       data.append("dailyBudget", params.defaultBudget.dailyBudget);
@@ -130,7 +137,15 @@ function Unity(props) {
         (res: any) => {
           toast(res.message, { type: "success" });
           setIsLoading(false);
-          window.location.reload();
+          service
+            .get("/unity-ads/" + appVariantId)
+            .then((res: any) => {
+              setUnityAds(res.results);
+              console.log("results: ", res.results);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         },
         () => setIsLoading(false)
       );
@@ -154,7 +169,7 @@ function Unity(props) {
     setIsLoading,
     stepData,
     setStepData,
-    unityAdsSettings
+    unityAdsSettings,
   };
   let stepComp;
   switch (current) {
