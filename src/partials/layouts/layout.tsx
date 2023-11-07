@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Header from "../Header";
-import {SidebarAppConfigs, SidebarConfigs, SidebarStoreAppConfigs} from "../sidebar/config";
+import {SidebarAppConfigs, SidebarConfigs, SidebarAdminConfigs, SidebarStoreAppConfigs} from "../sidebar/config";
 import Sidebar from "../sidebar/Sidebar";
-
+import { RootState } from "../../redux/store";
+import { useSelector } from "react-redux";
 function DefaultLayout({
   children = <></>,
   isDetailApp = false,
@@ -11,8 +12,12 @@ function DefaultLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isOpenMobileMenu, setIsOpenMobileMenu] = useState(false);
-  const listConfigs= isDetailApp? SidebarAppConfigs: (isStoreApp? SidebarStoreAppConfigs: SidebarConfigs);
+  const isAdmin = useSelector(
+    (state: RootState) => state.account.userData.isAdmin
+  );
+  const listConfigs= isDetailApp? SidebarAppConfigs: (isStoreApp? SidebarStoreAppConfigs: (isAdmin?SidebarAdminConfigs:SidebarConfigs));
 
+  
 
   const onClickMobileMenu = () => {
     setIsOpenMobileMenu(!isOpenMobileMenu);

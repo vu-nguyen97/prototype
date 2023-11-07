@@ -8,7 +8,7 @@ import {
   APP_PATH
 } from "../../constants/constants";
 import classNames from "classnames";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getSubOrganizationUrl } from "../../utils/Helpers";
 import { BiArrowBack } from "@react-icons/all-files/bi/BiArrowBack";
 import GamePlatformIcon from "../common/GamePlatformIcon";
@@ -22,6 +22,7 @@ import Drawer from "antd/lib/drawer";
 import { updateExpanded } from "../../redux/sidebar/sidebarSlice";
 import DefaultAppImg from "../common/DefaultAppImg";
 import { useWindowSize } from "../../utils/hooks/CustomHooks";
+
 // import { BiLinkExternal } from "@react-icons/all-files/bi/BiLinkExternal";
 
 function Sidebar({
@@ -362,7 +363,6 @@ function Sidebar({
           <Navs
             listConfigs={listConfigs}
             isDetailApp={isDetailApp}
-            isStoreApp = {isStoreApp}
             sidebarExpanded={sidebarExpanded}
             setSidebarExpanded={setSidebarExpanded}
             onMouseEnter={onMouseEnter}

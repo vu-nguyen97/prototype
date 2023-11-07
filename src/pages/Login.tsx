@@ -59,7 +59,6 @@ const Login = () => {
               dispatch(
                 updateUser(Object.assign({}, userRes.results, { isAdmin }))
               );
-
               if (from) {
                 return navigate(from);
               }

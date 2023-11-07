@@ -115,11 +115,11 @@ const AppRoutes = () => (
         <Route path="add-campaign" element={getPage(<AddCampaign />)} />
         {/* Todo: Detete the route below */}
         <Route path="test-chart" element={getPage(<TestChart />)} />
-        <Route path="configs" element={getPage(<Configs />)} />
+        <Route path="settings/default-ads-config" element={getPage(<Configs />)} />
         <Route path="connectors" element={getPage(<DataConnectors />)} />
         <Route path="vnc-viewer" element={getPage(<VncViewer/>)}></Route>
-        <Route path="google-play-account" element={getPage(<GoogleAccount/>)}></Route>
-        <Route path="chrome-standalone" element={getPage(<ChromeStandalone/>)}></Route>
+        <Route path="settings/google-play-account" element={getPage(<GoogleAccount/>)}></Route>
+        <Route path="settings/chrome-standalone" element={getPage(<ChromeStandalone/>)}></Route>
         <Route path="settings/account" element={getPage(<Account />)} />
         <Route
           path="settings/notifications"
