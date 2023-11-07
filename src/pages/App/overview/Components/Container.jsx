@@ -6,8 +6,9 @@ import BarChart from "../Charts/BarChart";
 import PieChart from "../Charts/PieChart";
 import DoughnutChart from "../Charts/DoughnutChart";
 import StackBarChart from "../Charts/StackBarChart";
-const Container = ({listPerformance, listChart, criteria}) => {
+const Container = ({listReport, listChart, criteria}) => {
     const [selectedChart, setSelectedChart] = useState(listChart[0].key);
+    listReport = listReport.filter(rp => rp.name != null);
     return (
         <div style={{marginBottom: 40 , backgroundColor: "white"}}>
             <div style={{marginLeft:918, paddingTop: 10}}>
@@ -25,11 +26,9 @@ const Container = ({listPerformance, listChart, criteria}) => {
                     </button>
                 </Dropdown>
             </div>
-            {selectedChart == 1&&<LineChart props = {listPerformance}/>}
-            {selectedChart == 2&&<BarChart props = {listPerformance}/>}
-            {selectedChart == 3&&<PieChart listPerformance={listPerformance} criteria={criteria}/>}
-            {selectedChart == 4&&<DoughnutChart listPerformance={listPerformance} criteria={criteria}/>}
-            {selectedChart == 5&&<StackBarChart listPerformance={listPerformance} criteria={criteria}/>}
+            {selectedChart == 1&&<PieChart listReport={listReport} criteria={criteria}/>}
+            {selectedChart == 2&&<DoughnutChart listReport={listReport} criteria={criteria}/>}
+            {selectedChart == 3&&<BarChart listReport = {listReport} criteria={criteria}/>}
         </div>
     );
 };

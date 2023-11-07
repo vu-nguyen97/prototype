@@ -10,30 +10,55 @@ import Loading from "../../../utils/Loading";
 import Dropdown from "antd/lib/dropdown/dropdown";
 import MoreOutlined from "@ant-design/icons/lib/icons/MoreOutlined";
 import Container from "./Components/Container"
+import { useParams } from "react-router-dom";
 function Overview(props) {
-    const [listPerformance, setListPerformance] = useState([]);
+    const [listReport, setListReport] = useState<any>([]);
+    const [listAppVariant, setListAppVariant] = useState<any>([]);
+    const [listAds, setListAds] = useState<any>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [criteria, setCriteria] = useState("1");
+    let {appId} = useParams();
     useEffect(() => {
         setIsLoading(true);
-        service.get("/performance").then(
+        service.get("/cpi-campaigns/app-variants?campaignId=" + appId).then(
             (res: any) => {
-                setListPerformance(res.results);
+                setListAppVariant(res.results);
                 setIsLoading(false);
             },
             () => setIsLoading(false)
         );
     }, []);
+
+    useEffect(() => {
+        setIsLoading(true);
+        listAppVariant.forEach(appVariant => {
+            service.get("/unity-ads/" + appVariant?.id).then(
+                (res: any) => {
+                    setListAds(prevList => [...prevList, res.results]);
+                    setIsLoading(false);
+                },
+                () => setIsLoading(false)
+            );
+        });
+    }, [listAppVariant]);
+
+    useEffect(() => {
+        setIsLoading(true);
+        listAds.forEach(ad => {
+            service.get("/report?campaignId=" + ad?.unityCampaignId).then(
+                (res: any) => {
+                    setListReport(prevList => [...prevList, {...res.results, name: ad?.campaignName}]);
+                    setIsLoading(false);
+                },
+                () => setIsLoading(false)
+            );
+        });
+    }, [listAds]);
   return (
     <Page>
       {isLoading ? <Loading/>:
       <div className="mb-4" id="OverviewPage">
           <ul>
-              <li style={{backgroundColor: "#EEEEEE"}}>
-                  <h1 style={{fontSize: "20px", marginLeft: "5px"}}>Compare Retentions of Campaign</h1>
-                  <Container listPerformance = {listPerformance} listChart = {[{ key: "1", label: "LineChart" },
-                      { key: "2", label: "BarChart" },]} criteria={{}}/>
-              </li>
               <li style={{backgroundColor: "#EEEEEE"}}>
                   <h1 style={{fontSize: "20px", marginLeft: "5px"}}>Compare according to<Dropdown
                       className="!ml-0 xs:!ml-2"
@@ -43,7 +68,8 @@ function Overview(props) {
                           items: [
                               { key: "1", label: "impression" },
                               { key: "2", label: "click" },
-                              { key: "3", label: "install"}
+                              { key: "3", label: "install"},
+                              { key: "4", label: "cost"}
                           ],
                           onClick: (item) => setCriteria(item.key),
                       }}
@@ -53,11 +79,12 @@ function Overview(props) {
                           {criteria=="1"&&"impression"}
                           {criteria=="2"&&"click"}
                           {criteria=="3"&&"install"}
+                          {criteria=="4"&&"cost"}
                       </button>
                   </Dropdown></h1>
-                  <Container listPerformance = {listPerformance} listChart = {[{ key: "3", label: "PieChart" },
-                      { key: "4", label: "DoughnutChart"},
-                      { key: "5", label: "StackBarChart"}]} criteria={criteria}/>
+                  <Container listReport = {listReport} listChart = {[{ key: "1", label: "PieChart" },
+                      { key: "2", label: "DoughnutChart"},
+                      { key: "3", label: "BarChart"}]} criteria={criteria}/>
               </li>
           </ul>
       </div>}
