@@ -32,6 +32,9 @@ const UnityAdsDetail = (props) => {
       if (res.results === "Completed") {
         window.location.reload();
       }
+    }).catch((err) => {
+      console.log("status error", err);
+      window.location.reload();
     }),
   ];
 
