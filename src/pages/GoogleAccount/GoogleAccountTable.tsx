@@ -11,6 +11,7 @@ import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import { Link } from 'react-router-dom';
 import service from "../../partials/services/axios.config";
 import { toast } from "react-toastify";
+
 function GoogleAccountTable(props) {
     const defaultPageSize = 20;
     const [pageSize, setPageSize] = useState(defaultPageSize);
@@ -54,7 +55,7 @@ function GoogleAccountTable(props) {
             title: "IP",
             render: (record) => (
                 <div className="whitespace-nowrap md:whitespace-normal">
-                    {record.container.ip}
+                    {record?.container?.ip}
                 </div>
             )
         },
@@ -62,7 +63,7 @@ function GoogleAccountTable(props) {
             title: "Chrome Port",
             render: (record) => (
                 <div className="whitespace-nowrap md:whitespace-normal">
-                    {record.container.chromePort}
+                    {record?.container?.chromePort}
                 </div>
             )
         },
@@ -70,7 +71,7 @@ function GoogleAccountTable(props) {
             title: "VNC Port",
             render: (record) => (
                 <div className="whitespace-nowrap md:whitespace-normal">
-                    {record.container.vncPort}
+                    {record?.container?.vncPort}
                 </div>
             )
         },
@@ -78,7 +79,7 @@ function GoogleAccountTable(props) {
             title: "VNC PWD",
             render: (record) => (
                 <div className="whitespace-nowrap md:whitespace-normal">
-                    {record.container.vncPassword}
+                    {record?.container?.vncPassword}
                 </div>
             )
         },
