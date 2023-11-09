@@ -5,15 +5,30 @@ import Tooltip from "antd/lib/tooltip";
 import { AiOutlineEdit } from "@react-icons/all-files/ai/AiOutlineEdit";
 import {AiFillEye} from "@react-icons/all-files/ai/AiFillEye";
 import {AiOutlineReload} from "@react-icons/all-files/ai/AiOutlineReload";
+import {AiOutlineLogin} from "@react-icons/all-files/ai/AiOutlineLogin";
+import {AiOutlineCheckCircle} from "@react-icons/all-files/ai/AiOutlineCheckCircle"
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import { Link } from 'react-router-dom';
-
+import service from "../../partials/services/axios.config";
+import { toast } from "react-toastify";
 function GoogleAccountTable(props) {
     const defaultPageSize = 20;
     const [pageSize, setPageSize] = useState(defaultPageSize);
 
     const {listData, onEdit, onDelete, onSyncApp, isLoading} = props;
-    
+    const onUpdateStatus = (record) => {
+        service.post("/google-play-stores/"+record?.id+"/check-state",{account: record?.email}).then(
+        (res: any) => {
+        toast(res.message || "check state success!", { type: "success" });
+      },
+    );
+    const timeout = setTimeout(() => {
+        // Code to execute after the delay
+        console.log('Delayed code executed');
+        window.location.reload();
+    }, 5000);
+    return () => {clearTimeout(timeout); window.location.reload();};
+    }
     const columns = [
         {
             title: "Account",
@@ -72,7 +87,28 @@ function GoogleAccountTable(props) {
             width: 140,
             render: (text, record) => {
                 return (
-                    <div className="flex space-x-2 ml-2">
+                    (record?.state == "LOGIN_REQUIRE")?(
+                        <div className="flex space-x-2 ml-2">
+                        <>
+                            <Tooltip title="Login">
+                                <Link to="/vnc-viewer" state ={{ip: record.container.ip, vncPort: record.container.vncPort,  vncPassword: record.container.vncPassword}}>
+                                <AiOutlineLogin
+                                    size={20}
+                                    className="text-slate-600 hover:text-antPrimary cursor-pointer"
+                                />
+                                </Link>
+                            </Tooltip>
+                            <Tooltip title="Logged In Check">
+                                <AiOutlineCheckCircle
+                                    size={20}
+                                    className="text-slate-600 hover:text-antPrimary cursor-pointer"
+                                    onClick={()=>onUpdateStatus(record)}
+                                />
+                            </Tooltip>
+                        </>
+                    </div>
+                    ):
+                    (<div className="flex space-x-2 ml-2">
                         <>
                             <Tooltip title="Open">
                                 <Link to="/vnc-viewer" state ={{ip: record.container.ip, vncPort: record.container.vncPort,  vncPassword: record.container.vncPassword}}>
@@ -106,7 +142,7 @@ function GoogleAccountTable(props) {
                                 />
                             </Tooltip>
                         </>
-                    </div>
+                    </div>)
                 );
             },
         }

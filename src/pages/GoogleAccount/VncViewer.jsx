@@ -9,6 +9,7 @@ const VncViewer = () => {
   const ip = location.state.ip;
   const vncPort = location.state.vncPort;
   const vncPassword = location.state.vncPassword;
+  console.log(ip,vncPort,vncPassword);
   const vncViewUrl =
     `http://` +
     ip +

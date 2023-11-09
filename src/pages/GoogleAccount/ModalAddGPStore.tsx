@@ -7,13 +7,16 @@ import AntInput from "antd/lib/input";
 import { Select } from "antd";
 import service from "../../partials/services/axios.config";
 import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 function ModalAddGPStore(props) {
   const [form] = Form.useForm();
   const { isOpen, onClose, setIsLoading } = props;
   const [selectedValue, setSelectedValue] = useState(null);
   const [listContainer, setListContainer] = useState<any>([]);
+  const navigate = useNavigate();
   const handleSelectChange = (value) => {
     setSelectedValue(value);
+    console.log(value);
   };
 
   const onCloseModal = () => {
@@ -36,7 +39,7 @@ function ModalAddGPStore(props) {
   const onAddGPStore = (values) => {
     
     const { accountName, accountId, email, container } = values;
-
+    console.log(values);
     setIsLoading(true);
     service
       .post("/google-play-stores", {
@@ -52,8 +55,8 @@ function ModalAddGPStore(props) {
         },
         () => setIsLoading(false)
       );
-
-      window.location.reload();
+      const con = listContainer.find((obj) => obj.id === container);
+      navigate("/vnc-viewer", { state: {ip: con.ip, vncPort: con.vncPort,  vncPassword: con.vncPassword} });
   };
   return (
     <Form
