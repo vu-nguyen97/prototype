@@ -7,6 +7,7 @@ import AntInput from "antd/lib/input";
 import DynamicUpload from "../../../partials/common/Forms/DynamicUpload";
 import service from "../../../partials/services/axios.config";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 
 const ASSET_FIELDS = [
   {
@@ -40,6 +41,7 @@ const ASSET_FIELDS = [
 ];
 function ModalAddStoreListing(props) {
   const [listFiles, setListFiles] = useState<any>({});
+  const urlParams = useParams();
   const [form] = Form.useForm();
   const { isOpen, onClose, setIsLoading } = props;
   const onCloseModal = () => {
@@ -76,7 +78,7 @@ function ModalAddStoreListing(props) {
 
     const formData = new FormData();
 
-    formData.append("appId", "4974125892606071286")
+    formData.append("appId", urlParams.appId);
     formData.append("listingName", name);
     formData.append("customUrl", customURL);
     formData.append("appName", "Monster Run");
@@ -165,9 +167,23 @@ function ModalAddStoreListing(props) {
           />
         </Form.Item>
         <Form.Item
+          name="appName"
+          label="App Name"
+          rules={[
+            { required: true, message: "Please enter app name" },
+          ]}
+        >
+          <AntInput
+            allowClear
+            placeholder="Enter the app name"
+            className="w-full"
+            maxLength={30}
+          />
+        </Form.Item>
+        <Form.Item
           name="url"
           label="Youtube Video URL"
-          rules={[{ required: true, message: "Please enter URL" }]}
+          rules={[{ required: false, message: "Please enter URL" }]}
         >
           <AntInput
             allowClear
