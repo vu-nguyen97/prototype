@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Button from "antd/lib/button/button";
 import Form from "antd/lib/form";
-import Collapse from "antd/lib/collapse/collapse";
+import Collapse from "antd/lib/collapse";
 
 import { FIELD_REQUIRED } from "../../../constants/formMessage";
 import AntInput from "antd/lib/input";
