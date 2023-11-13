@@ -60,7 +60,7 @@ const CustomStoreListing = () => {
 
   const reloadCustomListings = () => {
     service
-      .get("/store-app/" + urlParams.appId)
+      .get("/store-app/appId?appId=" + urlParams.appId)
       .then((res: any) => {
         console.log(res);
         if (res.results.consoleStatus === "Draft") {
