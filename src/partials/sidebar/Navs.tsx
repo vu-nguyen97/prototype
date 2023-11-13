@@ -105,6 +105,7 @@ Navs.propTypes = {
   onMouseEnter: PropTypes.func,
   onClickTab: PropTypes.func,
   appState: PropTypes.object,
+  isStoreApp: PropTypes.bool,
 };
 
 export default Navs;

@@ -363,6 +363,7 @@ function Sidebar({
           <Navs
             listConfigs={listConfigs}
             isDetailApp={isDetailApp}
+            isStoreApp={isStoreApp}
             sidebarExpanded={sidebarExpanded}
             setSidebarExpanded={setSidebarExpanded}
             onMouseEnter={onMouseEnter}

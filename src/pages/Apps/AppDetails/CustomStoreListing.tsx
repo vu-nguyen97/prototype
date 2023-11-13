@@ -12,6 +12,7 @@ const CustomStoreListing = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenModalAddApp, setIsOpenModalAddApp] = useState(false);
   const [customListings, setCustomListings] = useState([]);
+  const [isDraft, setIsDraft] = useState(false);
   const urlParams = useParams();
   const onEditData = (record) => {};
   const onDelete = (record) => {};
@@ -58,6 +59,18 @@ const CustomStoreListing = () => {
   };
 
   const reloadCustomListings = () => {
+    service
+      .get("/store-app/appId?appId=" + urlParams.appId)
+      .then((res: any) => {
+        console.log(res);
+        if (res.results.consoleStatus === "Draft") {
+          setIsDraft(true);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
     setIsLoading(true);
     service.get("/" + urlParams.appId + "/custom_listings").then(
       (res: any) => {
@@ -91,22 +104,40 @@ const CustomStoreListing = () => {
           </p>
           <div className="mt-1 sm:mt-0">
             <div>
-              <Button type="primary" style={{ marginRight: 10 }}>
+              <Button
+                type="primary"
+                style={{ marginRight: 10 }}
+                disabled={isDraft}
+              >
                 Create Group
               </Button>
               <Button
                 type="primary"
                 onClick={(e) => setIsOpenModalAddApp(true)}
+                disabled={isDraft}
               >
                 Create Listing
               </Button>
+              {isDraft && (
+                <div className="text-red-500 font-bold">
+                  Cannot have custom url listings for draft apps
+                </div>
+              )}
             </div>
 
             <div className="flex justify-end my-3 gap-4">
-              <Button type="primary" onClick={reloadCustomListings}>
+              <Button
+                type="primary"
+                onClick={reloadCustomListings}
+                disabled={isDraft}
+              >
                 Reload
               </Button>
-              <Button type="primary" onClick={sendUpdateListingRequest}>
+              <Button
+                type="primary"
+                onClick={sendUpdateListingRequest}
+                disabled={isDraft}
+              >
                 Update
               </Button>
             </div>
@@ -126,6 +157,7 @@ const CustomStoreListing = () => {
         isOpen={isOpenModalAddApp}
         onClose={() => setIsOpenModalAddApp(false)}
         setIsLoading={setIsLoading}
+        setIsOpenModalAddApp={setIsOpenModalAddApp}
       />
     </Page>
   );
