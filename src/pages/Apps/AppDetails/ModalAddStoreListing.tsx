@@ -43,7 +43,7 @@ function ModalAddStoreListing(props) {
   const [listFiles, setListFiles] = useState<any>({});
   const urlParams = useParams();
   const [form] = Form.useForm();
-  const { isOpen, onClose, setIsLoading } = props;
+  const { isOpen, onClose, setIsLoading, setIsOpenModalAddApp } = props;
   const onCloseModal = () => {
     onClose();
     setTimeout(() => {
@@ -103,10 +103,14 @@ function ModalAddStoreListing(props) {
 
     service.post("/custom_listing", formData).then(
       (res: any) => {
-        toast(res.message, { type: "success" });
+        toast("Success", { type: "success" });
         setIsLoading(false);
+        setIsOpenModalAddApp(false);
       },
-      () => setIsLoading(false)
+      (err) => {
+        setIsLoading(false);
+        toast(err, { type: "error" });
+      }
     );
   };
 
@@ -169,9 +173,7 @@ function ModalAddStoreListing(props) {
         <Form.Item
           name="appName"
           label="App Name"
-          rules={[
-            { required: true, message: "Please enter app name" },
-          ]}
+          rules={[{ required: true, message: "Please enter app name" }]}
         >
           <AntInput
             allowClear
@@ -242,6 +244,7 @@ ModalAddStoreListing.propTypes = {
   isOpen: PropTypes.bool,
   onClose: PropTypes.func,
   setIsLoading: PropTypes.func,
+  setIsOpenModalAddApp: PropTypes.func,
 };
 
 export default ModalAddStoreListing;

@@ -157,6 +157,7 @@ const CustomStoreListing = () => {
         isOpen={isOpenModalAddApp}
         onClose={() => setIsOpenModalAddApp(false)}
         setIsLoading={setIsLoading}
+        setIsOpenModalAddApp={setIsOpenModalAddApp}
       />
     </Page>
   );
