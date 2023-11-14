@@ -7,14 +7,32 @@ import { AiOutlineFilter } from "@react-icons/all-files/ai/AiOutlineFilter";
 import { AiOutlineEdit } from "@react-icons/all-files/ai/AiOutlineEdit";
 import { AiOutlineSearch } from "@react-icons/all-files/ai/AiOutlineSearch";
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
+import { UploadOutlined } from "@ant-design/icons";
 import { AiFillEye } from "@react-icons/all-files/ai/AiFillEye";
 import { Select } from "antd";
 import { Link } from "react-router-dom";
+import service from "../../partials/services/axios.config";
+import { toast } from "react-toastify";
+import { AiOutlineUpload } from "react-icons/ai";
 function AppTable(props) {
   const defaultPageSize = 10;
   const [pageSize, setPageSize] = useState(defaultPageSize);
   const [searchByDevId, setSearchByDevId] = useState("");
   const { listData, onSearch, isLoading } = props;
+
+  const createUnityApp = (record) => {
+    service
+      .post("/create-unity-app", {
+        store: "google",
+        storeId: record.packageId,
+      })
+      .then((res: any) => {
+        toast(res.message, { type: "success" });
+      })
+      .catch((error) => {
+        toast(error.message, { type: "error" });
+      });
+  };
 
   const columns = [
     {
@@ -96,6 +114,19 @@ function AppTable(props) {
                 </Tooltip>
               </Link>
             </>
+            {!record.unityAppId && (
+              <>
+                <Tooltip title="Create unity app">
+                  <AiOutlineUpload
+                    className="text-slate-600 hover:text-antPrimary cursor-pointer"
+                    size={21}
+                    onClick={() => {
+                      createUnityApp(record);
+                    }}
+                  />
+                </Tooltip>
+              </>
+            )}
           </div>
         );
       },
