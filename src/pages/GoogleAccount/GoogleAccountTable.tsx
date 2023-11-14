@@ -30,6 +30,23 @@ function GoogleAccountTable(props) {
     }, 5000);
     return () => {clearTimeout(timeout); window.location.reload();};
     }
+    
+    const onOpenVnc = (value) => {
+        const state = {ip: value.container.ip, vncPort: value.container.vncPort,  vncPassword: value.container.vncPassword}
+        const queryString = new URLSearchParams(state).toString();
+        window.open("/vnc-viewer?" + queryString, '_blank');
+        onStopTask();
+    }
+
+    const onStopTask = () => {
+        console.log("stop task");
+        service.post("/stop-task").then(
+        (res: any) => {
+        toast(res.message || "stop task success!", { type: "success" });
+      },
+    );
+    }
+
     const columns = [
         {
             title: "Account",
@@ -92,12 +109,11 @@ function GoogleAccountTable(props) {
                         <div className="flex space-x-2 ml-2">
                         <>
                             <Tooltip title="Login">
-                                <Link to="/vnc-viewer" state ={{ip: record.container.ip, vncPort: record.container.vncPort,  vncPassword: record.container.vncPassword}}>
                                 <AiOutlineLogin
                                     size={20}
                                     className="text-slate-600 hover:text-antPrimary cursor-pointer"
+                                    onClick={()=>{onOpenVnc(record)}}
                                 />
-                                </Link>
                             </Tooltip>
                             <Tooltip title="Logged In Check">
                                 <AiOutlineCheckCircle
@@ -112,12 +128,11 @@ function GoogleAccountTable(props) {
                     (<div className="flex space-x-2 ml-2">
                         <>
                             <Tooltip title="Open">
-                                <Link to="/vnc-viewer" state ={{ip: record.container.ip, vncPort: record.container.vncPort,  vncPassword: record.container.vncPassword}}>
                                 <AiFillEye
                                     size={20}
                                     className="text-slate-600 hover:text-antPrimary cursor-pointer"
+                                    onClick={()=>{onOpenVnc(record)}}
                                 />
-                                </Link>
                             </Tooltip>
                             <Tooltip title="Edit account">
                                 <AiOutlineEdit
