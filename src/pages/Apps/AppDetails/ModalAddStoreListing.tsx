@@ -84,7 +84,9 @@ function ModalAddStoreListing(props) {
     formData.append("appName", "Monster Run");
     formData.append("shortDescription", shortDescription);
     formData.append("fullDescription", fullDescription);
-    formData.append("youtubeVideoUrl", url);
+    if (url) {
+      formData.append("youtubeVideoUrl", url);
+    }
 
     formData.append("featureGraphic", featureImg[0]);
     formData.append("appIcon", iconImg[0]);
