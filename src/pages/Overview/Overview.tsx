@@ -5,7 +5,7 @@ import LineChart from "./Charts/LineChart";
 import PieChart from "./Charts/PieChart";
 import StackbarChart from "./Charts/StackbarChart";
 import Page from "../../utils/composables/Page";
-import Dropdown from "antd/lib/dropdown/dropdown";
+import Dropdown from "antd/lib/dropdown";
 import MoreOutlined from "@ant-design/icons/lib/icons/MoreOutlined";
 import {
   ChartIds,

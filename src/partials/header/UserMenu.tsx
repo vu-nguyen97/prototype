@@ -15,8 +15,7 @@ function UserMenu() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const userData = useSelector((state: RootState) => state.account.userData);
   const organizationCode = userData.organization.code;
-  const settingUrl =
-    ORGANIZATION_PATH + "/" + organizationCode + "/settings/account";
+  const settingUrl = "/settings/account";
 
   const dispatch = useDispatch();
   const trigger = useRef(null);

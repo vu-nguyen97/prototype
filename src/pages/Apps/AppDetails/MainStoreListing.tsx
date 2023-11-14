@@ -86,10 +86,13 @@ const MainStoreListing = () => {
     service.post("/main_listing", formData).then(
       (res: any) => {
         console.log("main");
-        toast(res.message, { type: "success" });
+        toast("Success", { type: "success" });
         setIsLoading(false);
       },
-      () => setIsLoading(false)
+      (err) => {
+        setIsLoading(false);
+        toast(err, { type: "error" });
+      }
     );
   };
 

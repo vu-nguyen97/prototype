@@ -7,7 +7,7 @@ import DoughnutChart from "./Charts/DoughnutChart";
 import StackBarChart from "./Charts/StackBarChart";
 import service from "../../../partials/services/axios.config";
 import Loading from "../../../utils/Loading";
-import Dropdown from "antd/lib/dropdown/dropdown";
+import Dropdown from "antd/lib/dropdown";
 import MoreOutlined from "@ant-design/icons/lib/icons/MoreOutlined";
 import Container from "./Components/Container"
 import { useParams } from "react-router-dom";
