@@ -15,7 +15,7 @@ const PieChart = ({listReport, criteria}) => {
     }
     console.log(compare_data);
     const data = {
-        labels: listReport.map(item => item?.name),
+        labels: listReport.map(item => item?.campaignName),
         datasets: [
             {
                 label: 'Compare Campaign',

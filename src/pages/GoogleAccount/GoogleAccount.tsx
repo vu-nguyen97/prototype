@@ -73,7 +73,6 @@ const GoogleAccount = () => {
         </div>
         <div className="mt-2">
           <GoogleAccountTable
-            isLoading={isLoading}
             onEdit={onEditData}
             onDelete={onDelete}
             onSyncApp={onSyncApp}

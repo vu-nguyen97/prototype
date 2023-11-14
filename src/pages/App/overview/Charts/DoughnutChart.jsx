@@ -13,7 +13,7 @@ const DoughnutChart = ({listReport, criteria}) => {
         break;
     }
     const data = {
-        labels: listReport.map(item => item?.name),
+        labels: listReport.map(item => item?.campaignName),
         datasets: [
             {
                 label: 'Compare Campaign',

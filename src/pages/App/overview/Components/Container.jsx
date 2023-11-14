@@ -8,7 +8,6 @@ import DoughnutChart from "../Charts/DoughnutChart";
 import StackBarChart from "../Charts/StackBarChart";
 const Container = ({listReport, listChart, criteria}) => {
     const [selectedChart, setSelectedChart] = useState(listChart[0].key);
-    listReport = listReport.filter(rp => rp.name != null);
     return (
         <div style={{marginBottom: 40 , backgroundColor: "white"}}>
             <div style={{marginLeft:918, paddingTop: 10}}>

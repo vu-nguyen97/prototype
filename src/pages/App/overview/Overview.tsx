@@ -20,40 +20,15 @@ function Overview(props) {
     let {appId} = useParams();
     useEffect(() => {
         setIsLoading(true);
-        service.get("/cpi-campaigns/app-variants?campaignId=" + appId).then(
+        service.get("/report?CPICampaignId="+appId).then(
             (res: any) => {
-                setListAppVariant(res.results);
+                setListReport(res.results);
                 setIsLoading(false);
             },
             () => setIsLoading(false)
         );
     }, []);
 
-    useEffect(() => {
-        setIsLoading(true);
-        listAppVariant.forEach(appVariant => {
-            service.get("/unity-ads/" + appVariant?.id).then(
-                (res: any) => {
-                    setListAds(prevList => [...prevList, res.results]);
-                    setIsLoading(false);
-                },
-                () => setIsLoading(false)
-            );
-        });
-    }, [listAppVariant]);
-
-    useEffect(() => {
-        setIsLoading(true);
-        listAds.forEach(ad => {
-            service.get("/report?campaignId=" + ad?.unityCampaignId).then(
-                (res: any) => {
-                    setListReport(prevList => [...prevList, {...res.results, name: ad?.campaignName}]);
-                    setIsLoading(false);
-                },
-                () => setIsLoading(false)
-            );
-        });
-    }, [listAds]);
   return (
     <Page>
       {isLoading ? <Loading/>:

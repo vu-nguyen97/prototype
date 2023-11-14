@@ -138,7 +138,6 @@ function Apps(props) {
 
         <div>
           <AppTable
-            isLoading={isLoading}
             onSearch={onSearch}
             listData={listAppRender}
           />

@@ -64,7 +64,6 @@ const ChromeStandalone = () => {
                     </Button>
                 </div>
                 <ChromeStandaloneTable
-                    isLoading = {isLoading}
                     onEdit={onEditData}
                     onDelete={onDelete}
                     listData={listContainer}
