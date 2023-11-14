@@ -93,9 +93,8 @@ function ModalAddGPStore(props) {
         >
           <AntInput
             allowClear
-            placeholder="Enter a Name (max 20 characters)"
+            placeholder="Enter a Name"
             className="w-full"
-            maxLength={20}
           />
         </Form.Item>
         <Form.Item
@@ -106,7 +105,6 @@ function ModalAddGPStore(props) {
           <AntInput
             allowClear
             className="w-full"
-            maxLength={20}
           />
         </Form.Item>
         <Form.Item
@@ -116,9 +114,8 @@ function ModalAddGPStore(props) {
         >
           <AntInput
             allowClear
-            placeholder="Enter an email (max 30 characters)"
+            placeholder="Enter an email"
             className="w-full"
-            maxLength={30}
           />
         </Form.Item>
         <Form.Item name="container" label="Container">

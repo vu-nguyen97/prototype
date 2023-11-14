@@ -15,6 +15,7 @@ const VncViewer = () => {
   console.log(ip,vncPort,vncPassword);
 
   useEffect(() => {
+    window.history.pushState({}, "", "/");
     const handleBeforeUnload = (event) => {
       event.preventDefault();
       service.post("/restart-task").then(
