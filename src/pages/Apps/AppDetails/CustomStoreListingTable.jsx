@@ -65,7 +65,7 @@ function CustomStoreListingTable(props) {
       render: (text, record) => {
         return (
           <div className="flex space-x-2 ml-2">
-            <>
+            {/* <>
               <Tooltip title="Edit store listing">
                 <AiOutlineEdit
                   size={20}
@@ -80,7 +80,7 @@ function CustomStoreListingTable(props) {
                   onClick={() => onDelete(record)}
                 />
               </Tooltip>
-            </>
+            </> */}
           </div>
         );
       },
