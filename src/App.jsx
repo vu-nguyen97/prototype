@@ -92,7 +92,7 @@ function App() {
   let persistor = persistStore(store);
 
   useEffect(() => {
-    message.config({ duration: 5 });
+    //message.config({ duration: 5 });
   }, []);
 
   useEffect(() => {

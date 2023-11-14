@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Dropdown from "antd/lib/dropdown/dropdown";
+import Dropdown from "antd/lib/dropdown";
 import MoreOutlined from "@ant-design/icons/lib/icons/MoreOutlined";
 import LineChart from "../Charts/LineChart";
 import BarChart from "../Charts/BarChart";
