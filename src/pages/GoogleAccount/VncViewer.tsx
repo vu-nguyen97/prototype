@@ -45,7 +45,7 @@ const VncViewer = () => {
       <div>
         <iframe
           id="vncFrame"
-          src={vncViewUrl}
+          src={"https://prototype.data4game.com:7556/?autoconnect=1&resize=local&password=fAlc0n2023FaKcOn55555"}
           style={{ width: "100%", height: "900px" }}
         ></iframe>
       </div>
