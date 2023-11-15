@@ -14,6 +14,7 @@ const Members = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [listRole, setListRole] = useState<any>([]);
   const [listApp, setListApp] = useState([]);
+  const [listStores, setListStores] = useState<any>([]);
   const [listMember, setListMember] = useState<any>([]);
   const [isOpenModalAddAndEdit, setIsOpenModalAddAndEdit] = useState(false);
   const [editedUser, setEditedUser] = useState<any>({});
@@ -23,19 +24,14 @@ const Members = () => {
     const getListRole = service.get("/role");
     const getListApp = service.get("/store-app");
     const getAllUser = service.get("/user/findAll");
-    Promise.all([getListRole, getListApp, getAllUser]).then(
+    const getListStore = service.get("/google-play-stores")
+    Promise.all([getListRole, getListApp, getAllUser, getListStore]).then(
       (res: any) => {
         setIsLoading(false);
-        // if (!res[0].results?.length) return;
-        // const listRole = res[0].results.map((role) =>
-        //   Object.assign({}, role, {
-        //     label: capitalizeWord(role.name.toLowerCase()),
-        //   })
-        // );
-
         setListRole(res[0].results || []);
         setListApp(res[1].results || []);
         setListMember(res[2].results || []);
+        setListStores(res[3].results || []);
       },
       () => setIsLoading(false)
     );
@@ -133,6 +129,7 @@ const Members = () => {
         setIsLoading={setIsLoading}
         onClose={onCloseModal}
         listStoreApps={listApp}
+        listStores={listStores}
         memberData={editedUser}
         listRole={listRole}
         setListMember={setListMember}

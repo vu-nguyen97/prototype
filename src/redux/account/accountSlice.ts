@@ -14,6 +14,7 @@ interface UserData {
   phone?: string;
   organization: Organization;
   storeApps?: any;
+  storeId?: any; 
 }
 
 interface Organization {

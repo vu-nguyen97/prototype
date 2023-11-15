@@ -176,13 +176,6 @@ export const SidebarAppConfigs = [
     iconEl: <BiPalette size={20} />,
     preload: () => import("../../pages/App/Variants/AppVariants"),
   },
-  // {
-  //   id: 2,
-  //   url: "/campaigns",
-  //   label: "Unity campaigns",
-  //   iconEl: <AiOutlineNotification size={20} />,
-  //   preload: () => import("../../pages/App/Campaigns/Campaigns"),
-  // },
   {
     id: 6,
     url: "/settings",

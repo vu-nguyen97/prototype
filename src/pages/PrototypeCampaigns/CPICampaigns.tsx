@@ -19,7 +19,8 @@ import moment from "moment";
 import Select from "antd/lib/select";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
 import ModalAdd from './ModalAdd';
-
+import { RootState } from "../../redux/store";
+import { useSelector } from "react-redux";
 const ListStatus = [
   { value: "true", label: "Active" },
   { value: "false", label: "Inactive" },
@@ -35,7 +36,12 @@ function Apps() {
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
   const [active, setActive] = useState("true");
   const [dateRange, setDateRange] = useState<any>(getLastDay(20));
-
+  const storeId = useSelector(
+    (state: RootState) => state.account.userData.storeId
+  );
+  const isAdmin = useSelector(
+    (state: RootState) => state.account.userData.isAdmin
+  );
   // Filters in BE
   const defaultPageSize = 20;
   const [tableFilters, setTableFilters] = useState({
@@ -72,6 +78,7 @@ function Apps() {
       name: search,
       createdBy,
       active,
+      storeId: isAdmin?"":storeId,
     };
 
     setIsLoading(true);

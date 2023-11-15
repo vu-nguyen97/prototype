@@ -12,6 +12,7 @@ import AntInput from "antd/lib/input/Input";
 import SelectStoreApp, {
   getActivedApp,
 } from "../../partials/common/Forms/SelectStoreApp";
+import { Input } from "antd";
 
 function ModalAddAndEdit(props) {
   const [form] = Form.useForm();
@@ -22,6 +23,7 @@ function ModalAddAndEdit(props) {
     memberData,
     listStoreApps,
     listRole,
+    listStores,
     listMember,
     setListMember,
   } = props;
@@ -29,7 +31,11 @@ function ModalAddAndEdit(props) {
   const defaultRole = ROLES.user;
   const [activedApp, setActivedApp] = useState<string[]>();
   const [activedRole, setActivedRole] = useState(defaultRole);
+  const [selectedValue, setSelectedValue] = useState<any>([]);
 
+  const handleChange = (value) => {
+    setSelectedValue(value);
+  };
   useEffect(() => {
     if (!memberData?.id) return;
 
@@ -66,25 +72,25 @@ function ModalAddAndEdit(props) {
   };
 
   const onFinish = (values) => {
-    const { apps, email, role } = values;
+    const { apps, storeId, email, role } = values;
     const storeApps = apps?.map((str) => getActivedApp(listStoreApps, str));
 
     if (isEditMode) {
       return onSubmitEditUser(role, storeApps);
     }
 
-    onSubmitInviteUser(email, role, storeApps);
+    onSubmitInviteUser(email, role, storeId);
   };
 
-  const onSubmitInviteUser = (email, role, storeApps) => {
+  const onSubmitInviteUser = (email, role, storeId) => {
     const params = {
       email,
       role,
-      storeAppIds: storeApps?.map((el) => el.id),
+      storeId,
     };
 
     setIsLoading(true);
-    service.post("/inviteUser", {email, role}).then(
+    service.post("/inviteUser", {email, role, storeId}).then(
       (res: any) => {
         toast(res.message || "Invite member success!", { type: "success" });
         setIsLoading(false);
@@ -156,18 +162,10 @@ function ModalAddAndEdit(props) {
           label="Role"
           rules={[{ required: true, message: OPTION_REQUIRED }]}
         >
-          <Select
-            placeholder="Select role"
+          <Input
+            defaultValue="Default Value" disabled
             className="w-full"
-            value={activedRole}
-            onChange={setActivedRole}
-          >
-            {listRole?.map((role: any, idx) => (
-              <Select.Option value={role.name} key={idx}>
-                {role.label}
-              </Select.Option>
-            ))}
-          </Select>
+          />
         </Form.Item>
 
         <Form.Item
@@ -181,9 +179,17 @@ function ModalAddAndEdit(props) {
             className="w-full"
           />
         </Form.Item>
-
-        {activedRole === ROLES.user && (
-          <Form.Item name="apps" label="Apps">
+        <Form.Item name="storeId" label="Store">
+        <Select value={selectedValue} onChange={handleChange} className="w-full">
+            {listStores.map((item) => (
+              <Select.Option key={item.id} value={item.id}>            
+                  {item.name}            
+              </Select.Option>
+            ))}
+          </Select>
+          </Form.Item>
+        {/* {activedRole === ROLES.user && (
+          <Form.Item name="stores" label="Stores">
             <SelectStoreApp
               isMultiple={true}
               listApp={listStoreApps}
@@ -194,7 +200,7 @@ function ModalAddAndEdit(props) {
               }}
             />
           </Form.Item>
-        )}
+        )} */}
       </Modal>
     </Form>
   );
@@ -208,6 +214,7 @@ ModalAddAndEdit.propTypes = {
   listMember: PropTypes.array,
   memberData: PropTypes.object,
   listStoreApps: PropTypes.array,
+  listStores: PropTypes.array,
   listRole: PropTypes.array,
 };
 

@@ -25,6 +25,8 @@ import Input from "antd/lib/input/Input";
 import { AiOutlineSearch } from "@react-icons/all-files/ai/AiOutlineSearch";
 import AppTable from "./AppTable";
 import { Select } from "antd";
+import { RootState } from "../../redux/store";
+import { useSelector } from "react-redux";
 function Apps(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState("");
@@ -33,25 +35,46 @@ function Apps(props) {
   const [listDeveloper, setListDeveloper] = useState<any>([]);
   const [selectedValue, setSelectedValue] = useState<any>([]);
   const [selectedValueName, setSelectedValueName] = useState<any>([]);
+  const storeId = useSelector(
+    (state: RootState) => state.account.userData.storeId
+  );
+  const isAdmin = useSelector(
+    (state: RootState) => state.account.userData.isAdmin
+  );
   
   useEffect(() => {
-    service.get("/google-play-stores").then(
-      (res: any) => {
-        setListDeveloper(res.results);
-        setSelectedValue(res.results[0]?.id);
-        setSelectedValueName(res.results[0]?.name);
-        setIsLoading(false);
-      },
-      () => {
-        setIsLoading(false);
-      }
-    );
+    if(isAdmin){
+      service.get("/google-play-stores").then(
+        (res: any) => {
+          setListDeveloper(res.results);
+          setSelectedValue(res.results[0]?.id);
+          setSelectedValueName(res.results[0]?.name);
+          setIsLoading(false);
+        },
+        () => {
+          setIsLoading(false);
+        }
+      );
+    }else{
+      service.get("/google-play-stores/"+storeId).then(
+        (res: any) => {
+          setListDeveloper(res.results);
+          setSelectedValue(res.results?.id);
+          setSelectedValueName(res.results?.name);
+          setIsLoading(false);
+        },
+        () => {
+          setIsLoading(false);
+        }
+      );
+    }
+    
   }, []);
 
   useEffect(() => {
     setIsLoading(true);
     console.log(selectedValue);
-    service.get("/store-app?devId=" + selectedValue).then(
+    service.get("/store-app/devId?devId=" + selectedValue).then(
       (res: any) => {
         setListApp(res.results);
         setListAppRender(res.results);
@@ -65,7 +88,7 @@ function Apps(props) {
 
   const getApp = (value) => {
     setIsLoading(true);
-    service.get("/store-app?devId=" + value).then(
+    service.get("/store-app/devId?devId=" + value).then(
       (res: any) => {
         setListApp(res.results);
         setListAppRender(res.results);
@@ -105,7 +128,7 @@ function Apps(props) {
           style={{ marginBottom: 20 }}
         >
           <div className="flex items-center flex-wrap -mx-1 2xl:-mx-2 -mt-3">
-            <Select
+            {isAdmin&&(<Select
               value={selectedValue}
               onChange={handleSelectChange}
               placeholder={selectedValueName}
@@ -116,7 +139,7 @@ function Apps(props) {
                   {item.name}
                 </Select.Option>
               ))}
-            </Select>
+            </Select>)}
             <AntInput
               allowClear
               placeholder="Search name"
