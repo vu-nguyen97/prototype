@@ -63,10 +63,13 @@ const MainStoreListing = () => {
 
     const formData = new FormData();
 
+    formData.append("developerId", "4976312113699037823");
     formData.append("appId", urlParams.appId);
     formData.append("shortDescription", shortDescription);
     formData.append("fullDescription", fullDescription);
-    formData.append("youtubeVideoUrl", url);
+    if (url) {
+      formData.append("youtubeVideoUrl", url);
+    }
 
     formData.append("featureGraphic", featureImg[0]);
     formData.append("appIcon", iconImg[0]);
