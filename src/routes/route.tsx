@@ -6,6 +6,7 @@ import {
   ProtectedRoutes,
 } from "../utils/ProtectedRoutes";
 import { FallbackProvider } from "../utils/composables/FallbackProvider";
+import SeleniumClients from "../pages/SeleniumClients/SeleniumClients";
 // import ErrorBoundary from "../utils/ErrorBoundary";
 
 const DefaultLayout = React.lazy(() => import("../partials/layouts/layout"));
@@ -120,6 +121,7 @@ const AppRoutes = () => (
         <Route path="vnc-viewer" element={getPage(<VncViewer/>)}></Route>
         <Route path="settings/google-play-account" element={getPage(<GoogleAccount/>)}></Route>
         <Route path="settings/chrome-standalone" element={getPage(<ChromeStandalone/>)}></Route>
+        <Route path="settings/selenium-clients" element={getPage(<SeleniumClients/>)}></Route>
         <Route path="settings/account" element={getPage(<Account />)} />
         <Route
           path="settings/notifications"
