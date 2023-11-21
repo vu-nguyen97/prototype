@@ -58,6 +58,7 @@ export default function ModalEditMainListing(props) {
   };
   const onFinish = (values) => {
     console.log("values", values);
+    onCloseModal();
     const { shortDescription, fullDescription, url } = values;
 
     const {
@@ -106,21 +107,34 @@ export default function ModalEditMainListing(props) {
     );
   };
   return (
-    <Modal
-      width={"70%"}
-      onCancel={onCloseModal}
-      open={modalOpen}
-      title="Edit main store listing"
+    <Form
+      id="MainListingForm"
+      labelAlign="left"
+      form={form}
+      labelCol={{ span: 24 }}
+      wrapperCol={{ span: 24 }}
+      onFinish={onFinish}
     >
-      <div className="bg-white p-5">
-        <Form
-          id="MainListingForm"
-          labelAlign="left"
-          form={form}
-          labelCol={{ span: 24 }}
-          wrapperCol={{ span: 24 }}
-          onFinish={onFinish}
-        >
+      <Modal
+        width={"70%"}
+        onCancel={onCloseModal}
+        open={modalOpen}
+        title="Edit main store listing"
+        footer={[
+          <Button key="back" htmlType="button" onClick={onCloseModal}>
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            htmlType="submit"
+            form="MainListingForm"
+          >
+            Save
+          </Button>,
+        ]}
+      >
+        <div className="bg-white p-5">
           <Form.Item
             name="shortDescription"
             label="Short description"
@@ -176,13 +190,8 @@ export default function ModalEditMainListing(props) {
               />
             );
           })}
-          <Form.Item wrapperCol={{ span: 24 }}>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Form.Item>
-        </Form>
-      </div>
-    </Modal>
+        </div>
+      </Modal>
+    </Form>
   );
 }

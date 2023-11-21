@@ -158,9 +158,12 @@ const MainStoreListing = () => {
 
       {mainListing ? (
         <div className="bg-white p-5">
-          <div className="flex">
+          <div className="flex gap-5">
             <Button type="primary" onClick={() => setIsModalOpen(true)}>
               Edit main store listing
+            </Button>
+            <Button type="primary" onClick={() => fetchMainStoreListing()}>
+              Fetch main store listing
             </Button>
           </div>
           <div className="mt-4 text-2xl font-[1000]">
@@ -186,6 +189,28 @@ const MainStoreListing = () => {
               Youtube Video Url: {mainListing.youtubeVideoUrl}
             </div>
           )}
+          <div className="mt-4 text-2xl font-[1000]">
+            App Icon:
+            <div className="flex justify-center">
+              <img
+                src={mainListing.appIconUrl}
+                width={200}
+                height={200}
+                alt="App Icon"
+              />
+            </div>
+          </div>
+          <div className="mt-4 text-2xl font-[1000]">
+            Feature Graphic:
+            <div className="flex justify-center">
+              <img
+                src={mainListing.featureGraphicUrl}
+                width={200}
+                height={200}
+                alt="Feature Graphic"
+              />
+            </div>
+          </div>
           <div className="mt-4 text-2xl font-[1000]">
             Phone Screenshots:
             <div className="flex flex-wrap justify-center">
