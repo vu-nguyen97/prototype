@@ -10,7 +10,7 @@ import { FaGooglePlay } from "@react-icons/all-files/fa/FaGooglePlay";
 import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
 import { AiOutlineNodeIndex } from "@react-icons/all-files/ai/AiOutlineNodeIndex";
 import { BiPalette } from "@react-icons/all-files/bi/BiPalette";
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 
 
 export const SidebarAdminConfigs = [
@@ -63,6 +63,12 @@ export const SidebarAdminConfigs = [
     label: "Settings",
     iconEl: <AiOutlineTool size={20} />,
     children: [
+      {
+        url: "/settings/selenium-clients",
+        label: "Automated Clients",
+        iconEl: <FaDocker size={16} />,
+        preload: () => import("../../pages/SeleniumClients/SeleniumClients"),
+      },
       {
         url: "/settings/chrome-standalone",
         label: "Chrome Standalone",
