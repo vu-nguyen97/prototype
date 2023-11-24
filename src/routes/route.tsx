@@ -7,6 +7,7 @@ import {
 } from "../utils/ProtectedRoutes";
 import { FallbackProvider } from "../utils/composables/FallbackProvider";
 import SeleniumClients from "../pages/SeleniumClients/SeleniumClients";
+import EditMainStoreListing from "../pages/Apps/AppDetails/EditMainStoreListing";
 // import ErrorBoundary from "../utils/ErrorBoundary";
 
 const DefaultLayout = React.lazy(() => import("../partials/layouts/layout"));
@@ -79,6 +80,11 @@ const StoreAppDetail = React.lazy(() => import("../pages/Apps/AppDetail"));
 const CustomStoreListing = React.lazy(() => import("../pages/Apps/AppDetails/CustomStoreListing"));
 const MainStoreListing = React.lazy(() => import("../pages/Apps/AppDetails/MainStoreListing"));
 const GoogleAccount = React.lazy(() => import("../pages/GoogleAccount/GoogleAccount"));
+<<<<<<< HEAD
+=======
+const ChromeStandalone = React.lazy(() => import("../pages/ChromeStandalone/ChromeStandalone"));
+const TaskMangement = React.lazy(() => import("../pages/TaskManagement/TaskMangement"));
+>>>>>>> 0b227203aa836cf64a834f34398019d98d862b0e
 const VncViewer = React.lazy(() => import("../pages/GoogleAccount/VncViewer"));
 /**
  * Refs:
@@ -103,6 +109,7 @@ const AppRoutes = () => (
           <Route path="overview" element={getAppPage(<Overview />)} />
           <Route path="main-store-listing" element={getStoreAppPage(<MainStoreListing/>)}/>
           <Route path="custom-store-listing" element={getStoreAppPage(<CustomStoreListing/>)}/>
+          <Route path="edit-main-listing" element={getStoreAppPage(<EditMainStoreListing/>)}/>
           <Route path="campaigns" element={getAppPage(<Campaigns />)} />
           <Route
             path="campaigns/:campId"
@@ -119,6 +126,9 @@ const AppRoutes = () => (
         <Route path="connectors" element={getPage(<DataConnectors />)} />
         <Route path="vnc-viewer" element={getPage(<VncViewer/>)}></Route>
         <Route path="settings/google-play-account" element={getPage(<GoogleAccount/>)}></Route>      
+        <Route path="settings/google-play-account" element={getPage(<GoogleAccount/>)}></Route>
+        {/* <Route path="settings/chrome-standalone" element={getPage(<ChromeStandalone/>)}></Route>
+        <Route path="settings/task-management" element={getPage(<TaskMangement/>)}></Route> */}
         <Route path="settings/selenium-clients" element={getPage(<SeleniumClients/>)}></Route>
         <Route path="settings/account" element={getPage(<Account />)} />
         <Route

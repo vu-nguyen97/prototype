@@ -10,6 +10,7 @@ import { FaGooglePlay } from "@react-icons/all-files/fa/FaGooglePlay";
 import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
 import { AiOutlineNodeIndex } from "@react-icons/all-files/ai/AiOutlineNodeIndex";
 import { BiPalette } from "@react-icons/all-files/bi/BiPalette";
+import { AiOutlineEdit } from "react-icons/ai";
 // import { useDispatch, useSelector } from 'react-redux';
 
 
@@ -75,6 +76,13 @@ export const SidebarAdminConfigs = [
         iconEl: <FaGooglePlay size={16} />,
         preload: () =>
           import("../../pages/GoogleAccount/GoogleAccount"),
+      },
+      {
+        url: "/settings/task-management",
+        label: "Task Mangement",
+        iconEl: <AiOutlineForm size={20} />,
+        preload: () =>
+          import("../../pages/TaskManagement/TaskMangement"),
       },
       {
         url: "/settings/default-ads-config",
@@ -192,6 +200,13 @@ export const SidebarStoreAppConfigs = [
     label: "Main Store Listing",
     iconEl: <AiOutlineDashboard size={20} />,
     preload: () => import("../../pages/Apps/AppDetails/MainStoreListing"),
+  },
+  {
+    id: 2,
+    url: "/edit-main-listing",
+    label: "Edit Main Store Listing",
+    iconEl: <AiOutlineEdit size={20} />,
+    preload: () => import("../../pages/Apps/AppDetails/EditMainStoreListing"),
   },
   {
     id: 1,

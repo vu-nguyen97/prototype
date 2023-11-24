@@ -7,6 +7,10 @@ import service from "../../../partials/services/axios.config";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import ModalEditMainListing from "./ModalEditMainListing";
+import Title from "antd/lib/typography/Title";
+import { Typography, Space } from "antd";
+
+const { Text } = Typography;
 
 const ASSET_FIELDS = [
   {
@@ -158,39 +162,31 @@ const MainStoreListing = () => {
 
       {mainListing ? (
         <div className="bg-white p-5">
-          <div className="flex gap-5">
-            <Button type="primary" onClick={() => setIsModalOpen(true)}>
-              Edit main store listing
-            </Button>
+          <div className="flex gap-5 mb-4">
             <Button type="primary" onClick={() => fetchMainStoreListing()}>
               Fetch main store listing
             </Button>
           </div>
-          <div className="mt-4 text-2xl font-[1000]">
-            App Name:{" "}
-            <div className="font-normal text-lg px-8">
+          <div className="px-6">
+            <Title level={3}>App Name: </Title>
+            <Text className="font-normal text-lg px-8">
               {mainListing.appName}
-            </div>
-          </div>
-          <div className="mt-4 text-2xl font-[1000]">
-            Short Description:
-            <div className="font-normal text-lg px-8">
+            </Text>
+            <Title level={3}>Short Description:</Title>
+            <Text className="font-normal text-lg px-8">
               {mainListing.shortDescription}
-            </div>
-          </div>
-          <div className="mt-4 text-2xl font-[1000]">
-            Full Description:
-            <div className="font-normal text-lg px-8">
+            </Text>
+            <Title level={3}>Full Description:</Title>
+            <div className="font-normal text-lg px-8 text-justify">
               {mainListing.fullDescription}
             </div>
-          </div>
-          {mainListing.youtubeVideoUrl && (
-            <div className="mt-4 text-2xl font-[1000]">
-              Youtube Video Url: {mainListing.youtubeVideoUrl}
-            </div>
-          )}
-          <div className="mt-4 text-2xl font-[1000]">
-            App Icon:
+            {mainListing.youtubeVideoUrl && (
+              <>
+                <Title level={3}>Youtube Video Url:</Title>
+                <Text>{mainListing.youtubeVideoUrl}</Text>
+              </>
+            )}
+            <Title level={3}>App Icon:</Title>
             <div className="flex justify-center">
               <img
                 src={mainListing.appIconUrl}
@@ -199,9 +195,9 @@ const MainStoreListing = () => {
                 alt="App Icon"
               />
             </div>
-          </div>
-          <div className="mt-4 text-2xl font-[1000]">
-            Feature Graphic:
+            <Title className="mt-6" level={3}>
+              Feature Graphic:
+            </Title>
             <div className="flex justify-center">
               <img
                 src={mainListing.featureGraphicUrl}
@@ -210,9 +206,9 @@ const MainStoreListing = () => {
                 alt="Feature Graphic"
               />
             </div>
-          </div>
-          <div className="mt-4 text-2xl font-[1000]">
-            Phone Screenshots:
+            <Title level={3} className="mt-6">
+              Phone Screenshots:
+            </Title>
             <div className="flex flex-wrap justify-center">
               {mainListing.phoneScreenshotsUrl.map((el, index) => (
                 <div key={index} className="p-2">
@@ -225,9 +221,9 @@ const MainStoreListing = () => {
                 </div>
               ))}
             </div>
-          </div>
-          <div className="mt-4 text-2xl font-[1000]">
-            7-inch tablet Screenshots:
+            <Title level={3} className="mt-6">
+              7-inch tablet Screenshots:
+            </Title>
             <div className="flex flex-wrap justify-center">
               {mainListing.tablet7ScreenshotsUrl.map((el, index) => (
                 <div key={index} className="p-2">
@@ -240,9 +236,9 @@ const MainStoreListing = () => {
                 </div>
               ))}
             </div>
-          </div>
-          <div className="mt-4 text-2xl font-[1000]">
-            10-inch tablet Screenshots:
+            <Title level={3} className="mt-6">
+              10-inch tablet Screenshots:
+            </Title>
             <div className="flex flex-wrap justify-center">
               {mainListing.tablet10ScreenshotsUrl.map((el, index) => (
                 <div key={index} className="p-2">
