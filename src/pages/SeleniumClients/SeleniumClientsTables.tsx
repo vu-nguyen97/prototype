@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Table from "antd/lib/table";
 import { FaMugHot } from "@react-icons/all-files/fa/FaMugHot";
 import { FaSpinner } from "@react-icons/all-files/fa/FaSpinner";
+import { FaLinkSlash } from "react-icons/fa6";
 import TimeAgoComponent from "../../utils/time/TimeAgoComponent";
 
 function SeleniumClientsTable(props) {
@@ -56,6 +57,14 @@ function SeleniumClientsTable(props) {
           <FaSpinner className="spin text-green-600" fontSize="1.5rem"
           />
           <span className="font-semibold text-green-600 ml-5 mt-1">{_state}</span>
+        </div>
+      );
+    }
+    if (_state === "LOGIN_REQUIRE" || _state === "login_require") {
+      return (
+        <div className="bold flex">
+          <FaLinkSlash className=" text-red-600 bounce" fontSize="1.5rem" />
+          <span className="font-semibold text-red-600 ml-5 mt-1">{_state}</span>
         </div>
       );
     }

@@ -79,7 +79,6 @@ const StoreAppDetail = React.lazy(() => import("../pages/Apps/AppDetail"));
 const CustomStoreListing = React.lazy(() => import("../pages/Apps/AppDetails/CustomStoreListing"));
 const MainStoreListing = React.lazy(() => import("../pages/Apps/AppDetails/MainStoreListing"));
 const GoogleAccount = React.lazy(() => import("../pages/GoogleAccount/GoogleAccount"));
-const ChromeStandalone = React.lazy(() => import("../pages/ChromeStandalone/ChromeStandalone"));
 const VncViewer = React.lazy(() => import("../pages/GoogleAccount/VncViewer"));
 /**
  * Refs:
@@ -119,8 +118,7 @@ const AppRoutes = () => (
         <Route path="settings/default-ads-config" element={getPage(<Configs />)} />
         <Route path="connectors" element={getPage(<DataConnectors />)} />
         <Route path="vnc-viewer" element={getPage(<VncViewer/>)}></Route>
-        <Route path="settings/google-play-account" element={getPage(<GoogleAccount/>)}></Route>
-        <Route path="settings/chrome-standalone" element={getPage(<ChromeStandalone/>)}></Route>
+        <Route path="settings/google-play-account" element={getPage(<GoogleAccount/>)}></Route>      
         <Route path="settings/selenium-clients" element={getPage(<SeleniumClients/>)}></Route>
         <Route path="settings/account" element={getPage(<Account />)} />
         <Route

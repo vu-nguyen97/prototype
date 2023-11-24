@@ -25,7 +25,7 @@ function ModalConfirmDeleteGPStore(props) {
         setIsLoading(true)
         service.delete("/google-play-stores/" + data.id).then(
             (res: any) => {
-              toast(res.message || "Delete Google Play Store success!", { type: "success" });
+              toast(res.message || "Delete developer account successfully!", { type: "success" });
               setIsLoading(false);
             },
             () => setIsLoading(false)

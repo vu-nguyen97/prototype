@@ -10,6 +10,7 @@ import ModalEditGPStore from "./ModalEditGPStore";
 import ModalConfirmDeleteGPStore from "./ModalConfirmDeleteGPStore";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
+
 const GoogleAccount = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [listGPStore, setListGPStore] = useState<any>([]);
@@ -32,6 +33,7 @@ const GoogleAccount = () => {
   }, []);
 
   const onEditData = (record) => {
+    console.log(record);
     setEditedStore(record);
     setIsOpenModalEdit(true);
   };
@@ -45,7 +47,7 @@ const GoogleAccount = () => {
     setIsLoading(true);
     service.post("/play-store/sync-apps",{storeId: record.id}).then(
       (res: any) => {
-        toast(res.message || "Sync App success!", { type: "success" });
+        toast(res.message || "Apps will be synced in the background. You will be notified when it's done!", { type: "success" });
         setIsLoading(false);
       },
       () => setIsLoading(false)
