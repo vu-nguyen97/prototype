@@ -77,6 +77,13 @@ export const SidebarAdminConfigs = [
           import("../../pages/GoogleAccount/GoogleAccount"),
       },
       {
+        url: "/settings/task-management",
+        label: "Task Mangement",
+        iconEl: <AiOutlineForm size={20} />,
+        preload: () =>
+          import("../../pages/TaskManagement/TaskMangement"),
+      },
+      {
         url: "/settings/default-ads-config",
         label: "Default Ads Config",
         iconEl: <AiOutlineForm size={20} />,
