@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useDeferredValue, useEffect, useState } from "react";
 import Loading from "../../../utils/Loading";
 import { Button, Form } from "antd";
 import AntInput from "antd/lib/input";
@@ -6,6 +6,11 @@ import DynamicUpload from "../../../partials/common/Forms/DynamicUpload";
 import service from "../../../partials/services/axios.config";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
+import ModalEditMainListing from "./ModalEditMainListing";
+import Title from "antd/lib/typography/Title";
+import { Typography, Space } from "antd";
+
+const { Text } = Typography;
 
 const ASSET_FIELDS = [
   {
@@ -43,6 +48,33 @@ const MainStoreListing = () => {
   const urlParams = useParams();
   const [loading, setIsLoading] = useState(false);
 
+  const [modalOpen, setIsModalOpen] = useState(false);
+
+  const [mainListing, setMainListing] = useState(null);
+
+  useEffect(() => {
+    setIsLoading(true);
+    service
+      .get("/main_listing?appId=" + urlParams.appId)
+      .then(
+        (res) => {
+          if (res.results !== null) {
+            setMainListing(res.results);
+          }
+          setIsLoading(false);
+        },
+        () => {
+          setIsLoading(false);
+          toast("Something went wrong", { type: "error" });
+        }
+      )
+      .catch((error) => {
+        console.log(error);
+        toast(error.message, { type: "error" });
+        setIsLoading(false);
+      });
+  }, []);
+
   const [listFiles, setListFiles] = useState<any>({});
   const onSetListFiles = (fieldName, files) => {
     const newListFiles = { ...listFiles };
@@ -63,10 +95,13 @@ const MainStoreListing = () => {
 
     const formData = new FormData();
 
+    formData.append("developerId", "4976312113699037823");
     formData.append("appId", urlParams.appId);
     formData.append("shortDescription", shortDescription);
     formData.append("fullDescription", fullDescription);
-    formData.append("youtubeVideoUrl", url);
+    if (url) {
+      formData.append("youtubeVideoUrl", url);
+    }
 
     formData.append("featureGraphic", featureImg[0]);
     formData.append("appIcon", iconImg[0]);
@@ -96,85 +131,216 @@ const MainStoreListing = () => {
     );
   };
 
+  const fetchMainStoreListing = () => {
+    setIsLoading(true);
+    service
+      .get(
+        "/fetch_main_listing?appId=" +
+          urlParams.appId +
+          "&developerId=4976312113699037823"
+      )
+      .then(
+        (res: any) => {
+          setIsLoading(false);
+          toast("Success", { type: "success" });
+        },
+        () => {
+          setIsLoading(false);
+          toast("Something went wrong", { type: "error" });
+        }
+      )
+      .catch((error) => {
+        setIsLoading(false);
+        toast(error.message, { type: "error" });
+      });
+  };
+
   return (
     <>
       {loading && <Loading />}
       <h1 style={{ fontSize: 40, fontWeight: "bold" }}>Main Store Listing</h1>
 
-      <div className="bg-white p-5">
-        <div className="mb-5">
-          <h1 className="font-bold text-3xl">Edit main store listing</h1>
-        </div>
-        <Form
-          id="MainListingForm"
-          labelAlign="left"
-          form={form}
-          labelCol={{ span: 24 }}
-          wrapperCol={{ span: 24 }}
-          onFinish={onFinish}
-        >
-          <Form.Item
-            name="shortDescription"
-            label="Short description"
-            rules={[
-              { required: true, message: "Please enter short description" },
-            ]}
-          >
-            <AntInput.TextArea
-              rows={2}
-              placeholder="Enter content (max 80 characters)"
-              maxLength={80}
-              allowClear
-            />
-          </Form.Item>
-          <Form.Item
-            name="fullDescription"
-            label="Full description"
-            rules={[
-              { required: true, message: "Please anter full description" },
-            ]}
-          >
-            <AntInput.TextArea
-              rows={3}
-              placeholder="Enter content (max 4000 characters)"
-              maxLength={4000}
-              allowClear
-            />
-          </Form.Item>
-          <Form.Item
-            name="url"
-            label="Youtube Video URL"
-            rules={[{ required: false, message: "Please enter URL" }]}
-          >
-            <AntInput
-              allowClear
-              placeholder="Enter an URL (max 50 characters)"
-              className="w-full"
-              maxLength={50}
-            />
-          </Form.Item>
-          {ASSET_FIELDS.map((el) => {
-            const { field, label, note, multiple } = el;
-            return (
-              <DynamicUpload
-                key={field}
-                className={"font-bold"}
-                field={field}
-                label={label}
-                note={note}
-                multiple={multiple}
-                listFiles={listFiles[field] || []}
-                onSetListFiles={onSetListFiles}
-              />
-            );
-          })}
-          <Form.Item wrapperCol={{ span: 24 }}>
-            <Button type="primary" htmlType="submit">
-              Submit
+      {mainListing ? (
+        <div className="bg-white p-5">
+          <div className="flex gap-5 mb-4">
+            <Button type="primary" onClick={() => fetchMainStoreListing()}>
+              Fetch main store listing
             </Button>
-          </Form.Item>
-        </Form>
-      </div>
+          </div>
+          <div className="px-6">
+            <Title level={3}>App Name: </Title>
+            <Text className="font-normal text-lg px-8">
+              {mainListing.appName}
+            </Text>
+            <Title level={3}>Short Description:</Title>
+            <Text className="font-normal text-lg px-8">
+              {mainListing.shortDescription}
+            </Text>
+            <Title level={3}>Full Description:</Title>
+            <div className="font-normal text-lg px-8 text-justify">
+              {mainListing.fullDescription}
+            </div>
+            {mainListing.youtubeVideoUrl && (
+              <>
+                <Title level={3}>Youtube Video Url:</Title>
+                <Text>{mainListing.youtubeVideoUrl}</Text>
+              </>
+            )}
+            <Title level={3}>App Icon:</Title>
+            <div className="flex justify-center">
+              <img
+                src={mainListing.appIconUrl}
+                width={200}
+                height={200}
+                alt="App Icon"
+              />
+            </div>
+            <Title className="mt-6" level={3}>
+              Feature Graphic:
+            </Title>
+            <div className="flex justify-center">
+              <img
+                src={mainListing.featureGraphicUrl}
+                width={200}
+                height={200}
+                alt="Feature Graphic"
+              />
+            </div>
+            <Title level={3} className="mt-6">
+              Phone Screenshots:
+            </Title>
+            <div className="flex flex-wrap justify-center">
+              {mainListing.phoneScreenshotsUrl.map((el, index) => (
+                <div key={index} className="p-2">
+                  <img
+                    src={el}
+                    width={200}
+                    height={200}
+                    alt={`Phone Screenshot ${index + 1}`}
+                  />
+                </div>
+              ))}
+            </div>
+            <Title level={3} className="mt-6">
+              7-inch tablet Screenshots:
+            </Title>
+            <div className="flex flex-wrap justify-center">
+              {mainListing.tablet7ScreenshotsUrl.map((el, index) => (
+                <div key={index} className="p-2">
+                  <img
+                    src={el}
+                    width={200}
+                    height={200}
+                    alt={`7-inch tablet Screenshot ${index + 1}`}
+                  />
+                </div>
+              ))}
+            </div>
+            <Title level={3} className="mt-6">
+              10-inch tablet Screenshots:
+            </Title>
+            <div className="flex flex-wrap justify-center">
+              {mainListing.tablet10ScreenshotsUrl.map((el, index) => (
+                <div key={index} className="p-2">
+                  <img
+                    src={el}
+                    width={200}
+                    height={200}
+                    alt={`10-inch tablet Screenshot ${index + 1}`}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+          <ModalEditMainListing
+            setIsLoading={setIsLoading}
+            onClose={() => {
+              setIsModalOpen(false);
+            }}
+            modalOpen={modalOpen}
+          />
+        </div>
+      ) : (
+        <div className="bg-white p-5">
+          <div className="mb-5">
+            <h1 className="font-bold text-3xl">Create main store listing</h1>
+          </div>
+          <div>
+            <Button type="primary" onClick={() => fetchMainStoreListing()}>
+              Fetch main store listing
+            </Button>
+          </div>
+          <Form
+            id="MainListingForm"
+            labelAlign="left"
+            form={form}
+            labelCol={{ span: 24 }}
+            wrapperCol={{ span: 24 }}
+            onFinish={onFinish}
+          >
+            <Form.Item
+              name="shortDescription"
+              label="Short description"
+              rules={[
+                { required: true, message: "Please enter short description" },
+              ]}
+            >
+              <AntInput.TextArea
+                rows={2}
+                placeholder="Enter content (max 80 characters)"
+                maxLength={80}
+                allowClear
+              />
+            </Form.Item>
+            <Form.Item
+              name="fullDescription"
+              label="Full description"
+              rules={[
+                { required: true, message: "Please anter full description" },
+              ]}
+            >
+              <AntInput.TextArea
+                rows={3}
+                placeholder="Enter content (max 4000 characters)"
+                maxLength={4000}
+                allowClear
+              />
+            </Form.Item>
+            <Form.Item
+              name="url"
+              label="Youtube Video URL"
+              rules={[{ required: false, message: "Please enter URL" }]}
+            >
+              <AntInput
+                allowClear
+                placeholder="Enter an URL (max 50 characters)"
+                className="w-full"
+                maxLength={50}
+              />
+            </Form.Item>
+            {ASSET_FIELDS.map((el) => {
+              const { field, label, note, multiple } = el;
+              return (
+                <DynamicUpload
+                  key={field}
+                  className={"font-bold"}
+                  field={field}
+                  label={label}
+                  note={note}
+                  multiple={multiple}
+                  listFiles={listFiles[field] || []}
+                  onSetListFiles={onSetListFiles}
+                />
+              );
+            })}
+            <Form.Item wrapperCol={{ span: 24 }}>
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
+        </div>
+      )}
     </>
   );
 };

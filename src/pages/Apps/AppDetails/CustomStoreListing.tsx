@@ -47,7 +47,7 @@ const CustomStoreListing = () => {
   const sendUpdateListingRequest = () => {
     setIsLoading(true);
     service
-      .post("/" + urlParams.appId + "/custom_listings")
+      .post("/4976312113699037823/" + urlParams.appId + "/custom_listings")
       .then((res: any) => {
         toast(res.message, { type: "success" });
         setIsLoading(false);

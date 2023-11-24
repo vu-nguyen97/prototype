@@ -43,7 +43,7 @@ const GoogleAccount = () => {
 
   const onSyncApp = (record) => {
     setIsLoading(true);
-    service.post("/sync",{storeId: record.id}).then(
+    service.post("/play-store/sync-apps",{storeId: record.id}).then(
       (res: any) => {
         toast(res.message || "Sync App success!", { type: "success" });
         setIsLoading(false);

@@ -79,6 +79,7 @@ function ModalAddStoreListing(props) {
     const formData = new FormData();
 
     formData.append("appId", urlParams.appId);
+    formData.append("developerId", "4976312113699037823");
     formData.append("listingName", name);
     formData.append("customUrl", customURL);
     formData.append("appName", "Monster Run");
@@ -103,7 +104,7 @@ function ModalAddStoreListing(props) {
     });
     console.log(tenInchScreenshots.length);
 
-    service.post("/custom_listing", formData).then(
+    service.post("/play-store/custom-listings", formData).then(
       (res: any) => {
         toast("Success", { type: "success" });
         setIsLoading(false);

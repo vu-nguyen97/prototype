@@ -2,12 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import Page from "../../utils/composables/Page";
 import service from "../../partials/services/axios.config";
 import { toast } from "react-toastify";
-import { Button, Collapse, Form } from "antd";
+import { Button, Collapse, Form, Select } from "antd";
 import Loading from "../../utils/Loading";
 import ReleaseStatusTable from "./ReleaseStatusTable";
 import AntInput from "antd/lib/input";
 import { Input } from "antd";
 import DynamicUpload from "../../partials/common/Forms/DynamicUpload";
+import { languages } from "./languages";
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
@@ -43,7 +44,6 @@ function CreateNewRelease() {
     "Data collection is required",
   ];
 
-
   useEffect(() => {
     service.get("/default-app-content-settings").then((res) => {
       setTemplateData(res.results);
@@ -76,16 +76,19 @@ function CreateNewRelease() {
   const onFinish = () => {
     setIsLoading(true);
 
-    const { appName, testersGroups, releaseName, engReleaseNotes } = form.getFieldsValue();
+    const { appName, country, releaseName, countryNotes } =
+      form.getFieldsValue();
 
     console.log("appName", appName);
 
     const formData = new FormData();
+    formData.append("developerId", "4976312113699037823");
     formData.append("appName", appName);
-    formData.append("emailListNames", testersGroups.split(","));
-    formData.append("templateName", templateName);
+    // formData.append("emailListNames", testersGroups.split(","));
+    // formData.append("templateName", templateName);
     formData.append("releaseName", releaseName);
-    formData.append("engReleaseNotes", engReleaseNotes);
+    formData.append("country", country);
+    formData.append("countryNotes", countryNotes);
     formData.append("file", listFiles["file"][0] as Blob);
     console.log(formData);
     console.log(listFiles["file"]?.length);
@@ -137,14 +140,13 @@ function CreateNewRelease() {
             <AntInput allowClear className="w-full" />
           </Form.Item>
           <Form.Item
-            name="testersGroups"
-            label="Testers Groups (comma separated)"
-            rules={[{ required: true, message: "Please enter Testers Groups" }]}
+            name="country"
+            label="Country"
+            rules={[{ required: true, message: "Please select a country" }]}
           >
-            <AntInput
-              allowClear
-              placeholder="tester group 1, tester group 2, ..."
-              className="w-full"
+            <Select
+              showSearch
+              options={languages.map((lang) => ({ label: lang, value: lang }))}
             />
           </Form.Item>
           <Form.Item
@@ -155,11 +157,9 @@ function CreateNewRelease() {
             <AntInput allowClear className="w-full" />
           </Form.Item>
           <Form.Item
-            name="engReleaseNotes"
-            label="English Release Notes"
-            rules={[
-              { required: true, message: "Please enter English Release Notes" },
-            ]}
+            name="countryNotes"
+            label="Release Notes"
+            rules={[{ required: true, message: "Please enter Release Notes" }]}
           >
             <TextArea rows={5} />
           </Form.Item>

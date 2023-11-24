@@ -6,6 +6,8 @@ import {
   ProtectedRoutes,
 } from "../utils/ProtectedRoutes";
 import { FallbackProvider } from "../utils/composables/FallbackProvider";
+import SeleniumClients from "../pages/SeleniumClients/SeleniumClients";
+import EditMainStoreListing from "../pages/Apps/AppDetails/EditMainStoreListing";
 // import ErrorBoundary from "../utils/ErrorBoundary";
 
 const DefaultLayout = React.lazy(() => import("../partials/layouts/layout"));
@@ -104,6 +106,7 @@ const AppRoutes = () => (
           <Route path="overview" element={getAppPage(<Overview />)} />
           <Route path="main-store-listing" element={getStoreAppPage(<MainStoreListing/>)}/>
           <Route path="custom-store-listing" element={getStoreAppPage(<CustomStoreListing/>)}/>
+          <Route path="edit-main-listing" element={getStoreAppPage(<EditMainStoreListing/>)}/>
           <Route path="campaigns" element={getAppPage(<Campaigns />)} />
           <Route
             path="campaigns/:campId"
@@ -122,6 +125,7 @@ const AppRoutes = () => (
         <Route path="settings/google-play-account" element={getPage(<GoogleAccount/>)}></Route>
         <Route path="settings/chrome-standalone" element={getPage(<ChromeStandalone/>)}></Route>
         <Route path="settings/task-management" element={getPage(<TaskMangement/>)}></Route>
+        <Route path="settings/selenium-clients" element={getPage(<SeleniumClients/>)}></Route>
         <Route path="settings/account" element={getPage(<Account />)} />
         <Route
           path="settings/notifications"
