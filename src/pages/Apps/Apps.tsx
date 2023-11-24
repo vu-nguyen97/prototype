@@ -68,12 +68,8 @@ function Apps(props) {
     }
     setSelectedDeveloperId(selectedDeveloper.id);
     setSelectedValueName(selectedDeveloper.name);
-    setLastSyncAppsAt(selectedDeveloper.lastSyncAppsAt);
+    setLastSyncAppsAt(Number(selectedDeveloper.lastSyncAppsAt));
   }, [selectedDeveloper]);
-
-  useEffect(() => {
-    console.log("useEffect lastSyncAppsAt", lastSyncAppsAt);
-  }, [lastSyncAppsAt]);
 
   useEffect(() => {
     setIsLoading(true);
