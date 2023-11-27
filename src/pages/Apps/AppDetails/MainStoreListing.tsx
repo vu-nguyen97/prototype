@@ -74,63 +74,7 @@ const MainStoreListing = () => {
         setIsLoading(false);
       });
   }, []);
-
-  const [listFiles, setListFiles] = useState<any>({});
-  const onSetListFiles = (fieldName, files) => {
-    const newListFiles = { ...listFiles };
-    newListFiles[fieldName] = files;
-    setListFiles(newListFiles);
-  };
-  const onFinish = (values) => {
-    console.log("values", values);
-    const { shortDescription, fullDescription, url } = values;
-
-    const {
-      featureImg,
-      iconImg,
-      phoneScreenshots,
-      sevenInchScreenshots,
-      tenInchScreenshots,
-    } = listFiles;
-
-    const formData = new FormData();
-
-    formData.append("developerId", "4976312113699037823");
-    formData.append("appId", urlParams.appId);
-    formData.append("shortDescription", shortDescription);
-    formData.append("fullDescription", fullDescription);
-    if (url) {
-      formData.append("youtubeVideoUrl", url);
-    }
-
-    formData.append("featureGraphic", featureImg[0]);
-    formData.append("appIcon", iconImg[0]);
-    phoneScreenshots.forEach((el) => {
-      formData.append("phoneScreenshots", el);
-    });
-    console.log(phoneScreenshots.length);
-    sevenInchScreenshots.forEach((el) => {
-      formData.append("tablet7Screenshots", el);
-    });
-    console.log(sevenInchScreenshots.length);
-    tenInchScreenshots.forEach((el) => {
-      formData.append("tablet10Screenshots", el);
-    });
-    console.log(tenInchScreenshots.length);
-
-    service.post("/main_listing", formData).then(
-      (res: any) => {
-        console.log("main");
-        toast("Success", { type: "success" });
-        setIsLoading(false);
-      },
-      (err) => {
-        setIsLoading(false);
-        toast(err, { type: "error" });
-      }
-    );
-  };
-
+  
   const fetchMainStoreListing = () => {
     setIsLoading(true);
     service
@@ -262,83 +206,11 @@ const MainStoreListing = () => {
         </div>
       ) : (
         <div className="bg-white p-5">
-          <div className="mb-5">
-            <h1 className="font-bold text-3xl">Create main store listing</h1>
-          </div>
           <div>
             <Button type="primary" onClick={() => fetchMainStoreListing()}>
               Fetch main store listing
             </Button>
           </div>
-          <Form
-            id="MainListingForm"
-            labelAlign="left"
-            form={form}
-            labelCol={{ span: 24 }}
-            wrapperCol={{ span: 24 }}
-            onFinish={onFinish}
-          >
-            <Form.Item
-              name="shortDescription"
-              label="Short description"
-              rules={[
-                { required: true, message: "Please enter short description" },
-              ]}
-            >
-              <AntInput.TextArea
-                rows={2}
-                placeholder="Enter content (max 80 characters)"
-                maxLength={80}
-                allowClear
-              />
-            </Form.Item>
-            <Form.Item
-              name="fullDescription"
-              label="Full description"
-              rules={[
-                { required: true, message: "Please anter full description" },
-              ]}
-            >
-              <AntInput.TextArea
-                rows={3}
-                placeholder="Enter content (max 4000 characters)"
-                maxLength={4000}
-                allowClear
-              />
-            </Form.Item>
-            <Form.Item
-              name="url"
-              label="Youtube Video URL"
-              rules={[{ required: false, message: "Please enter URL" }]}
-            >
-              <AntInput
-                allowClear
-                placeholder="Enter an URL (max 50 characters)"
-                className="w-full"
-                maxLength={50}
-              />
-            </Form.Item>
-            {ASSET_FIELDS.map((el) => {
-              const { field, label, note, multiple } = el;
-              return (
-                <DynamicUpload
-                  key={field}
-                  className={"font-bold"}
-                  field={field}
-                  label={label}
-                  note={note}
-                  multiple={multiple}
-                  listFiles={listFiles[field] || []}
-                  onSetListFiles={onSetListFiles}
-                />
-              );
-            })}
-            <Form.Item wrapperCol={{ span: 24 }}>
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-            </Form.Item>
-          </Form>
         </div>
       )}
     </>
