@@ -22,6 +22,9 @@ function AppTable(props) {
       })
       .then((res: any) => {
         toast(res.message, { type: "success" });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       })
       .catch((error) => {
         toast(error.message, { type: "error" });
@@ -96,29 +99,12 @@ function AppTable(props) {
                   <AiOutlineUpload
                     size={20}
                     className="text-slate-600 hover:text-antPrimary cursor-pointer"
-                    onClick={() => createUnityApp(record)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      createUnityApp(record);
+                    }}
                   />
                 </Tooltip>
-              </div>
-            )}
-          </>
-        );
-      },
-    },
-    {
-      title: "Linked Appsflyer",
-      render: (record) => {
-        return (
-          <>
-            {record.appsFlyerId ? (
-              <div className="flex items-center gap-4">
-                <AiOutlineCheck size={20} color="green" />
-                <span className="text-green-500 font-bold">Linked</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-4">
-                <AiOutlineClose size={20} color="red" />
-                <span className="text-red-500 font-bold">Not linked yet</span>
               </div>
             )}
           </>
