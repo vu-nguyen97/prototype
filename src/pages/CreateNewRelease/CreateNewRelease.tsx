@@ -82,7 +82,6 @@ function CreateNewRelease() {
     console.log("appName", appName);
 
     const formData = new FormData();
-    formData.append("developerId", "4976312113699037823");
     formData.append("appName", appName);
     // formData.append("emailListNames", testersGroups.split(","));
     // formData.append("templateName", templateName);

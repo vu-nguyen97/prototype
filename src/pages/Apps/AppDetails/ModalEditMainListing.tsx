@@ -71,7 +71,6 @@ export default function ModalEditMainListing(props) {
 
     const formData = new FormData();
 
-    formData.append("developerId", "4976312113699037823");
     formData.append("appId", urlParams.appId);
     formData.append("shortDescription", shortDescription);
     formData.append("fullDescription", fullDescription);

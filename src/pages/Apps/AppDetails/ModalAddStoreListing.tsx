@@ -79,7 +79,6 @@ function ModalAddStoreListing(props) {
     const formData = new FormData();
 
     formData.append("appId", urlParams.appId);
-    formData.append("developerId", "4976312113699037823");
     formData.append("listingName", name);
     formData.append("customUrl", customURL);
     formData.append("appName", "Monster Run");

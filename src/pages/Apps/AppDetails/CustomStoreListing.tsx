@@ -104,13 +104,13 @@ const CustomStoreListing = () => {
           </p>
           <div className="mt-1 sm:mt-0">
             <div>
-              <Button
+              {/* <Button
                 type="primary"
                 style={{ marginRight: 10 }}
                 disabled={isDraft}
               >
                 Create Group
-              </Button>
+              </Button> */}
               <Button
                 type="primary"
                 onClick={(e) => setIsOpenModalAddApp(true)}
@@ -126,19 +126,19 @@ const CustomStoreListing = () => {
             </div>
 
             <div className="flex justify-end my-3 gap-4">
-              <Button
+              {/* <Button
                 type="primary"
                 onClick={reloadCustomListings}
                 disabled={isDraft}
               >
                 Reload
-              </Button>
+              </Button> */}
               <Button
                 type="primary"
                 onClick={sendUpdateListingRequest}
                 disabled={isDraft}
               >
-                Update
+                Sync Now
               </Button>
             </div>
 

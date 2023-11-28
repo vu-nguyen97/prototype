@@ -81,8 +81,7 @@ const MainStoreListing = () => {
     service
       .get(
         "/fetch_main_listing?appId=" +
-          urlParams.appId +
-          "&developerId=4976312113699037823"
+          urlParams.appId
       )
       .then(
         (res: any) => {
