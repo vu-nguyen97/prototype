@@ -10,6 +10,8 @@ import ModalEditMainListing from "./ModalEditMainListing";
 import Title from "antd/lib/typography/Title";
 import { Typography, Space } from "antd";
 import Page from "../../../utils/composables/Page";
+import axios from "axios";
+import TimeAgoComponent from "../../../utils/time/TimeAgoComponent";
 
 const { Text } = Typography;
 
@@ -53,15 +55,36 @@ const MainStoreListing = () => {
 
   const [mainListing, setMainListing] = useState(null);
 
+  const [task, setTask] = useState();
+
   useEffect(() => {
     setIsLoading(true);
-    service
-      .get("/main_listing?appId=" + urlParams.appId)
+    axios
+      .all([
+        service.get("/main_listing?appId=" + urlParams.appId),
+        service.get("/main_listing_last_sync?appId=" + urlParams.appId),
+      ])
       .then(
-        (res) => {
-          if (res.results !== null) {
-            setMainListing(res.results);
-          }
+        axios.spread((res1: any, res2: any) => {
+          setIsLoading(false);
+          setMainListing(res1.results);
+          setTask(res2.results);
+        })
+      )
+      .catch((error) => {
+        console.log(error);
+        toast(error.message, { type: "error" });
+        setIsLoading(false);
+      });
+  }, []);
+
+  const fetchMainStoreListing = () => {
+    setIsLoading(true);
+    service
+      .get("/fetch_main_listing?appId=" + urlParams.appId)
+      .then(
+        (res: any) => {
+          toast(res.message, { type: "success" });
           setIsLoading(false);
         },
         () => {
@@ -74,30 +97,6 @@ const MainStoreListing = () => {
         toast(error.message, { type: "error" });
         setIsLoading(false);
       });
-  }, []);
-  
-  const fetchMainStoreListing = () => {
-    setIsLoading(true);
-    service
-      .get(
-        "/fetch_main_listing?appId=" +
-          urlParams.appId +
-          "&developerId=4976312113699037823"
-      )
-      .then(
-        (res: any) => {
-          setIsLoading(false);
-          toast(res.message, { type: "success" });
-        },
-        () => {
-          setIsLoading(false);
-          toast("Something went wrong", { type: "error" });
-        }
-      )
-      .catch((error) => {
-        setIsLoading(false);
-        toast(error.message, { type: "error" });
-      });
   };
 
   return (
@@ -107,10 +106,20 @@ const MainStoreListing = () => {
 
       {mainListing ? (
         <div className="bg-white p-5">
-          <div className="flex gap-5 mb-4">
-            <Button type="primary" onClick={() => fetchMainStoreListing()}>
+          <div className="flex gap-5 mb-4 items-center">
+            <Button
+              type="primary"
+              onClick={() => fetchMainStoreListing()}
+              loading={
+                task && (task.state === "RUNNING" || task.state === "CREATED")
+              }
+            >
               Fetch main store listing
             </Button>
+            <span className="text-md font-[500] flex gap-1">
+              <span>Last Sync: </span>
+              {task ? <TimeAgoComponent createDate={task ? task.createdAt : 0} /> : "None"}
+            </span>
           </div>
           <div className="px-6">
             <Title level={3}>App Name: </Title>
@@ -207,10 +216,14 @@ const MainStoreListing = () => {
         </div>
       ) : (
         <div className="bg-white p-5">
-          <div>
+          <div className="flex gap-5 items-center">
             <Button type="primary" onClick={() => fetchMainStoreListing()}>
               Fetch main store listing
             </Button>
+            <span className="text-md font-[500] flex gap-1">
+              <span>Last Sync: </span>
+              {task ? "None" : <TimeAgoComponent createDate={task && task.createdAt} />}
+            </span>
           </div>
         </div>
       )}
