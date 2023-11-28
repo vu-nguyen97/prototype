@@ -6,6 +6,7 @@ import service from "../../../partials/services/axios.config";
 import AntInput from "antd/lib/input";
 import DynamicUpload from "../../../partials/common/Forms/DynamicUpload";
 import Loading from "../../../utils/Loading";
+import Page from "../../../utils/composables/Page";
 
 const ASSET_FIELDS = [
   {
@@ -102,7 +103,7 @@ export default function EditMainStoreListing() {
     form.resetFields();
   };
   return (
-    <>
+    <Page>
       {isLoading && <Loading />}
       <h1 style={{ fontSize: 40, fontWeight: "bold" }}>
         Edit main store listing
@@ -178,6 +179,6 @@ export default function EditMainStoreListing() {
           </Form>
         </div>
       </div>
-    </>
+    </Page>
   );
 }

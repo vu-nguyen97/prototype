@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import ModalEditMainListing from "./ModalEditMainListing";
 import Title from "antd/lib/typography/Title";
 import { Typography, Space } from "antd";
+import Page from "../../../utils/composables/Page";
 
 const { Text } = Typography;
 
@@ -100,7 +101,7 @@ const MainStoreListing = () => {
   };
 
   return (
-    <>
+    <Page>
       {loading && <Loading />}
       <h1 style={{ fontSize: 40, fontWeight: "bold" }}>Main Store Listing</h1>
 
@@ -213,7 +214,7 @@ const MainStoreListing = () => {
           </div>
         </div>
       )}
-    </>
+    </Page>
   );
 };
 
