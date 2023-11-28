@@ -11,6 +11,7 @@ import EditMainStoreListing from "../pages/Apps/AppDetails/EditMainStoreListing"
 // import ErrorBoundary from "../utils/ErrorBoundary";
 
 const DefaultLayout = React.lazy(() => import("../partials/layouts/layout"));
+const CreateNewPassword = React.lazy(() => import("../pages/CreateNewPassword"));
 
 const getPage = (comp, padding = true) => (
   <Suspense fallback={<DefaultLayout />}>
@@ -158,6 +159,7 @@ const AppRoutes = () => (
       <Route path="/otp" element={<EnterOtp />} />
       <Route path="/create_password" element={<CreatePassword />} />
       <Route path="/forgot_password" element={<ForgotPassword />} />
+      <Route path="/create-new-password" element={<CreateNewPassword />} />
     </Routes>
   </FallbackProvider>
 );
