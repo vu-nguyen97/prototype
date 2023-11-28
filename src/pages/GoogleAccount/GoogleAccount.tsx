@@ -45,7 +45,7 @@ const GoogleAccount = () => {
 
   const onSyncApp = (record) => {
     setIsLoading(true);
-    service.post("/play-store/sync-apps",{storeId: record.id}).then(
+    service.post(`/google-play-stores/sync-apps`,{storeId: record.id}).then(
       (res: any) => {
         toast(res.message || "Apps will be synced in the background. You will be notified when it's done!", { type: "success" });
         setIsLoading(false);
