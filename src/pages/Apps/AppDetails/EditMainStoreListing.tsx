@@ -91,7 +91,7 @@ export default function EditMainStoreListing() {
     service.post("/main_listing", formData).then(
       (res: any) => {
         console.log("main");
-        toast("Success", { type: "success" });
+        toast(res.message, { type: "success" });
         setIsLoading(false);
       },
       (err) => {

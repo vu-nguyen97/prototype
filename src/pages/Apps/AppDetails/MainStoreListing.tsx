@@ -87,7 +87,7 @@ const MainStoreListing = () => {
       .then(
         (res: any) => {
           setIsLoading(false);
-          toast("Success", { type: "success" });
+          toast(res.message, { type: "success" });
         },
         () => {
           setIsLoading(false);
