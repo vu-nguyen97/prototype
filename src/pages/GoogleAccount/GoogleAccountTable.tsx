@@ -70,6 +70,18 @@ function GoogleAccountTable(props) {
       ),
     },
     {
+      title: "Developer Id",
+      render: (record) => (
+        <div className="flex items-center">
+          <div>
+            <div className="font-semibold text-black text-base">
+              {record.id}
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
       title: "Email",
       render: (record) => (
         <div className="whitespace-nowrap md:whitespace-normal">
