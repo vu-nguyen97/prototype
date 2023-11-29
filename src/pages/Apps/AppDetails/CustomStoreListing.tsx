@@ -151,14 +151,14 @@ const CustomStoreListing = () => {
             <div className="flex justify-end my-3 gap-4 items-center">
               <div className="flex gap-1">
                 <div className="text-md font-[500]">Last Sync:</div>
-                <TimeAgoComponent createDate={task ? task.createdAt : 0} />
+                {task ? <TimeAgoComponent createDate={task ? task.createdAt : 0} /> : "None"}
               </div>
               <Button
                 type="primary"
                 onClick={sendUpdateListingRequest}
                 disabled={isDraft}
                 loading={
-                  task && (task.state === "RUNNING" || task.state === "CREATED")
+                  task ? (task.state === "RUNNING" || task.state === "CREATED") : false
                 }
               >
                 Sync Now

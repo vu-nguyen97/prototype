@@ -21,6 +21,7 @@ import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
 import ModalAdd from './ModalAdd';
 import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
 const ListStatus = [
   { value: "true", label: "Active" },
   { value: "false", label: "Inactive" },
@@ -48,6 +49,7 @@ function Apps() {
     page: 0,
     size: defaultPageSize,
   });
+  
 
   useEffect(() => {  
     const getListApp = service.get("/store-app");
@@ -106,13 +108,15 @@ function Apps() {
       <div className="flex justify-between">
         <div className="page-title">CPI Campaigns</div>
         <div className="flex space-x-2">
+          <Link to="/cpi-campaigns/new-campaign">
           <Button
             type="primary"
             icon={<PlusOutlined />}
-            onClick={(e) => setIsOpenModalAddApp(true)}
+            // onClick={(e) => setIsOpenModalAddApp(true)}
           >
             New CPI Campaign
           </Button>
+          </Link>
         </div>
       </div>
 

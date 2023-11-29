@@ -111,7 +111,7 @@ const MainStoreListing = () => {
               type="primary"
               onClick={() => fetchMainStoreListing()}
               loading={
-                task && (task.state === "RUNNING" || task.state === "CREATED")
+                task ? (task.state === "RUNNING" || task.state === "CREATED") : false
               }
             >
               Fetch main store listing

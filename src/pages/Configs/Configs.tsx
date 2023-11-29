@@ -68,18 +68,6 @@ export default function Configs() {
 
   const onSubmitConfig = () => {};
 
-  const onEditConfig = (value) => {
-    console.log(value)
-    // setIsLoading(true);
-    // service.put("/config/"+record.id,value).then(
-    //   (res: any) => {
-    //     setConfigs(res.results);
-    //     setIsLoading(false);
-    //   },
-    //   () => setIsLoading(false)
-    // );
-  }
-
   const filteredData = configs?.filter((el) => {
     let result = true;
 
@@ -136,7 +124,6 @@ export default function Configs() {
         isOpen={isOpenModalEdit}
         onClose={() => setIsOpenModalEdit(false)}
         setIsLoading={setIsLoading}
-        onFinish={onEditConfig}
         data={record}
       />
 

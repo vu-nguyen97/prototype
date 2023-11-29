@@ -57,6 +57,7 @@ const Account = React.lazy(() => import("../pages/Settings/Account"));
 const CPICampaigns = React.lazy(
   () => import("../pages/PrototypeCampaigns/CPICampaigns")
 );
+const NewCPICampaign = React.lazy(() => import("../pages/PrototypeCampaigns/NewCPICampaign"));
 const DataConnectors = React.lazy(
   () => import("../pages/DataConnectors/DataConnectors")
 );
@@ -96,6 +97,10 @@ const AppRoutes = () => (
         <Route
           path="cpi-campaigns"
           element={getPage(<CPICampaigns />)}
+        />
+        <Route
+          path="cpi-campaigns/new-campaign"
+          element={getPage(<NewCPICampaign />)}
         />
         {/* 
           appId thực tế trong project này là prototype campaign, 
