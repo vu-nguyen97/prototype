@@ -12,7 +12,7 @@ import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import searchMaxMinValue from "../../partials/common/Table/SearchMaxMinValue";
 
 export const getColumns = (props) => {
-  const { onSearchTable, onFilterTable } = props;
+  const { onSearchTable, onFilterTable, onOpenModalEdit } = props;
 
   return [
     {
@@ -78,30 +78,19 @@ export const getColumns = (props) => {
         return <div>{countryBid.join(", ")}</div>;
       },
     },
-    // {
-    //   title: "Action",
-    //   render: (record) => (
-    //     <div className="flex space-x-2 ml-2">
-    //       <Tooltip title="Edit">
-    //         <AiOutlineEdit
-    //           size={20}
-    //           className="text-slate-600 hover:text-antPrimary cursor-pointer"
-    //           // onClick={() => onEdit(record)}
-    //         />
-    //       </Tooltip>
-    //       <Tooltip title="Remove">
-    //         <Popconfirm
-    //           placement="left"
-    //           title="Remove this config?"
-    //           // onConfirm={() => onDelete(record)}
-    //           okText="Yes"
-    //           cancelText="No"
-    //         >
-    //           <DeleteOutlined className="icon-danger text-xl cursor-pointer" />
-    //         </Popconfirm>
-    //       </Tooltip>
-    //     </div>
-    //   ),
-    // },
+    {
+      title: "Action",
+      render: (record) => (
+        <div className="flex space-x-2 ml-2">
+          <Tooltip title="Edit">
+            <AiOutlineEdit
+              size={20}
+              className="text-slate-600 hover:text-antPrimary cursor-pointer"
+              onClick={() =>  onOpenModalEdit(record)}
+            />
+          </Tooltip>
+        </div>
+      ),
+    },
   ];
 };

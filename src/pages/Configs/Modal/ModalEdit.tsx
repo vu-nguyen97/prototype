@@ -30,57 +30,76 @@ import SelectCountryFromList from "../../../partials/common/Forms/SelectCountryF
 import { COUNTRIES } from "../../../constants/countries";
 import { EN_LANGUAGE, LANGUAGES } from "../../../constants/languages";
 
-function ModalAddAndEdit(props) {
+function ModalEdit(props) {
   const [form] = Form.useForm();
-  const { isOpen, onClose, onSubmit, setIsLoading } = props;
+  const { isOpen, onClose, data } = props;
+  useEffect(() => {
+    if (!data?.id) return;
 
-  const initialValues = {
-    name: "",
-    totalBudget: 500,
-    dailyBudget: 50,
-    totalDay: 3,
-    language: EN_LANGUAGE,
-    countries: [],
-  };
+    const { name, totalBudget, dailyBudget, totalDay, bids, language } = data;
+    const bid = bids[0].bid;
+    const country = bids[0].country;
+    form.setFieldsValue({
+      name,
+      totalBudget,
+      dailyBudget,
+      totalDay,
+      bid,
+      language,
+      country
+    });
+    
+  }, [data?.id]);
+
+  const onFinish = (values) => {
+    console.log(values)
+    const request = {
+      language: values.language,
+      type: "DEFAULT",
+      bids: [{
+        bid: values.bid,
+        country: values.country,
+      }],
+      dailyBudget: values.dailyBudget,
+      totalBudget: values.totalBudget,
+      totalDay: values.totalDay,
+      name: values.name
+    }
+    service.put("/config/"+data.id,request).then(
+      (res: any) => {
+        toast(res.message || "Edit config success!", { type: "success" });
+      },
+    );
+    window.location.reload();
+  }
 
   const onCloseModal = () => {
     onClose();
 
     setTimeout(() => {
-      form.resetFields();
     }, 300);
   };
 
-  const onFinish = (values) => {
-    const { name, totalBudget, dailyBudget, totalDay, language, countries } =
-      values;
-
-    console.log("values :>> ", values);
-  };
-
-  const isEditMode = false;
-  const id = "FormAddAndEditConfig";
 
   return (
     <Form
-      id={id}
+      id="ModalEditConfig"
       labelAlign="left"
       form={form}
       labelCol={{ span: 24 }}
       wrapperCol={{ span: 24 }}
       onFinish={onFinish}
-      initialValues={initialValues}
     >
       <Modal
-        title={isEditMode ? "Edit config" : "Add new config"}
+        title={"Edit config"}
         open={isOpen}
         onCancel={onCloseModal}
         footer={[
           <Button key="back" htmlType="button" onClick={onCloseModal}>
             Cancel
           </Button>,
-          <Button key="submit" type="primary" htmlType="submit" form={id}>
-            {isEditMode ? "Edit" : "Add"}
+          <Button key="submit" type="primary" htmlType="submit" form="ModalEditConfig" onClick={onCloseModal}>
+            Edit
           </Button>,
         ]}
       >
@@ -128,7 +147,7 @@ function ModalAddAndEdit(props) {
           </Select>
         </Form.Item>
         <Form.Item
-          name="countries"
+          name="country"
           label="Countries"
           rules={[{ required: true, message: COUNTRY_REQUIRED }]}
         >
@@ -147,11 +166,12 @@ function ModalAddAndEdit(props) {
   );
 }
 
-ModalAddAndEdit.propTypes = {
+ModalEdit.propTypes = {
   isOpen: PropTypes.bool,
   onClose: PropTypes.func,
-  onSubmit: PropTypes.func,
+  onFinish: PropTypes.func,
   setIsLoading: PropTypes.func,
+  data: PropTypes.any
 };
 
-export default ModalAddAndEdit;
+export default ModalEdit;
