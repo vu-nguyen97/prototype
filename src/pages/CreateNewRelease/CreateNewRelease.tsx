@@ -78,6 +78,8 @@ function CreateNewRelease() {
         // }
       });
     }, 5000);
+
+    form.setFieldValue("country", "English (US)");
   }, []);
 
   const onSetListFiles = (fieldName, files) => {
@@ -179,7 +181,6 @@ function CreateNewRelease() {
             <Select
               showSearch
               options={languages.map((lang) => ({ label: lang, value: lang }))}
-              defaultValue={"English (US)"}
             />
           </Form.Item>
           <Form.Item
