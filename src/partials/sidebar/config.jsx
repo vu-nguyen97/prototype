@@ -71,14 +71,8 @@ export const SidebarAdminConfigs = [
         preload: () => import("../../pages/SeleniumClients/SeleniumClients"),
       },
       {
-        url: "/settings/chrome-standalone",
-        label: "Chrome Standalone",
-        iconEl: <FaDocker size={16} />,
-        preload: () => import("../../pages/ChromeStandalone/ChromeStandalone"),
-      },
-      {
         url: "/settings/google-play-account",
-        label: "Google Play Console",
+        label: "Developer Accounts",
         iconEl: <FaGooglePlay size={16} />,
         preload: () =>
           import("../../pages/GoogleAccount/GoogleAccount"),
@@ -92,7 +86,7 @@ export const SidebarAdminConfigs = [
       },
       {
         url: "/settings/default-ads-config",
-        label: "Default Ads Config",
+        label: "Ads Config",
         iconEl: <AiOutlineForm size={20} />,
         preload: () =>
           import("../../pages/Configs/Configs"),

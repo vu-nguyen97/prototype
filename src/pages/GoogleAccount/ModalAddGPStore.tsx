@@ -7,17 +7,12 @@ import AntInput from "antd/lib/input";
 import { Select } from "antd";
 import service from "../../partials/services/axios.config";
 import { toast } from "react-toastify";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 function ModalAddGPStore(props) {
   const [form] = Form.useForm();
   const { isOpen, onClose, setIsLoading } = props;
-  const [selectedValue, setSelectedValue] = useState(null);
   const [listContainer, setListContainer] = useState<any>([]);
   const navigate = useNavigate();
-  const handleSelectChange = (value) => {
-    setSelectedValue(value);
-    console.log(value);
-  };
 
   const onCloseModal = () => {
     onClose();
@@ -25,38 +20,27 @@ function ModalAddGPStore(props) {
       form.resetFields();
     }, 300);
   };
-  useEffect(() => {
-    setIsLoading(true);
-    service.get("/chrome-standalone-containers").then(
-      (res: any) => {
-        setListContainer(res.results);
-        setIsLoading(false);
-      },
-      () => setIsLoading(false)
-    );
-  }, []);
 
   const onAddGPStore = (values) => {
-    
-    const { accountName, accountId, email, container } = values;
-    console.log(values);
+    const { accountName, accountId, email } = values;
     setIsLoading(true);
     service
       .post("/google-play-stores", {
         name: accountName,
         id: accountId,
         email,
-        containerId: container,
       })
       .then(
         (res: any) => {
-          toast(res.message || "Add container success!", { type: "success" });
+          toast(
+            res.message || "The developer account was added successfully!",
+            { type: "success" }
+          );
           setIsLoading(false);
         },
         () => setIsLoading(false)
       );
-      const con = listContainer.find((obj) => obj.id === container);
-      navigate("/vnc-viewer", { state: {ip: con.ip, vncPort: con.vncPort,  vncPassword: con.vncPassword} });
+    window.location.reload();
   };
   return (
     <Form
@@ -91,21 +75,14 @@ function ModalAddGPStore(props) {
           label="Account Name"
           rules={[{ required: true, message: "Please enter Account Name" }]}
         >
-          <AntInput
-            allowClear
-            placeholder="Enter a Name"
-            className="w-full"
-          />
+          <AntInput allowClear placeholder="Enter a Name" className="w-full" />
         </Form.Item>
         <Form.Item
           name="accountId"
           label="Account Id"
           rules={[{ required: true, message: "Please enter Account ID" }]}
         >
-          <AntInput
-            allowClear
-            className="w-full"
-          />
+          <AntInput allowClear className="w-full" />
         </Form.Item>
         <Form.Item
           name="email"
@@ -117,15 +94,6 @@ function ModalAddGPStore(props) {
             placeholder="Enter an email"
             className="w-full"
           />
-        </Form.Item>
-        <Form.Item name="container" label="Container">
-          <Select value={selectedValue} onChange={handleSelectChange} className="w-full">
-            {listContainer.map((item) => (
-              <Select.Option key={item.id} value={item.id}>            
-                  http://{item.ip}:{item.vncPort}            
-              </Select.Option>
-            ))}
-          </Select>
         </Form.Item>
       </Modal>
     </Form>

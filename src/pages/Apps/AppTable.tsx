@@ -1,24 +1,18 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Table from "antd/lib/table";
-import Input from "antd/lib/input/Input";
 import Tooltip from "antd/lib/tooltip";
-import { AiOutlineFilter } from "@react-icons/all-files/ai/AiOutlineFilter";
-import { AiOutlineEdit } from "@react-icons/all-files/ai/AiOutlineEdit";
-import { AiOutlineSearch } from "@react-icons/all-files/ai/AiOutlineSearch";
-import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
-import { UploadOutlined } from "@ant-design/icons";
 import { AiFillEye } from "@react-icons/all-files/ai/AiFillEye";
-import { Select } from "antd";
 import { Link } from "react-router-dom";
 import service from "../../partials/services/axios.config";
 import { toast } from "react-toastify";
 import { AiOutlineUpload } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineCheck } from "react-icons/ai";
 function AppTable(props) {
   const defaultPageSize = 10;
   const [pageSize, setPageSize] = useState(defaultPageSize);
-  const [searchByDevId, setSearchByDevId] = useState("");
-  const { listData, onSearch, isLoading } = props;
+  const { listData, isLoading } = props;
 
   const createUnityApp = (record) => {
     service
@@ -28,6 +22,9 @@ function AppTable(props) {
       })
       .then((res: any) => {
         toast(res.message, { type: "success" });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       })
       .catch((error) => {
         toast(error.message, { type: "error" });
@@ -79,55 +76,38 @@ function AppTable(props) {
         </div>
       ),
     },
-    // {
-    //     title: (
-    //         <div className="flex space-x-2 ml-2" style={{ position: 'relative' }}>
-    //             <div >DeveloperId</div>
-    //             <Input placeholder="Search App By DeveloperId" onChange={(e) => setSearchByDevId(e.target.value)}/>
-    //             <Tooltip title="Search App">
-    //             <AiOutlineSearch
-    //             size={30}
-    //             className="text-slate-600 hover:text-antPrimary cursor-pointer"
-    //             onClick={()=>onSearch(searchByDevId)}/>
-    //             </Tooltip>
-    //         </div>
-    //     ),
-    //     render: (record) => (
-    //         <div className="whitespace-nowrap md:whitespace-normal">
-    //             {record.consoleAppId}
-    //         </div>
-    //     )
-    // },
     {
-      title: "Action",
-      width: 140,
+      title: "Linked Unity",
       render: (record) => {
         return (
-          <div className="flex space-x-2 ml-2">
-            <>
-              <Link to={`/apps/${record.consoleAppId}/main-store-listing`}>
-                <Tooltip title="View app details">
-                  <AiFillEye
-                    className="text-slate-600 hover:text-antPrimary cursor-pointer"
-                    size={20}
-                  />
+          <>
+            {record.unityAppId ? (
+              <div className="flex items-center gap-4">
+                <AiOutlineCheck size={20} color="green" />
+                <span className="text-green-500 font-bold">Linked</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4">
+                <Tooltip title="Not linked yet">
+                  <AiOutlineClose size={20} color="red" />
                 </Tooltip>
-              </Link>
-            </>
-            {!record.unityAppId && (
-              <>
-                <Tooltip title="Create unity app">
+                <Tooltip
+                  placement="topLeft"
+                  title="Link Unity App"
+                  arrowPointAtCenter
+                >
                   <AiOutlineUpload
+                    size={20}
                     className="text-slate-600 hover:text-antPrimary cursor-pointer"
-                    size={21}
-                    onClick={() => {
+                    onClick={(event) => {
+                      event.stopPropagation();
                       createUnityApp(record);
                     }}
                   />
                 </Tooltip>
-              </>
+              </div>
             )}
-          </div>
+          </>
         );
       },
     },
@@ -153,6 +133,12 @@ function AppTable(props) {
       onChange={(pagination) => {
         pagination?.pageSize && setPageSize(pagination?.pageSize);
       }}
+      onRow={(record) => ({
+        onClick: () => {
+          window.location.href = `/apps/${record.consoleAppId}/main-store-listing`;
+        },
+        style: { cursor: "pointer" },
+      })}
     />
   );
 }
@@ -161,7 +147,6 @@ AppTable.defaultProps = {
   listData: [],
 };
 AppTable.propTypes = {
-  onSearch: PropTypes.func,
   isLoading: PropTypes.bool,
   listData: PropTypes.array,
 };

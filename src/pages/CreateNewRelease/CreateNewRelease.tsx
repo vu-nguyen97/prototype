@@ -147,6 +147,7 @@ function CreateNewRelease() {
             <Select
               showSearch
               options={languages.map((lang) => ({ label: lang, value: lang }))}
+              defaultValue={"English (US)"}
             />
           </Form.Item>
           <Form.Item

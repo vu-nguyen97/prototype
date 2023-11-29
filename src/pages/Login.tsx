@@ -131,7 +131,7 @@ const Login = () => {
                     Forgot password?
                   </Link>
                 </div>
-                <div className="!mt-1">
+                {/* <div className="!mt-1">
                   Don't have an account?{" "}
                   <Link
                     to="/sign-up"
@@ -139,7 +139,7 @@ const Login = () => {
                   >
                     Sign up
                   </Link>
-                </div>
+                </div> */}
                 <button
                   type="submit"
                   className="btn-primary w-full"

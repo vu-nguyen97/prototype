@@ -11,6 +11,7 @@ import EditMainStoreListing from "../pages/Apps/AppDetails/EditMainStoreListing"
 // import ErrorBoundary from "../utils/ErrorBoundary";
 
 const DefaultLayout = React.lazy(() => import("../partials/layouts/layout"));
+const CreateNewPassword = React.lazy(() => import("../pages/CreateNewPassword"));
 
 const getPage = (comp, padding = true) => (
   <Suspense fallback={<DefaultLayout />}>
@@ -80,7 +81,6 @@ const StoreAppDetail = React.lazy(() => import("../pages/Apps/AppDetail"));
 const CustomStoreListing = React.lazy(() => import("../pages/Apps/AppDetails/CustomStoreListing"));
 const MainStoreListing = React.lazy(() => import("../pages/Apps/AppDetails/MainStoreListing"));
 const GoogleAccount = React.lazy(() => import("../pages/GoogleAccount/GoogleAccount"));
-const ChromeStandalone = React.lazy(() => import("../pages/ChromeStandalone/ChromeStandalone"));
 const TaskMangement = React.lazy(() => import("../pages/TaskManagement/TaskMangement"));
 const VncViewer = React.lazy(() => import("../pages/GoogleAccount/VncViewer"));
 /**
@@ -122,14 +122,12 @@ const AppRoutes = () => (
         <Route path="settings/default-ads-config" element={getPage(<Configs />)} />
         <Route path="connectors" element={getPage(<DataConnectors />)} />
         <Route path="vnc-viewer" element={getPage(<VncViewer/>)}></Route>
-        <Route path="settings/google-play-account" element={getPage(<GoogleAccount/>)}></Route>
-        <Route path="settings/chrome-standalone" element={getPage(<ChromeStandalone/>)}></Route>
+        <Route path="settings/google-play-account" element={getPage(<GoogleAccount/>)}></Route>      
+        <Route path="settings/google-play-account" element={getPage(<GoogleAccount/>)}></Route>        
         <Route path="settings/task-management" element={getPage(<TaskMangement/>)}></Route>
         <Route path="settings/selenium-clients" element={getPage(<SeleniumClients/>)}></Route>
         <Route path="settings/account" element={getPage(<Account />)} />
-        <Route
-          path="settings/notifications"
-          element={getPage(<Notifications />)}
+        <Route path="settings/notifications" element={getPage(<Notifications />)}
         />
 
         <Route path="store-app/:id">
@@ -161,6 +159,7 @@ const AppRoutes = () => (
       <Route path="/otp" element={<EnterOtp />} />
       <Route path="/create_password" element={<CreatePassword />} />
       <Route path="/forgot_password" element={<ForgotPassword />} />
+      <Route path="/create-new-password" element={<CreateNewPassword />} />
     </Routes>
   </FallbackProvider>
 );
