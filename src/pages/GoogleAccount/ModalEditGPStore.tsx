@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 import { Select } from "antd";
 
 function ModalEditGPStore(props) {
-  
   const [form] = Form.useForm();
   const { isOpen, onClose, setIsLoading, data } = props;
 
@@ -44,10 +43,10 @@ function ModalEditGPStore(props) {
             type: "success",
           });
           setIsLoading(false);
+          window.location.reload();
         },
         () => setIsLoading(false)
       );
-    window.location.reload();
   };
   return (
     <Form

@@ -37,10 +37,10 @@ function ModalAddGPStore(props) {
             { type: "success" }
           );
           setIsLoading(false);
+          window.location.reload();
         },
         () => setIsLoading(false)
       );
-    window.location.reload();
   };
   return (
     <Form
