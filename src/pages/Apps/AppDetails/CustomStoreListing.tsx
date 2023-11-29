@@ -8,11 +8,14 @@ import CustomStoreListingTable from "./CustomStoreListingTable";
 import { useParams } from "react-router-dom";
 import service from "../../../partials/services/axios.config";
 import { toast } from "react-toastify";
+import axios from "axios";
+import TimeAgoComponent from "../../../utils/time/TimeAgoComponent";
 const CustomStoreListing = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenModalAddApp, setIsOpenModalAddApp] = useState(false);
   const [customListings, setCustomListings] = useState([]);
   const [isDraft, setIsDraft] = useState(false);
+  const [task, setTask] = useState<any>();
   const urlParams = useParams();
   const onEditData = (record) => {};
   const onDelete = (record) => {};
@@ -59,26 +62,45 @@ const CustomStoreListing = () => {
   };
 
   const reloadCustomListings = () => {
-    service
-      .get("/store-app/appId?appId=" + urlParams.appId)
-      .then((res: any) => {
-        console.log(res);
-        if (res.results.consoleStatus === "Draft") {
-          setIsDraft(true);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
     setIsLoading(true);
-    service.get("/" + urlParams.appId + "/custom_listings").then(
-      (res: any) => {
-        setCustomListings(res.results);
+    // service
+    //   .get("/store-app/appId?appId=" + urlParams.appId)
+    //   .then((res: any) => {
+    //     console.log(res);
+    //     if (res.results.consoleStatus === "Draft") {
+    //       setIsDraft(true);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+    // service.get("/" + urlParams.appId + "/custom_listings").then(
+    //   (res: any) => {
+    //     setCustomListings(res.results);
+    //     setIsLoading(false);
+    //   },
+    //   () => setIsLoading(false)
+    // );
+    axios
+      .all([
+        service.get("/store-app/appId?appId=" + urlParams.appId),
+        service.get("/" + urlParams.appId + "/custom_listings"),
+        service.get("/custom_listings_last_sync?appId=" + urlParams.appId),
+      ])
+      .then(
+        axios.spread((res1: any, res2: any, res3: any) => {
+          if (res1.results.consoleStatus === "Draft") {
+            setIsDraft(true);
+          }
+          setCustomListings(res2.results);
+          setIsLoading(false);
+          setTask(res3.results);
+        })
+      )
+      .catch((error) => {
+        toast(error.message, { type: "error" });
         setIsLoading(false);
-      },
-      () => setIsLoading(false)
-    );
+      });
   };
 
   return (
@@ -125,18 +147,19 @@ const CustomStoreListing = () => {
               )}
             </div>
 
-            <div className="flex justify-end my-3 gap-4">
-              {/* <Button
-                type="primary"
-                onClick={reloadCustomListings}
-                disabled={isDraft}
-              >
-                Reload
-              </Button> */}
+
+            <div className="flex justify-end my-3 gap-4 items-center">
+              <div className="flex gap-1">
+                <div className="text-md font-[500]">Last Sync:</div>
+                <TimeAgoComponent createDate={task ? task.createdAt : 0} />
+              </div>
               <Button
                 type="primary"
                 onClick={sendUpdateListingRequest}
                 disabled={isDraft}
+                loading={
+                  task && (task.state === "RUNNING" || task.state === "CREATED")
+                }
               >
                 Sync Now
               </Button>

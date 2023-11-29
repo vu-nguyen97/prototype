@@ -105,7 +105,7 @@ function ModalAddStoreListing(props) {
 
     service.post("/play-store/custom-listings", formData).then(
       (res: any) => {
-        toast("Success", { type: "success" });
+        toast(res.message, { type: "success" });
         setIsLoading(false);
         setIsOpenModalAddApp(false);
       },

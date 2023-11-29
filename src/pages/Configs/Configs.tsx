@@ -11,6 +11,7 @@ import {
 import Button from "antd/lib/button/button";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
 import ModalAddAndEdit from "./Modal/ModalAddAndEdit";
+import ModalEdit from "./Modal/ModalEdit";
 
 export default function Configs() {
   const [configs, setConfigs] = useState([]);
@@ -18,10 +19,10 @@ export default function Configs() {
   const [pageSize, setPageSize] = useState(defaultPageSize);
   const [columns, setColumns] = useState(getColumns({}));
   const [isLoading, setIsLoading] = useState(false);
-
+  const [record, setRecord] = useState([])
   const [searchData, setSearchData] = useState<any>({});
   const [filterByMaxMin, setFilterByMaxMin] = useState<any>({});
-
+  const [isOpenModalEdit, setIsOpenModalEdit] = useState<any>(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
 
   useEffect(() => {
@@ -41,6 +42,7 @@ export default function Configs() {
         configs,
         onSearchTable,
         onFilterTable,
+        onOpenModalEdit
       })
     );
   }, [configs]);
@@ -59,7 +61,24 @@ export default function Configs() {
     }
   };
 
+  const onOpenModalEdit = (value) => {
+    setRecord(value);
+    setIsOpenModalEdit(true);
+  }
+
   const onSubmitConfig = () => {};
+
+  const onEditConfig = (value) => {
+    console.log(value)
+    // setIsLoading(true);
+    // service.put("/config/"+record.id,value).then(
+    //   (res: any) => {
+    //     setConfigs(res.results);
+    //     setIsLoading(false);
+    //   },
+    //   () => setIsLoading(false)
+    // );
+  }
 
   const filteredData = configs?.filter((el) => {
     let result = true;
@@ -112,6 +131,15 @@ export default function Configs() {
         setIsLoading={setIsLoading}
         onSubmit={onSubmitConfig}
       />
+
+      <ModalEdit
+        isOpen={isOpenModalEdit}
+        onClose={() => setIsOpenModalEdit(false)}
+        setIsLoading={setIsLoading}
+        onFinish={onEditConfig}
+        data={record}
+      />
+
     </Page>
   );
 }

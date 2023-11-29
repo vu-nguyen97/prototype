@@ -7,8 +7,9 @@ import { Link } from "react-router-dom";
 import service from "../../partials/services/axios.config";
 import { toast } from "react-toastify";
 import { AiOutlineUpload } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineCheck } from "react-icons/ai";
 function AppTable(props) {
-  
   const defaultPageSize = 10;
   const [pageSize, setPageSize] = useState(defaultPageSize);
   const { listData, isLoading } = props;
@@ -21,6 +22,9 @@ function AppTable(props) {
       })
       .then((res: any) => {
         toast(res.message, { type: "success" });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       })
       .catch((error) => {
         toast(error.message, { type: "error" });
@@ -73,35 +77,37 @@ function AppTable(props) {
       ),
     },
     {
-      title: "Action",
-      width: 140,
+      title: "Linked Unity",
       render: (record) => {
         return (
-          <div className="flex space-x-2 ml-2">
-            <>
-              <Link to={`/apps/${record.consoleAppId}/main-store-listing`}>
-                <Tooltip title="View app details">
-                  <AiFillEye
-                    className="text-slate-600 hover:text-antPrimary cursor-pointer"
-                    size={20}
-                  />
+          <>
+            {record.unityAppId ? (
+              <div className="flex items-center gap-4">
+                <AiOutlineCheck size={20} color="green" />
+                <span className="text-green-500 font-bold">Linked</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4">
+                <Tooltip title="Not linked yet">
+                  <AiOutlineClose size={20} color="red" />
                 </Tooltip>
-              </Link>
-            </>
-            {!record.unityAppId && (
-              <>
-                <Tooltip title="Create unity app">
+                <Tooltip
+                  placement="topLeft"
+                  title="Link Unity App"
+                  arrowPointAtCenter
+                >
                   <AiOutlineUpload
+                    size={20}
                     className="text-slate-600 hover:text-antPrimary cursor-pointer"
-                    size={21}
-                    onClick={() => {
+                    onClick={(event) => {
+                      event.stopPropagation();
                       createUnityApp(record);
                     }}
                   />
                 </Tooltip>
-              </>
+              </div>
             )}
-          </div>
+          </>
         );
       },
     },
@@ -127,6 +133,12 @@ function AppTable(props) {
       onChange={(pagination) => {
         pagination?.pageSize && setPageSize(pagination?.pageSize);
       }}
+      onRow={(record) => ({
+        onClick: () => {
+          window.location.href = `/apps/${record.consoleAppId}/main-store-listing`;
+        },
+        style: { cursor: "pointer" },
+      })}
     />
   );
 }
