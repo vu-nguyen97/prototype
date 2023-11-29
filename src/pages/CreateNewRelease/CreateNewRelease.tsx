@@ -9,6 +9,7 @@ import AntInput from "antd/lib/input";
 import { Input } from "antd";
 import DynamicUpload from "../../partials/common/Forms/DynamicUpload";
 import { languages } from "./languages";
+import axios from "axios";
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
@@ -16,6 +17,8 @@ function CreateNewRelease() {
   const [templateName, setTemplateName] = useState("Production Default");
   const [listFiles, setListFiles] = useState<any>({});
   const [isLoading, setIsLoading] = useState(false);
+
+  const [listDevelopers, setListDevelopers] = useState([]);
 
   const [form] = Form.useForm();
 
@@ -45,13 +48,29 @@ function CreateNewRelease() {
   ];
 
   useEffect(() => {
-    service.get("/default-app-content-settings").then((res) => {
+    service.get("/default-app-content-settings").then((res: any) => {
       setTemplateData(res.results);
       console.log(res.results);
     });
 
+    axios
+      .all([
+        service.get("/google-play-stores"),
+        service.get("/default-app-content-settings"),
+      ])
+      .then(
+        axios.spread((res1: any, res2: any) => {
+          setListDevelopers(res1.results);
+          setTemplateData(res2.results);
+        })
+      )
+      .catch((error) => {
+        console.log(error);
+        toast(error.message, { type: "error" });
+      });
+
     const interval = setInterval(() => {
-      service.get("/release-status").then((res) => {
+      service.get("/release-status").then((res: any) => {
         setReleaseStatus(res.results);
         // if (res.results.length == 0) {
         //   // kill interval
@@ -76,13 +95,13 @@ function CreateNewRelease() {
   const onFinish = () => {
     setIsLoading(true);
 
-    const { appName, country, releaseName, countryNotes } =
+    const { appName, country, releaseName, countryNotes, developerId } =
       form.getFieldsValue();
 
     console.log("appName", appName);
 
     const formData = new FormData();
-    formData.append("developerId", "4976312113699037823");
+    formData.append("developerId", developerId);
     formData.append("appName", appName);
     // formData.append("emailListNames", testersGroups.split(","));
     // formData.append("templateName", templateName);
@@ -132,6 +151,19 @@ function CreateNewRelease() {
           wrapperCol={{ span: 24 }}
           onFinish={onFinish}
         >
+          <Form.Item
+            name="developerId"
+            label="Store"
+            rules={[{ required: true, message: "Please select a store" }]}
+          >
+            <Select
+              showSearch
+              options={listDevelopers.map((dev: any) => ({
+                label: dev.name,
+                value: dev.id,
+              }))}
+            />
+          </Form.Item>
           <Form.Item
             name="appName"
             label="App Name"
