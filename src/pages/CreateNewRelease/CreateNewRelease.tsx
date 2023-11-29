@@ -91,7 +91,7 @@ function CreateNewRelease() {
   const onFinish = () => {
     setIsLoading(true);
 
-    const { appName, country, releaseName, countryNotes, developerId } =
+    const { appName, releaseName, countryNotes, developerId } =
       form.getFieldsValue();
 
     console.log("appName", appName);
@@ -102,7 +102,7 @@ function CreateNewRelease() {
     // formData.append("emailListNames", testersGroups.split(","));
     // formData.append("templateName", templateName);
     formData.append("releaseName", releaseName);
-    formData.append("country", country);
+    // formData.append("country", country);
     formData.append("countryNotes", countryNotes);
     formData.append("file", listFiles["file"][0] as Blob);
     console.log(formData);
@@ -167,7 +167,7 @@ function CreateNewRelease() {
           >
             <AntInput allowClear className="w-full" />
           </Form.Item>
-          <Form.Item
+{/*          <Form.Item
             name="country"
             label="Country"
             rules={[{ required: true, message: "Please select a country" }]}
@@ -177,7 +177,7 @@ function CreateNewRelease() {
               options={languages.map((lang) => ({ label: lang, value: lang }))}
               defaultValue={"English (US)"}
             />
-          </Form.Item>
+          </Form.Item>*/}
           <Form.Item
             name="releaseName"
             label="Release Name"
