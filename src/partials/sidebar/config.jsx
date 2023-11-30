@@ -12,7 +12,7 @@ import { AiOutlineNodeIndex } from "@react-icons/all-files/ai/AiOutlineNodeIndex
 import { BiPalette } from "@react-icons/all-files/bi/BiPalette";
 import { AiOutlineEdit } from "react-icons/ai";
 // import { useDispatch, useSelector } from 'react-redux';
-
+import { MdNewReleases } from "react-icons/md";
 
 export const SidebarAdminConfigs = [
   {
@@ -47,7 +47,7 @@ export const SidebarAdminConfigs = [
     id: 5,
     url: "/release",
     label: "Create new release",
-    iconEl: <FaGooglePlay size={16} />,
+    iconEl: <MdNewReleases size={20} />,
     preload: () => import("../../pages/CreateNewRelease/CreateNewRelease"),
   },
   {
@@ -74,22 +74,19 @@ export const SidebarAdminConfigs = [
         url: "/settings/google-play-account",
         label: "Developer Accounts",
         iconEl: <FaGooglePlay size={16} />,
-        preload: () =>
-          import("../../pages/GoogleAccount/GoogleAccount"),
+        preload: () => import("../../pages/GoogleAccount/GoogleAccount"),
       },
       {
         url: "/settings/task-management",
         label: "Task Mangement",
         iconEl: <AiOutlineForm size={20} />,
-        preload: () =>
-          import("../../pages/TaskManagement/TaskMangement"),
+        preload: () => import("../../pages/TaskManagement/TaskMangement"),
       },
       {
         url: "/settings/default-ads-config",
         label: "Ads Config",
         iconEl: <AiOutlineForm size={20} />,
-        preload: () =>
-          import("../../pages/Configs/Configs"),
+        preload: () => import("../../pages/Configs/Configs"),
       },
     ],
   },
@@ -128,7 +125,7 @@ export const SidebarConfigs = [
     id: 5,
     url: "/release",
     label: "Create new release",
-    iconEl: <FaGooglePlay size={16} />,
+    iconEl: <MdNewReleases size={20} />,
     preload: () => import("../../pages/CreateNewRelease/CreateNewRelease"),
   },
   {

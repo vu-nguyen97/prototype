@@ -69,11 +69,9 @@ function CreateNewRelease() {
         toast(error.message, { type: "error" });
       });
 
-    const interval = setInterval(() => {
-      service.get("/release-status").then((res: any) => {
-        setReleaseStatus(res.results);
-      });
-    }, 5000);
+    service.get("/release-status").then((res: any) => {
+      setReleaseStatus(res.results);
+    });
 
     form.setFieldValue("country", "English (US)");
   }, []);
@@ -139,7 +137,7 @@ function CreateNewRelease() {
   return (
     <Page>
       {isLoading && <Loading />}
-      <div className="text-3xl mb-4 font-bold">Create New Release</div>
+      <div className="page-title">Create New Release</div>
       <div className="max-w-xl mx-auto space-y-4 mb-4">
         <Form
           id="FormCreateRelease"
@@ -169,7 +167,7 @@ function CreateNewRelease() {
           >
             <AntInput allowClear className="w-full" />
           </Form.Item>
-{/*          <Form.Item
+          {/* <Form.Item
             name="country"
             label="Country"
             rules={[{ required: true, message: "Please select a country" }]}
@@ -178,7 +176,7 @@ function CreateNewRelease() {
               showSearch
               options={languages.map((lang) => ({ label: lang, value: lang }))}
             />
-          </Form.Item>*/}
+          </Form.Item> */}
           <Form.Item
             name="releaseName"
             label="Release Name"

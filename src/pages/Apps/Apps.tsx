@@ -151,7 +151,7 @@ function Apps(props) {
       <div>
         <div className="page-title">Apps</div>
         <div className="bg-white p-4 rounded-sm shadow mt-2">
-          <div className="flex items-center flex-wrap -mx-1 2xl:-mx-2 ">
+          <div className="flex items-center flex-wrap -mx-1 2xl:-mx-2 -mt-3">
             <Select
               value={selectedDeveloperId}
               onChange={handleSelectChange}
@@ -176,7 +176,8 @@ function Apps(props) {
             <div className="xs:!w-[300px] mx-1 2xl:!mx-2 mt-3 ml-50">
               <span className="flex">
                 <div className="font-semibold ml-10">Last sync at: </div>
-                <TimeAgoComponent createDate={lastSyncAppsAt ? lastSyncAppsAt : 0}
+                <TimeAgoComponent
+                  createDate={lastSyncAppsAt ? lastSyncAppsAt : 0}
                 />
               </span>
             </div>

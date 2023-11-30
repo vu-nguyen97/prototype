@@ -14,19 +14,12 @@ h6 {
   box-shadow: none !important;
 }
 
-span.anticon:not(.custom-align) {
-  vertical-align: 0.14em !important;
-}
 .ant-tabs-nav-list span.anticon {
   vertical-align: -0.125em !important;
 }
 
 button span.anticon {
   vertical-align: 0.12em !important;
-}
-
-.ant-btn-sm span.anticon {
-  vertical-align: 0 !important;
 }
 
 .ant-radio {
