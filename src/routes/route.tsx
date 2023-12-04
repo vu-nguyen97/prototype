@@ -11,7 +11,9 @@ import EditMainStoreListing from "../pages/Apps/AppDetails/EditMainStoreListing"
 // import ErrorBoundary from "../utils/ErrorBoundary";
 
 const DefaultLayout = React.lazy(() => import("../partials/layouts/layout"));
-const CreateNewPassword = React.lazy(() => import("../pages/CreateNewPassword"));
+const CreateNewPassword = React.lazy(
+  () => import("../pages/CreateNewPassword")
+);
 
 const getPage = (comp, padding = true) => (
   <Suspense fallback={<DefaultLayout />}>
@@ -27,12 +29,12 @@ const getAppPage = (comp, padding = true) => (
 );
 
 const getStoreAppPage = (comp, padding = true) => (
-    <Suspense fallback={<DefaultLayout isStoreApp/>}>
-      <DefaultLayout isStoreApp padding={padding}>
-        {comp}
-      </DefaultLayout>
-    </Suspense>
-)
+  <Suspense fallback={<DefaultLayout isStoreApp />}>
+    <DefaultLayout isStoreApp padding={padding}>
+      {comp}
+    </DefaultLayout>
+  </Suspense>
+);
 
 // https://loadable-components.com/docs/loadable-vs-react-lazy/
 // https://github.com/vitejs/vite/issues/1931
@@ -57,7 +59,9 @@ const Account = React.lazy(() => import("../pages/Settings/Account"));
 const CPICampaigns = React.lazy(
   () => import("../pages/PrototypeCampaigns/CPICampaigns")
 );
-const NewCPICampaign = React.lazy(() => import("../pages/PrototypeCampaigns/NewCPICampaign"));
+const NewCPICampaign = React.lazy(
+  () => import("../pages/PrototypeCampaigns/NewCPICampaign")
+);
 const DataConnectors = React.lazy(
   () => import("../pages/DataConnectors/DataConnectors")
 );
@@ -69,7 +73,9 @@ const Campaigns = React.lazy(() => import("../pages/App/Campaigns/Campaigns"));
 const CampaignDetail = React.lazy(
   () => import("../pages/App/Campaigns/CampaignDetail/CampaignDetail")
 );
-const AppVariants = React.lazy(() => import("../pages/App/Variants/AppVariants"));
+const AppVariants = React.lazy(
+  () => import("../pages/App/Variants/AppVariants")
+);
 const Settings = React.lazy(() => import("../pages/App/setting/Settings"));
 const Overview = React.lazy(() => import("../pages/App/overview/Overview"));
 const Notifications = React.lazy(
@@ -79,10 +85,18 @@ const CreateNewRelease = React.lazy(
   () => import("../pages/CreateNewRelease/CreateNewRelease")
 );
 const StoreAppDetail = React.lazy(() => import("../pages/Apps/AppDetail"));
-const CustomStoreListing = React.lazy(() => import("../pages/Apps/AppDetails/CustomStoreListing"));
-const MainStoreListing = React.lazy(() => import("../pages/Apps/AppDetails/MainStoreListing"));
-const GoogleAccount = React.lazy(() => import("../pages/GoogleAccount/GoogleAccount"));
-const TaskMangement = React.lazy(() => import("../pages/TaskManagement/TaskMangement"));
+const CustomStoreListing = React.lazy(
+  () => import("../pages/Apps/AppDetails/CustomStoreListing")
+);
+const MainStoreListing = React.lazy(
+  () => import("../pages/Apps/AppDetails/MainStoreListing")
+);
+const GoogleAccount = React.lazy(
+  () => import("../pages/GoogleAccount/GoogleAccount")
+);
+const TaskMangement = React.lazy(
+  () => import("../pages/TaskManagement/TaskMangement")
+);
 const VncViewer = React.lazy(() => import("../pages/GoogleAccount/VncViewer"));
 /**
  * Refs:
@@ -94,10 +108,7 @@ const AppRoutes = () => (
     <Routes>
       <Route element={<ProtectedRoutes />}>
         <Route path="apps" element={getPage(<Apps />)} />
-        <Route
-          path="cpi-campaigns"
-          element={getPage(<CPICampaigns />)}
-        />
+        <Route path="cpi-campaigns" element={getPage(<CPICampaigns />)} />
         <Route
           path="cpi-campaigns/new-campaign"
           element={getPage(<NewCPICampaign />)}
@@ -109,9 +120,18 @@ const AppRoutes = () => (
         <Route path="apps/:appId/">
           <Route index element={getAppPage(<Overview />)} />
           <Route path="overview" element={getAppPage(<Overview />)} />
-          <Route path="main-store-listing" element={getStoreAppPage(<MainStoreListing/>)}/>
-          <Route path="custom-store-listing" element={getStoreAppPage(<CustomStoreListing/>)}/>
-          <Route path="edit-main-listing" element={getStoreAppPage(<EditMainStoreListing/>)}/>
+          <Route
+            path="main-store-listing"
+            element={getStoreAppPage(<MainStoreListing />)}
+          />
+          <Route
+            path="custom-store-listing"
+            element={getStoreAppPage(<CustomStoreListing />)}
+          />
+          <Route
+            path="edit-main-listing"
+            element={getStoreAppPage(<EditMainStoreListing />)}
+          />
           <Route path="campaigns" element={getAppPage(<Campaigns />)} />
           <Route
             path="campaigns/:campId"
@@ -124,15 +144,28 @@ const AppRoutes = () => (
         <Route path="add-campaign" element={getPage(<AddCampaign />)} />
         {/* Todo: Detete the route below */}
         <Route path="test-chart" element={getPage(<TestChart />)} />
-        <Route path="settings/default-ads-config" element={getPage(<Configs />)} />
+        <Route
+          path="settings/default-ads-config"
+          element={getPage(<Configs />)}
+        />
         <Route path="connectors" element={getPage(<DataConnectors />)} />
-        <Route path="vnc-viewer" element={getPage(<VncViewer/>)}></Route>
-        <Route path="settings/google-play-account" element={getPage(<GoogleAccount/>)}></Route>      
-        <Route path="settings/google-play-account" element={getPage(<GoogleAccount/>)}></Route>        
-        <Route path="settings/task-management" element={getPage(<TaskMangement/>)}></Route>
-        <Route path="settings/selenium-clients" element={getPage(<SeleniumClients/>)}></Route>
+        <Route path="vnc-viewer" element={getPage(<VncViewer />)} />
+        <Route
+          path="settings/google-play-account"
+          element={getPage(<GoogleAccount />)}
+        />
+        <Route
+          path="settings/task-management"
+          element={getPage(<TaskMangement />)}
+        />
+        <Route
+          path="settings/selenium-clients"
+          element={getPage(<SeleniumClients />)}
+        />
         <Route path="settings/account" element={getPage(<Account />)} />
-        <Route path="settings/notifications" element={getPage(<Notifications />)}
+        <Route
+          path="settings/notifications"
+          element={getPage(<Notifications />)}
         />
 
         <Route path="store-app/:id">
