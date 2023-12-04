@@ -26,26 +26,26 @@ const UnityAdsDetail = (props) => {
   const [status, setStatus] = useState("");
 
   const fetchStatus = () => [
-    service.get("/unity-ads-status/" + appVariantId).then((res) => {
-      console.log("status response", res.results);
-      setStatus(res.results);
-      if (res.results === "Completed") {
+    service
+      .get("/unity-ads-status/" + appVariantId)
+      .then((res: any) => {
+        console.log("status response", res.results);
+        setStatus(res.results);
+        if (res.results === "Completed") {
+          window.location.reload();
+        }
+      })
+      .catch((err) => {
+        console.log("status error", err);
         window.location.reload();
-      }
-    }).catch((err) => {
-      console.log("status error", err);
-      window.location.reload();
-    }),
+      }),
   ];
 
-  if (!finished) {
-    useEffect(() => {
-      // schedule call to fetch status
-      const intervalId = setInterval(() => {
-        fetchStatus();
-      }, 2000);
-    }, []);
-  }
+  useEffect(() => {
+    if (finished) return;
+    // schedule call to fetch status
+    fetchStatus();
+  }, [finished]);
 
   const formattedScheduleStart = new Date(scheduleStart).toLocaleString();
   const formattedScheduleEnd = new Date(scheduleEnd).toLocaleString();

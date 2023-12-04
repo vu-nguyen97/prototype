@@ -90,15 +90,15 @@ function ModalAddAndEdit(props) {
     };
 
     setIsLoading(true);
-    service.post("/inviteUser", {email, role, storeId}).then(
+    service.post("/inviteUser", params).then(
       (res: any) => {
         toast(res.message || "Invite member success!", { type: "success" });
         setIsLoading(false);
         onCloseModal();
+        window.location.reload();
       },
       () => setIsLoading(false)
     );
-    window.location.reload();
   };
 
   const onSubmitEditUser = (role, storeApps) => {
@@ -123,10 +123,10 @@ function ModalAddAndEdit(props) {
           newTableData.splice(foundIndex, 1, res.results);
           setListMember(newTableData);
         }
+        window.location.reload();
       },
       () => setIsLoading(false)
     );
-    window.location.reload();
   };
 
   return (
@@ -162,10 +162,7 @@ function ModalAddAndEdit(props) {
           label="Role"
           rules={[{ required: true, message: OPTION_REQUIRED }]}
         >
-          <Input
-            defaultValue="Default Value" disabled
-            className="w-full"
-          />
+          <Input defaultValue="Default Value" disabled className="w-full" />
         </Form.Item>
 
         <Form.Item
@@ -180,14 +177,18 @@ function ModalAddAndEdit(props) {
           />
         </Form.Item>
         <Form.Item name="storeId" label="Store">
-        <Select value={selectedValue} onChange={handleChange} className="w-full">
+          <Select
+            value={selectedValue}
+            onChange={handleChange}
+            className="w-full"
+          >
             {listStores.map((item) => (
-              <Select.Option key={item.id} value={item.id}>            
-                  {item.name}            
+              <Select.Option key={item.id} value={item.id}>
+                {item.name}
               </Select.Option>
             ))}
           </Select>
-          </Form.Item>
+        </Form.Item>
         {/* {activedRole === ROLES.user && (
           <Form.Item name="stores" label="Stores">
             <SelectStoreApp

@@ -2,13 +2,19 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Table from "antd/lib/table";
 import Tooltip from "antd/lib/tooltip";
-import { AiFillEye } from "@react-icons/all-files/ai/AiFillEye";
 import { Link } from "react-router-dom";
 import service from "../../partials/services/axios.config";
 import { toast } from "react-toastify";
 import { AiOutlineUpload } from "react-icons/ai";
 import { AiOutlineClose } from "react-icons/ai";
 import { AiOutlineCheck } from "react-icons/ai";
+import {
+  sortByBool,
+  sortByString,
+  sortNumberWithNullable,
+} from "../../utils/Helpers";
+import moment from "moment";
+
 function AppTable(props) {
   const defaultPageSize = 10;
   const [pageSize, setPageSize] = useState(defaultPageSize);
@@ -34,6 +40,7 @@ function AppTable(props) {
   const columns = [
     {
       title: "Name",
+      sorter: sortByString("name"),
       render: (record) => (
         <div className="flex space-x-2 ml-2">
           <img
@@ -46,6 +53,7 @@ function AppTable(props) {
     },
     {
       title: "PackageId",
+      sorter: sortByString("packageId"),
       render: (record) => (
         <div className="whitespace-nowrap md:whitespace-normal">
           {record.packageId}
@@ -54,6 +62,7 @@ function AppTable(props) {
     },
     {
       title: "App Status",
+      sorter: sortByString("consoleStatus"),
       render: (record) => (
         <div className="whitespace-nowrap md:whitespace-normal">
           {record.consoleStatus}
@@ -62,6 +71,7 @@ function AppTable(props) {
     },
     {
       title: "Update Status",
+      sorter: sortByString("updateStatus"),
       render: (record) => (
         <div className="whitespace-nowrap md:whitespace-normal">
           {record.updateStatus}
@@ -70,42 +80,42 @@ function AppTable(props) {
     },
     {
       title: "Last Update",
+      sorter: (a, b) => sortNumberWithNullable(a, b, (el) => el.lastSyncTime),
       render: (record) => (
         <div className="whitespace-nowrap md:whitespace-normal">
-          {record.lastUpdate}
+          {record.lastSyncTime &&
+            moment(record.lastSyncTime).format("DD-MM-YYYY HH:mm")}
         </div>
       ),
     },
     {
       title: "Linked Unity",
+      sorter: sortByBool("unityAppId"),
       render: (record) => {
         return (
           <>
             {record.unityAppId ? (
-              <div className="flex items-center gap-4">
-                <AiOutlineCheck size={20} color="green" />
-                <span className="text-green-500 font-bold">Linked</span>
+              <div className="flex items-center">
+                <AiOutlineCheck size={16} color="green" />
+                <span className="text-green-500 ml-0.5">Linked</span>
               </div>
             ) : (
-              <div className="flex items-center gap-4">
-                <Tooltip title="Not linked yet">
-                  <AiOutlineClose size={20} color="red" />
-                </Tooltip>
-                <Tooltip
-                  placement="topLeft"
-                  title="Link Unity App"
-                  arrowPointAtCenter
-                >
-                  <AiOutlineUpload
-                    size={20}
-                    className="text-slate-600 hover:text-antPrimary cursor-pointer"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      createUnityApp(record);
-                    }}
-                  />
-                </Tooltip>
+              <div className="flex items-center">
+                <AiOutlineClose size={14} className="text-red-500" />
+                <span className="text-red-500 ml-0.5">Not Linked</span>
               </div>
+              // <div className="flex items-center space-x-2">
+              //   <Tooltip title="Not linked yet">
+              //     <AiOutlineClose size={20} color="red" />
+              //   </Tooltip>
+              //   <Tooltip title="Link Unity App" arrowPointAtCenter>
+              //     <AiOutlineUpload
+              //       size={20}
+              //       className="text-slate-600 hover:text-antPrimary cursor-pointer"
+              //       onClick={() => createUnityApp(record)}
+              //     />
+              //   </Tooltip>
+              // </div>
             )}
           </>
         );
@@ -124,6 +134,7 @@ function AppTable(props) {
       className="mt-6"
       id="app-table"
       rowKey={(record) => record.id}
+      // @ts-ignore
       columns={columns}
       loading={isLoading}
       dataSource={[...listData]}

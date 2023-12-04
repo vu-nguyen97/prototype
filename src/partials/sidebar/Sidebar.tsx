@@ -5,10 +5,10 @@ import logo from "../../images/logo/logo.png";
 import {
   PROTOTYPE_CAMP_PATH,
   SIDEBAR_EXPANDED,
-  APP_PATH
+  APP_PATH,
 } from "../../constants/constants";
 import classNames from "classnames";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getSubOrganizationUrl } from "../../utils/Helpers";
 import { BiArrowBack } from "@react-icons/all-files/bi/BiArrowBack";
 import GamePlatformIcon from "../common/GamePlatformIcon";
@@ -171,12 +171,81 @@ function Sidebar({
     }
   };
 
+  const linkClass =
+    "flex items-center py-2.5 pl-4 text-sky-500 border-y border-slate-600/70 hover:text-sky-600";
+  const getBackEl = (label) => (
+    <>
+      <BiArrowBack size={22} title={label} className="flex-shrink-0" />
+      <Transition
+        unmountOnExit
+        show={sidebarExpanded}
+        className="transform ease-in ml-2"
+        enterStart="opacity-0"
+        entering="whitespace-nowrap"
+        enterEndDelay="200"
+        enterEnd="opacity-100 whitespace-normal"
+        leaveStart="opacity-100"
+        leaveEnd="opacity-0 whitespace-nowrap"
+      >
+        {label}
+      </Transition>
+    </>
+  );
+  const AppNameEl = (
+    <>
+      {!appState?.id ? (
+        <div className="my-7 flex items-center">
+          <Skeleton.Avatar active size={48} />
+          <div className="flex-1 ml-3.5">
+            <Skeleton.Node className="rounded !h-3 !w-full" active>
+              {" "}
+            </Skeleton.Node>
+            <Skeleton.Node className="rounded !h-3 !w-2/3 mt-1" active>
+              {" "}
+            </Skeleton.Node>
+          </div>
+        </div>
+      ) : (
+        <div className="my-7">
+          <div>
+            <div className="text-white flex items-center">
+              <div className="flex-1 flex items-center">
+                {appState?.icon ? (
+                  <GamePlatformIcon
+                    app={appState}
+                    imgClass="w-12 h-12 rounded-[0.75rem]"
+                  />
+                ) : (
+                  <DefaultAppImg dot={appState.active} dotClass="right-[2px]" />
+                )}
+
+                <Transition
+                  unmountOnExit
+                  show={sidebarExpanded}
+                  className="text-base font-semibold ml-3.5 transform ease-in line-clamp-2"
+                  enterStart="opacity-0"
+                  entering="whitespace-nowrap"
+                  enterEndDelay="200"
+                  enterEnd="opacity-100 whitespace-normal"
+                  leaveStart="opacity-100"
+                  leaveEnd="opacity-0 whitespace-nowrap"
+                >
+                  {appState.name}
+                </Transition>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+
   const sidebarContent = (
     <>
       <div
         className={classNames(
           "flex items-center mt-2",
-          isDetailApp ? "mb-5" : (isStoreApp? "mb-5" : "mb-6 md:mb-10")
+          isDetailApp ? "mb-5" : isStoreApp ? "mb-5" : "mb-6 md:mb-10"
         )}
       >
         <img src={logo} alt=" " className="w-11 h-11" />
@@ -198,153 +267,23 @@ function Sidebar({
       <div className="space-y-8">
         <div>
           {isStoreApp && (
-          <>
-            <Link
-                to={orgUrl + APP_PATH}
-                state={state}
-                className="flex items-center py-2.5 pl-4 text-sky-500 border-y border-slate-600/70 hover:text-sky-600"
-            >
-              <BiArrowBack
-                  size={22}
-                  title="All Apps"
-                  className="flex-shrink-0"
-              />
-              <Transition
-                  unmountOnExit
-                  show={sidebarExpanded}
-                  className="transform ease-in ml-2"
-                  enterStart="opacity-0"
-                  entering="whitespace-nowrap"
-                  enterEndDelay="200"
-                  enterEnd="opacity-100 whitespace-normal"
-                  leaveStart="opacity-100"
-                  leaveEnd="opacity-0 whitespace-nowrap"
-              >
-                All Apps
-              </Transition>
-            </Link>
-            {!appState?.id ? (
-                <div className="my-7 flex items-center">
-                  <Skeleton.Avatar active size={48} />
-                  <div className="flex-1 ml-3.5">
-                    <Skeleton.Node className="rounded !h-3 !w-full" active>
-                      {" "}
-                    </Skeleton.Node>
-                    <Skeleton.Node className="rounded !h-3 !w-2/3 mt-1" active>
-                      {" "}
-                    </Skeleton.Node>
-                  </div>
-                </div>
-            ) : (
-                <div className="my-7">
-                  <div>
-                    <div className="text-white flex items-center">
-                      <div className="flex-1 flex items-center">
-                        {appState?.icon ? (
-                            <GamePlatformIcon
-                                app={appState}
-                                imgClass="w-12 h-12 rounded-[0.75rem]"
-                            />
-                        ) : (
-                            <DefaultAppImg
-                                dot={appState.active}
-                                dotClass="right-[2px]"
-                            />
-                        )}
-
-                        <Transition
-                            unmountOnExit
-                            show={sidebarExpanded}
-                            className="text-base font-semibold ml-3.5 transform ease-in line-clamp-2"
-                            enterStart="opacity-0"
-                            entering="whitespace-nowrap"
-                            enterEndDelay="200"
-                            enterEnd="opacity-100 whitespace-normal"
-                            leaveStart="opacity-100"
-                            leaveEnd="opacity-0 whitespace-nowrap"
-                        >
-                          {appState.name}
-                        </Transition>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            )}
-          </>
+            <>
+              <Link to={orgUrl + APP_PATH} state={state} className={linkClass}>
+                {getBackEl("All Apps")}
+              </Link>
+              {AppNameEl}
+            </>
           )}
           {isDetailApp ? (
             <>
               <Link
                 to={orgUrl + PROTOTYPE_CAMP_PATH}
                 state={state}
-                className="flex items-center py-2.5 pl-4 text-sky-500 border-y border-slate-600/70 hover:text-sky-600"
+                className={linkClass}
               >
-                <BiArrowBack
-                  size={22}
-                  title="All Campaigns"
-                  className="flex-shrink-0"
-                />
-                <Transition
-                  unmountOnExit
-                  show={sidebarExpanded}
-                  className="transform ease-in ml-2"
-                  enterStart="opacity-0"
-                  entering="whitespace-nowrap"
-                  enterEndDelay="200"
-                  enterEnd="opacity-100 whitespace-normal"
-                  leaveStart="opacity-100"
-                  leaveEnd="opacity-0 whitespace-nowrap"
-                >
-                  All Campaigns
-                </Transition>
+                {getBackEl("All Campaigns")}
               </Link>
-              {!appState?.id ? (
-                <div className="my-7 flex items-center">
-                  <Skeleton.Avatar active size={48} />
-                  <div className="flex-1 ml-3.5">
-                    <Skeleton.Node className="rounded !h-3 !w-full" active>
-                      {" "}
-                    </Skeleton.Node>
-                    <Skeleton.Node className="rounded !h-3 !w-2/3 mt-1" active>
-                      {" "}
-                    </Skeleton.Node>
-                  </div>
-                </div>
-              ) : (
-                <div className="my-7">
-                  <div>
-                    <div className="text-white flex items-center">
-                      <div className="flex-1 flex items-center">
-                        {appState?.icon ? (
-                          <GamePlatformIcon
-                            app={appState}
-                            imgClass="w-12 h-12 rounded-[0.75rem]"
-                          />
-                        ) : (
-                          <DefaultAppImg
-                            dot={appState.active}
-                            dotClass="right-[2px]"
-                          />
-                        )}
-
-                        <Transition
-                          unmountOnExit
-                          show={sidebarExpanded}
-                          className="text-base font-semibold ml-3.5 transform ease-in line-clamp-2"
-                          enterStart="opacity-0"
-                          entering="whitespace-nowrap"
-                          enterEndDelay="200"
-                          enterEnd="opacity-100 whitespace-normal"
-                          leaveStart="opacity-100"
-                          leaveEnd="opacity-0 whitespace-nowrap"
-                        >
-                          {appState.name}
-                        </Transition>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {AppNameEl}
             </>
           ) : (
             <h3 className="text-xs uppercase text-slate-500 font-semibold pl-3">

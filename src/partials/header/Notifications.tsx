@@ -34,13 +34,13 @@ export const getNotificationTypeIcon = (data) => {
   return (
     <>
       {isSuccessType && (
-        <CheckCircleOutlined className="text-base !text-green-600 !align-[0.11em] custom-align mr-1" />
+        <CheckCircleOutlined className="text-base !text-green-600 mr-1" />
       )}
       {isErrType && (
-        <CloseCircleOutlined className="text-base !text-red-500 !align-[0.11em] custom-align mr-1" />
+        <CloseCircleOutlined className="text-base !text-red-500 mr-1" />
       )}
       {isWarningType && (
-        <ExclamationCircleOutlined className="text-base !text-orange-500 !align-[0.11em] custom-align mr-1" />
+        <ExclamationCircleOutlined className="text-base !text-orange-500 mr-1" />
       )}
     </>
   );

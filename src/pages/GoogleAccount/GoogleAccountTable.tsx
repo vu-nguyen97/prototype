@@ -18,36 +18,36 @@ function GoogleAccountTable(props) {
   const [pageSize, setPageSize] = useState(defaultPageSize);
 
   const { listData, onEdit, onDelete, onSyncApp, isLoading } = props;
-  
-//   const onUpdateStatus = (record) => {
-//     service
-//       .post("/google-play-stores/" + record?.id + "/check-state", {
-//         account: record?.email,
-//       })
-//       .then((res: any) => {
-//         toast(res.message || "check state success!", { type: "success" });
-//       });
-//     const timeout = setTimeout(() => {
-//       // Code to execute after the delay
-//       console.log("Delayed code executed");
-//       window.location.reload();
-//     }, 5000);
-//     return () => {
-//       clearTimeout(timeout);
-//       window.location.reload();
-//     };
-//   };
 
-//   const onOpenVnc = (value) => {
-//     const state = {
-//       ip: value.container.ip,
-//       vncPort: value.container.vncPort,
-//       vncPassword: value.container.vncPassword,
-//     };
-//     const queryString = new URLSearchParams(state).toString();
-//     window.open("/vnc-viewer?" + queryString, "_blank");
-//     onStopTask();
-//   };
+  //   const onUpdateStatus = (record) => {
+  //     service
+  //       .post("/google-play-stores/" + record?.id + "/check-state", {
+  //         account: record?.email,
+  //       })
+  //       .then((res: any) => {
+  //         toast(res.message || "check state success!", { type: "success" });
+  //       });
+  //     const timeout = setTimeout(() => {
+  //       // Code to execute after the delay
+  //       console.log("Delayed code executed");
+  //       window.location.reload();
+  //     }, 5000);
+  //     return () => {
+  //       clearTimeout(timeout);
+  //       window.location.reload();
+  //     };
+  //   };
+
+  //   const onOpenVnc = (value) => {
+  //     const state = {
+  //       ip: value.container.ip,
+  //       vncPort: value.container.vncPort,
+  //       vncPassword: value.container.vncPassword,
+  //     };
+  //     const queryString = new URLSearchParams(state).toString();
+  //     window.open("/vnc-viewer?" + queryString, "_blank");
+  //     onStopTask();
+  //   };
 
   const onStopTask = () => {
     console.log("stop task");
@@ -62,9 +62,7 @@ function GoogleAccountTable(props) {
       render: (record) => (
         <div className="flex items-center">
           <div>
-            <div className="font-semibold text-black text-base">
-              {record.name}
-            </div>
+            <div className="font-semibold">{record.name}</div>
           </div>
         </div>
       ),
