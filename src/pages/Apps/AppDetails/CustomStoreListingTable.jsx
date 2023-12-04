@@ -7,7 +7,7 @@ import { capitalizeWord, sortByString } from "../../../utils/Helpers";
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 
 function CustomStoreListingTable(props) {
-  const defaultPageSize = 20;
+  const defaultPageSize = 10;
   const [pageSize, setPageSize] = useState(defaultPageSize);
 
   const { listData, onEdit, onDelete, isLoading } = props;

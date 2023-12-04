@@ -39,11 +39,25 @@ const ASSET_FIELDS = [
     multiple: true,
   },
 ];
-function ModalAddStoreListing(props) {
+function ModalAddCustomListing(props) {
   const [listFiles, setListFiles] = useState<any>({});
   const urlParams = useParams();
   const [form] = Form.useForm();
-  const { isOpen, onClose, setIsLoading, setIsOpenModalAddApp } = props;
+  const { isOpen, onClose, setIsLoading, setIsOpenModalAddApp, mainListing } =
+    props;
+
+  useEffect(() => {
+    if (mainListing === null) return;
+
+    console.log("mainListing", mainListing);
+    form.setFieldsValue({
+      appName: mainListing.appName,
+      shortDescription: mainListing.shortDescription,
+      fullDescription: mainListing.fullDescription,
+      url: mainListing.youtubeVideoUrl,
+    });
+  }, [isOpen, mainListing]);
+
   const onCloseModal = () => {
     onClose();
     setTimeout(() => {
@@ -69,11 +83,12 @@ function ModalAddStoreListing(props) {
     } = values;
 
     const {
-      featureImg,
-      iconImg,
-      phoneScreenshots,
-      sevenInchScreenshots,
-      tenInchScreenshots,
+      // featureImg,
+      // iconImg,
+      // phoneScreenshots,
+      // sevenInchScreenshots,
+      // tenInchScreenshots,
+      assets,
     } = listFiles;
 
     const formData = new FormData();
@@ -88,20 +103,24 @@ function ModalAddStoreListing(props) {
       formData.append("youtubeVideoUrl", url);
     }
 
-    formData.append("featureGraphic", featureImg[0]);
-    formData.append("appIcon", iconImg[0]);
-    phoneScreenshots.forEach((el) => {
-      formData.append("phoneScreenshots", el);
+    assets.forEach((el) => {
+      formData.append("assets", el);
     });
-    console.log(phoneScreenshots.length);
-    sevenInchScreenshots.forEach((el) => {
-      formData.append("tablet7Screenshots", el);
-    });
-    console.log(sevenInchScreenshots.length);
-    tenInchScreenshots.forEach((el) => {
-      formData.append("tablet10Screenshots", el);
-    });
-    console.log(tenInchScreenshots.length);
+
+    // formData.append("featureGraphic", featureImg[0]);
+    // formData.append("appIcon", iconImg[0]);
+    // phoneScreenshots.forEach((el) => {
+    //   formData.append("phoneScreenshots", el);
+    // });
+    // console.log(phoneScreenshots.length);
+    // sevenInchScreenshots.forEach((el) => {
+    //   formData.append("tablet7Screenshots", el);
+    // });
+    // console.log(sevenInchScreenshots.length);
+    // tenInchScreenshots.forEach((el) => {
+    //   formData.append("tablet10Screenshots", el);
+    // });
+    // console.log(tenInchScreenshots.length);
 
     service.post("/play-store/custom-listings", formData).then(
       (res: any) => {
@@ -213,40 +232,34 @@ function ModalAddStoreListing(props) {
         <Form.Item
           name="fullDescription"
           label="Full description"
-          rules={[{ required: true, message: "Please anter full description" }]}
+          rules={[{ required: true, message: "Please enter full description" }]}
         >
           <AntInput.TextArea
-            rows={3}
+            rows={10}
             placeholder="Enter content (max 4000 characters)"
             maxLength={4000}
             allowClear
           />
         </Form.Item>
-        {ASSET_FIELDS.map((el) => {
-          const { field, label, note, multiple } = el;
-          return (
-            <DynamicUpload
-              key={field}
-              className={"font-bold"}
-              field={field}
-              label={label}
-              note={note}
-              multiple={multiple}
-              listFiles={listFiles[field] || []}
-              onSetListFiles={onSetListFiles}
-            />
-          );
-        })}
+        <DynamicUpload
+          className={"font-bold"}
+          field={"assets"}
+          label={"Assets"}
+          multiple={true}
+          listFiles={listFiles["assets"] || []}
+          onSetListFiles={onSetListFiles}
+        />
       </Modal>
     </Form>
   );
 }
 
-ModalAddStoreListing.propTypes = {
+ModalAddCustomListing.propTypes = {
   isOpen: PropTypes.bool,
   onClose: PropTypes.func,
   setIsLoading: PropTypes.func,
   setIsOpenModalAddApp: PropTypes.func,
+  mainListing: PropTypes.object,
 };
 
-export default ModalAddStoreListing;
+export default ModalAddCustomListing;

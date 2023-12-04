@@ -85,13 +85,13 @@ function Apps(props) {
     getApp(value);
   };
 
-  const handleSearch = (e) => {
-    if (search === null) {
+  const handleSearch = (value) => {
+    if (value === null || value === "") {
       setListAppRender(listApp);
     } else {
       setListAppRender(
         listApp.filter((app) =>
-          app.name.toLowerCase().includes(search.toLowerCase())
+          app.name.toLowerCase().includes(value.toLowerCase())
         )
       );
     }
@@ -139,8 +139,10 @@ function Apps(props) {
               className="xs:!w-[300px] mx-1 2xl:!mx-2 mt-3"
               prefix={<SearchOutlined />}
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onPressEnter={handleSearch}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                handleSearch(e.target.value);
+              }}
             />
             <div className="xs:!w-[300px] mx-1 2xl:!mx-2 mt-3 ml-50">
               <span className="flex">

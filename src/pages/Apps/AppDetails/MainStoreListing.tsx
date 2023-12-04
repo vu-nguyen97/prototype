@@ -111,14 +111,24 @@ const MainStoreListing = () => {
               type="primary"
               onClick={() => fetchMainStoreListing()}
               loading={
-                task ? (task.state === "RUNNING" || task.state === "CREATED") : false
+                task
+                  ? task.state === "RUNNING" || task.state === "CREATED"
+                  : false
               }
             >
               Fetch main store listing
             </Button>
             <span className="text-md font-[500] flex gap-1">
               <span>Last Sync: </span>
-              {task ? <TimeAgoComponent createDate={task ? task.createdAt : 0} /> : "None"}
+              {task ? (
+                task.state === "FAILED" ? (
+                  "Last sync failed"
+                ) : (
+                  <TimeAgoComponent createDate={task ? task.createdAt : 0} />
+                )
+              ) : (
+                "None"
+              )}
             </span>
           </div>
           <div className="px-6">
@@ -222,7 +232,11 @@ const MainStoreListing = () => {
             </Button>
             <span className="text-md font-[500] flex gap-1">
               <span>Last Sync: </span>
-              {task ? "None" : <TimeAgoComponent createDate={task && task.createdAt} />}
+              {task ? (
+                "None"
+              ) : (
+                <TimeAgoComponent createDate={task && task.createdAt} />
+              )}
             </span>
           </div>
         </div>

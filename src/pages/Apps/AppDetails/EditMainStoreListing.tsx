@@ -1,5 +1,5 @@
 import { Button, Form } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import service from "../../../partials/services/axios.config";
@@ -44,6 +44,29 @@ export default function EditMainStoreListing() {
   const [listFiles, setListFiles] = useState<any>({});
   const urlParams = useParams();
   const [isLoading, setIsLoading] = useState(false);
+  const [mainListing, setMainListing] = useState<any>(null);
+
+  useEffect(() => {
+    setIsLoading(true);
+    service
+      .get(`/main_listing?appId=${urlParams.appId}`)
+      .then((res: any) => {
+        setIsLoading(false);
+        setMainListing(res.results);
+        if (res.results) {
+          form.setFieldsValue({
+            shortDescription: res.results?.shortDescription,
+            fullDescription: res.results?.fullDescription,
+            url: res.results?.youtubeVideoUrl,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        toast(error.message, { type: "error" });
+        setIsLoading(false);
+      });
+  }, []);
 
   const onSetListFiles = (fieldName, files) => {
     const newListFiles = { ...listFiles };
@@ -56,15 +79,15 @@ export default function EditMainStoreListing() {
     const { shortDescription, fullDescription, url } = values;
 
     const {
-      featureImg,
-      iconImg,
-      phoneScreenshots,
-      sevenInchScreenshots,
-      tenInchScreenshots,
+      // featureImg,
+      // iconImg,
+      // phoneScreenshots,
+      // sevenInchScreenshots,
+      // tenInchScreenshots,
+      assets,
     } = listFiles;
 
     const formData = new FormData();
-
 
     formData.append("appId", urlParams.appId);
     formData.append("shortDescription", shortDescription);
@@ -73,20 +96,24 @@ export default function EditMainStoreListing() {
       formData.append("youtubeVideoUrl", url);
     }
 
-    formData.append("featureGraphic", featureImg[0]);
-    formData.append("appIcon", iconImg[0]);
-    phoneScreenshots.forEach((el) => {
-      formData.append("phoneScreenshots", el);
+    assets.forEach((el) => {
+      formData.append("assets", el);
     });
-    console.log(phoneScreenshots.length);
-    sevenInchScreenshots.forEach((el) => {
-      formData.append("tablet7Screenshots", el);
-    });
-    console.log(sevenInchScreenshots.length);
-    tenInchScreenshots.forEach((el) => {
-      formData.append("tablet10Screenshots", el);
-    });
-    console.log(tenInchScreenshots.length);
+
+    // formData.append("featureGraphic", featureImg[0]);
+    // formData.append("appIcon", iconImg[0]);
+    // phoneScreenshots.forEach((el) => {
+    //   formData.append("phoneScreenshots", el);
+    // });
+    // console.log(phoneScreenshots.length);
+    // sevenInchScreenshots.forEach((el) => {
+    //   formData.append("tablet7Screenshots", el);
+    // });
+    // console.log(sevenInchScreenshots.length);
+    // tenInchScreenshots.forEach((el) => {
+    //   formData.append("tablet10Screenshots", el);
+    // });
+    // console.log(tenInchScreenshots.length);
 
     service.post("/main_listing", formData).then(
       (res: any) => {
@@ -158,21 +185,14 @@ export default function EditMainStoreListing() {
                 maxLength={50}
               />
             </Form.Item>
-            {ASSET_FIELDS.map((el) => {
-              const { field, label, note, multiple } = el;
-              return (
-                <DynamicUpload
-                  key={field}
-                  className={"font-bold"}
-                  field={field}
-                  label={label}
-                  note={note}
-                  multiple={multiple}
-                  listFiles={listFiles[field] || []}
-                  onSetListFiles={onSetListFiles}
-                />
-              );
-            })}
+            <DynamicUpload
+              className={"font-bold"}
+              field={"assets"}
+              label={"Assets"}
+              multiple={true}
+              listFiles={listFiles["assets"] || []}
+              onSetListFiles={onSetListFiles}
+            />
             <Button type="primary" htmlType="submit">
               Submit
             </Button>
