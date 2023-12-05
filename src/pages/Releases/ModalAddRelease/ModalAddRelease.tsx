@@ -9,9 +9,6 @@ import Select from "antd/lib/select";
 import service from "../../../partials/services/axios.config";
 import AntInput from "antd/lib/input";
 import Loading from "../../../utils/Loading";
-import { useQuery } from "@tanstack/react-query";
-import { LIST_STORE } from "../../../api/constants.api";
-import { getListStore } from "../../../api/common/common.api";
 import moment from "moment";
 import {
   AssetNotes,
@@ -26,30 +23,17 @@ import { matchYoutubeUrl } from "../../../utils/Helpers";
 
 function ModalAddRelease(props) {
   const [form] = Form.useForm();
-  const { isOpen, onClose } = props;
+  const { isOpen, onClose, listStores } = props;
 
   const [isLoading, setIsLoading] = useState(false);
-  const [listDevelopers, setListDevelopers] = useState<any>([]);
   const [listFiles, setListFiles] = useState<any>({});
 
   const initialValues = {};
 
-  const { data: listStoreRes } = useQuery([LIST_STORE], getListStore, {
-    staleTime: 5 * 60000,
-    enabled: isOpen,
-  });
-
   useEffect(() => {
-    if (!isOpen || !listDevelopers?.length) return;
-    form.setFieldValue("developerId", listDevelopers[1].id); // todo
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (!listStoreRes?.results?.length) return;
-
-    setListDevelopers(listStoreRes.results);
-    form.setFieldValue("developerId", listStoreRes.results[1].id); // todo
-  }, [listStoreRes]);
+    if (!isOpen || !listStores?.length) return;
+    form.setFieldValue("developerId", listStores[0].id);
+  }, [isOpen, listStores]);
 
   const onCloseModal = () => {
     onClose();
@@ -170,12 +154,8 @@ function ModalAddRelease(props) {
           label="Store"
           rules={[{ required: true, message: "Please select a store" }]}
         >
-          <Select
-            showSearch
-            placeholder="Select a store"
-            loading={!listDevelopers.length}
-          >
-            {listDevelopers.map((item: any) => (
+          <Select showSearch placeholder="Select a store">
+            {listStores.map((item: any) => (
               <Select.Option key={item.id} value={item.id}>
                 {item.name}
               </Select.Option>
@@ -306,6 +286,7 @@ function ModalAddRelease(props) {
 ModalAddRelease.propTypes = {
   isOpen: PropTypes.bool,
   onClose: PropTypes.func,
+  listStores: PropTypes.array,
 };
 
 export default ModalAddRelease;
