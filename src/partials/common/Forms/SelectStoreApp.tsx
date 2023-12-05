@@ -33,14 +33,15 @@ function SelectStoreApp(props) {
     onFocusFunc
   } = props;
 
+  console.log(listApp);
   const onGetKey = (data) => {
     if (getKey) {
       return getKey(data);
     }
-    return data.storeId + data.name;
+    return data.packageId + data.name;
   };
 
-  const listAppEl = listApp?.map((data, idx) => (
+  const listAppEl = listApp?.map((data) => (
     <Select.Option key={onGetKey(data)} size="large">
       <div className="flex items-center">
         {data.icon && <GamePlatformIcon app={data} inputSize={true} />}

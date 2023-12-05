@@ -8,6 +8,7 @@ export const LIST_SITE_ID = "listSiteId";
 export const LIST_EMAIL = "listEmail";
 export const LIST_EMAIL_BY_APP = "listEmailByApp";
 export const LIST_CURRENCY = "listCurrency";
+export const LIST_STORE = "listStore";
 
 export const GET_STORE_APP_BY_ID = "getStoreAppById";
 

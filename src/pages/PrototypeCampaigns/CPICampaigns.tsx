@@ -11,7 +11,7 @@ import {
   onClickRangePickerFooter,
 } from "../../partials/common/Forms/RangePicker";
 import DatePicker from "antd/lib/date-picker";
-import { disabledDate } from "../../utils/Helpers";
+import { disabledDate, filterSelectByDOM, filterSelectGroupByKey } from "../../utils/Helpers";
 import { EXTRA_FOOTER } from "../../constants/constants";
 import Tag from "antd/lib/tag";
 import Button from "antd/lib/button/button";
@@ -22,6 +22,11 @@ import ModalAdd from './ModalAdd';
 import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
+import SelectStoreApp, {getActivedApp} from "../../partials/common/Forms/SelectStoreApp";
+import GamePlatformIcon from "../../partials/common/GamePlatformIcon";
+import { option } from "yargs";
+const { Option, OptGroup } = Select;
+
 const ListStatus = [
   { value: "true", label: "Active" },
   { value: "false", label: "Inactive" },
@@ -30,13 +35,17 @@ const ListStatus = [
 function Apps() {
   const [isLoading, setIsLoading] = useState(false);
   const [listApp, setListApp] = useState<any>({});
-  const [listStoreApp, setListStoreApp] = useState<any>({});
+  const [listStoreApp, setListStoreApp] = useState<any>([]);
   const [isOpenModalAddApp, setIsOpenModalAddApp] = useState(false);
   const [search, setSearch] = useState("");
+  const [selectedValue, setSelectedValue] = useState<any>("ALL"); 
+  const [selectedApp, setSelectedApp] = useState<any>("ALL"); 
   const [createdBy, setCreatedBy] = useState("");
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
-  const [active, setActive] = useState("true");
-  const [dateRange, setDateRange] = useState<any>(getLastDay(20));
+  const [active, setActive] = useState("ALL");
+  const [dateRange, setDateRange] = useState<any>(getLastDay(7));
+  const [listDeveloper, setListDeveloper] = useState<any>([]);
+  const [activedApp, setActivedApp] = useState<object[]>();
   const storeId = useSelector(
     (state: RootState) => state.account.userData.storeId
   );
@@ -50,20 +59,26 @@ function Apps() {
     size: defaultPageSize,
   });
   
+  useEffect(() => {
+      service.get("/google-play-stores").then(
+        (res: any) => {
+          setListDeveloper(res.results);
+        },
+        () => {
+        }
+      );
+  }, []);
 
   useEffect(() => {  
     const getListApp = service.get("/store-app");
     Promise.all([ getListApp]).then(
       (res: any) => {
-        setIsLoading(false);
-        // set list store apps to be apps that has unity appId
         let chooseableList = res[0].results.filter(
-          (app: any) => app.unityAppId !== null
+          (app: any) => app.unityGameId !== null
         )
         console.log("chooseableList",chooseableList);
         setListStoreApp(chooseableList);
       },
-      () => setIsLoading(false)
     );
   }, []);
 
@@ -78,11 +93,14 @@ function Apps() {
       page: tableFilters.page,
       pageSize: tableFilters.size,
       name: search,
+      store: (selectedValue=="ALL"?null:selectedValue),
+      app: (selectedApp=="ALL"?null:selectedApp),
       createdBy,
-      active,
+      active: (active=="ALL"?null:active),
       storeId: isAdmin?"":storeId,
     };
 
+    console.log("param:",params)
     setIsLoading(true);
     service.get("/cpi-campaigns", { params }).then(
       (res: any) => {
@@ -101,6 +119,14 @@ function Apps() {
     onSearchData();
   };
 
+  const handleSelectChange = (value) => {
+    setSelectedValue(value);
+  };
+
+  const handleSelectChangeApp = (value) => {
+    setSelectedApp(value);
+  };
+
   return (
     <Page>
       {isLoading && <Loading />}
@@ -108,15 +134,13 @@ function Apps() {
       <div className="flex justify-between">
         <div className="page-title">CPI Campaigns</div>
         <div className="flex space-x-2">
-          <Link to="/cpi-campaigns/new-campaign">
           <Button
             type="primary"
             icon={<PlusOutlined />}
-            // onClick={(e) => setIsOpenModalAddApp(true)}
+            onClick={(e) => setIsOpenModalAddApp(true)}
           >
             New CPI Campaign
           </Button>
-          </Link>
         </div>
       </div>
 
@@ -125,26 +149,76 @@ function Apps() {
           <AntInput
             allowClear
             placeholder="Search name"
-            className="xs:!w-[200px] mx-1 2xl:!mx-2 mt-3"
+            className="xs:!w-[180px] mx-1 2xl:!mx-2 mt-3"
             prefix={<SearchOutlined />}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <AntInput
+          <div className="flex items-center !mt-3 !mx-1 2xl:!mx-2">
+            Store:
+          <Select
             allowClear
-            placeholder="Search created by"
-            className="xs:!w-[200px] mx-1 2xl:!mx-2 mt-3"
-            prefix={<SearchOutlined />}
-            value={createdBy}
-            onChange={(e) => setCreatedBy(e.target.value)}
-          />
+            value={selectedValue}
+            onChange={handleSelectChange}
+            className="xs:!w-[170px] !ml-2 2xl:!ml-3"
+          >
+            <Select.Option key={0} value="ALL">
+                  All
+                </Select.Option>
+                {listDeveloper.map((item) => (
+                  <Select.Option key={item.id} value={item.id}>
+                    {item.name}
+                  </Select.Option>
+                ))}
+          </Select>
+          </div>
+          <div className="flex items-center !mt-3 !mx-1 2xl:!mx-2">
+            App:
+            <div style={{marginLeft: 10, width:400}}>
+            <Select
+              showSearch
+              style={{ width: 400 }}
+              value={selectedApp}
+              onChange={handleSelectChangeApp}
+              placeholder="Select a name"
+              // optionFilterProp="children"
+              filterOption={filterSelectByDOM}
+              // filterOption={(input, option: any) => {console.log(">>>>", input, option);return true}}
+            >
+               <OptGroup label="All">
+              <Select.Option key={0} value="ALL">
+                  All
+                </Select.Option>
+               </OptGroup>
+
+               <OptGroup label="Apps">
+
+              {listStoreApp.map(item => (
+                <Select.Option key={item.id} value={item.id}>
+                  <div className="flex items-center">
+                      {item.icon && <GamePlatformIcon app={item} inputSize={true} />}
+                      {item.name}
+                  </div>  
+                </Select.Option>
+              ))}
+               </OptGroup>
+
+            </Select>
+            </div>
+            
+          </div>
+          <div className="flex items-center !mt-3 !mx-1 2xl:!mx-2">
+            Status:
           <Select
             allowClear
             placeholder="Status"
-            className="xs:!w-[110px] !mx-1 2xl:!mx-2 !mt-3"
+            className="xs:!w-[110px] !ml-2 2xl:!ml-3"
             value={active}
             onChange={setActive}
           >
+            <Select.Option key={10} value="ALL">
+                  All
+                </Select.Option>
             {ListStatus.map((el: any, idx) => {
               return (
                 <Select.Option value={el.value} key={idx}>
@@ -153,6 +227,7 @@ function Apps() {
               );
             })}
           </Select>
+          </div>
           <DatePicker.RangePicker
             className="w-full xs:w-auto mx-1 2xl:!mx-2 !mt-3"
             open={isOpenDateRange}
