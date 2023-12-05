@@ -79,7 +79,7 @@ const CustomStoreListing = () => {
           setCustomListings(res2.results);
           setIsLoading(false);
           setTask(res3.results);
-          setMainListing(res4.results);
+          setMainListing(res4.results[0]);
         })
       )
       .catch((error) => {
