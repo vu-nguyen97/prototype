@@ -44,9 +44,9 @@ export const SidebarConfigs = [
   {
     id: 5,
     url: "/release",
-    label: "Create new release",
+    label: "Releases",
     iconEl: <MdNewReleases size={20} />,
-    preload: () => import("../../pages/CreateNewRelease/CreateNewRelease"),
+    preload: () => import("../../pages/Releases/Releases"),
   },
   {
     id: 8,

@@ -81,9 +81,7 @@ const Overview = React.lazy(() => import("../pages/App/overview/Overview"));
 const Notifications = React.lazy(
   () => import("../pages/Settings/Notifications/Notifications")
 );
-const CreateNewRelease = React.lazy(
-  () => import("../pages/CreateNewRelease/CreateNewRelease")
-);
+const Releases = React.lazy(() => import("../pages/Releases/Releases"));
 const StoreAppDetail = React.lazy(() => import("../pages/Apps/AppDetail"));
 const CustomStoreListing = React.lazy(
   () => import("../pages/Apps/AppDetails/CustomStoreListing")
@@ -172,7 +170,7 @@ const AppRoutes = () => (
           <Route index element={getPage(<StoreAppDetail />)} />
         </Route>
 
-        <Route path="release" element={getPage(<CreateNewRelease />)} />
+        <Route path="release" element={getPage(<Releases />)} />
 
         <Route element={<AdminRoutes />}>
           <Route path="networks" element={getPage(<NetworkConfig />)} />
