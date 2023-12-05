@@ -42,9 +42,9 @@ function AppTable(props) {
       title: "Name",
       sorter: sortByString("name"),
       render: (record) => (
-        <div className="flex space-x-2 ml-2">
-          <img src={record.icon} className="w-6 h-6 mr-2.5 rounded-sm" />
-          {record.name}
+        <div className="flex items-center space-x-2 md:ml-1.5">
+          <img src={record.icon} className="w-8 h-8 rounded" />
+          <div>{record.name}</div>
         </div>
       ),
     },

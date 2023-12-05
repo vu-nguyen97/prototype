@@ -54,9 +54,9 @@ export const ExternalUrlRoutes = () => {
   if (!appId) {
     switch (pageCode) {
       case "1010":
-        redirectedPage = (
-          <Navigate to={"/connectors" + window.location.search} />
-        );
+        // redirectedPage = (
+        //   <Navigate to={"/connectors" + window.location.search} />
+        // );
         break;
       default:
         redirectedPage = <Navigate to="/" />;

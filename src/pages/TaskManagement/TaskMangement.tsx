@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Page from "../../utils/composables/Page";
-import Loading from "../../utils/Loading";
 import { Select } from "antd";
 import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
@@ -12,7 +11,6 @@ import service from "../../partials/services/axios.config";
 import { disabledDate, getLabelFromStr } from "../../utils/Helpers";
 import { EXTRA_FOOTER } from "../../constants/constants";
 import {
-  DATE_RANGE_FORMAT,
   getLastDay,
   onClickRangePickerFooter,
 } from "../../partials/common/Forms/RangePicker";
@@ -204,8 +202,7 @@ const TaskMangement = () => {
 
   return (
     <Page>
-      {/* {isLoading && <Loading />} */}
-      <div className="page-title">Task Management</div>
+      <div className="page-title">Task management</div>
       <div className="bg-white p-4 rounded-sm shadow mt-2 mb-5">
         <div className="flex items-center flex-wrap -mx-1 2xl:-mx-2 -mt-3">
           {isAdmin && (
