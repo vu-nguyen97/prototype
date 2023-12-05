@@ -45,8 +45,16 @@ export default function getColumns(props) {
       render: (rd) => rd.createdBy,
       sorter: sortByString("createdBy"),
     },
-    getDate("startDate", "Start date"),
-    getDate("endDate", "End date"),
+    {
+      title: "Start date",
+      render: (rd) => (new Date(rd.createdDate).toISOString().split('T')[0]),
+      sorter: sortByString("createdDate"),
+    },
+    {
+      title: "End date",
+      render: (rd) => ( new Date(new Date(rd.createdDate).getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]),
+      sorter: sortByString("createdDate"),
+    },
     { title: "Actived", render: (rd) => rd.active?.toString() },
   ];
 }
