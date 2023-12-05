@@ -3,7 +3,7 @@ import React from "react";
 import { AiOutlineQuestionCircle } from "@react-icons/all-files/ai/AiOutlineQuestionCircle";
 
 export const getDefaultReleaseNote = (name) =>
-  "Release Notes: Game Launch - Version 1.0\n\n🚀 Welcome to " +
+  "Game Launch - Version 1.0\n\n🚀 Welcome to " +
   name +
   " - Version 1.0! 🚀\n\n" +
   "Explore a new world, meet unique characters, and enjoy stunning visuals. " +
