@@ -1,27 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Page from "../../utils/composables/Page";
 import service from "../../partials/services/axios.config";
 import { toast } from "react-toastify";
-import { Button, Collapse, Form, Select } from "antd";
+import { Button, Collapse } from "antd";
 import Loading from "../../utils/Loading";
 import ReleaseStatusTable from "./ReleaseStatusTable";
-import AntInput from "antd/lib/input";
-import { Input } from "antd";
-import DynamicUpload from "../../partials/common/Forms/DynamicUpload";
-import { languages } from "./languages";
 import axios from "axios";
+import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
+import ModalAddRelease from "./ModalAddRelease/ModalAddRelease";
 const { Panel } = Collapse;
-const { TextArea } = Input;
 
 function CreateNewRelease() {
-  const [templateName, setTemplateName] = useState("Production Default");
-  const [listFiles, setListFiles] = useState<any>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const [listDevelopers, setListDevelopers] = useState([]);
-
-  const [form] = Form.useForm();
-
+  const [isAddRelease, setIsAddRelease] = useState(false);
   const [releaseStatus, setReleaseStatus] = useState([]);
 
   const [templateData, setTemplateData] = useState<any>();
@@ -55,12 +47,11 @@ function CreateNewRelease() {
 
     axios
       .all([
-        service.get("/google-play-stores"),
+        service.get("/google-play-stores"), // Todo: delete
         service.get("/default-app-content-settings"),
       ])
       .then(
         axios.spread((res1: any, res2: any) => {
-          setListDevelopers(res1.results);
           setTemplateData(res2.results);
         })
       )
@@ -72,53 +63,7 @@ function CreateNewRelease() {
     service.get("/release-status").then((res: any) => {
       setReleaseStatus(res.results);
     });
-
-    form.setFieldValue("country", "English (US)");
   }, []);
-
-  const onSetListFiles = (fieldName, files) => {
-    const newListFiles = { ...listFiles };
-    newListFiles["file"] = files;
-    setListFiles(newListFiles);
-  };
-
-  const handleTemplateChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setTemplateName(event.target.value);
-  };
-
-  const onFinish = () => {
-    setIsLoading(true);
-
-    const { appName, releaseName, countryNotes, developerId } =
-      form.getFieldsValue();
-
-    console.log("appName", appName);
-
-    const formData = new FormData();
-    formData.append("developerId", developerId);
-    formData.append("appName", appName);
-    // formData.append("emailListNames", testersGroups.split(","));
-    // formData.append("templateName", templateName);
-    formData.append("releaseName", releaseName);
-    // formData.append("country", country);
-    formData.append("countryNotes", countryNotes);
-    formData.append("file", listFiles["file"][0] as Blob);
-    console.log(formData);
-    console.log(listFiles["file"]?.length);
-    // Handle form submission here
-    service
-      .post("/release", formData)
-      .then((res) => {
-        toast("Request pushed successfully", { type: "success" });
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        toast(err.message, { type: "error" });
-        setIsLoading(false);
-      });
-  };
 
   function clearStatus() {
     setIsLoading(true);
@@ -134,78 +79,24 @@ function CreateNewRelease() {
       });
   }
 
+  const addNewRelease = () => {
+    setIsAddRelease(true);
+  };
+
   return (
     <Page>
       {isLoading && <Loading />}
-      <div className="page-title">Create New Release</div>
-      <div className="max-w-xl mx-auto space-y-4 mb-4">
-        <Form
-          id="FormCreateRelease"
-          labelAlign="left"
-          form={form}
-          labelCol={{ span: 24 }}
-          wrapperCol={{ span: 24 }}
-          onFinish={onFinish}
-        >
-          <Form.Item
-            name="developerId"
-            label="Store"
-            rules={[{ required: true, message: "Please select a store" }]}
+      <div className="flex justify-between flex-col xs:flex-row">
+        <div className="page-title">Releases</div>
+        <div className="mt-1 sm:mt-0">
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={addNewRelease}
           >
-            <Select
-              showSearch
-              options={listDevelopers.map((dev: any) => ({
-                label: dev.name,
-                value: dev.id,
-              }))}
-            />
-          </Form.Item>
-          <Form.Item
-            name="appName"
-            label="App Name"
-            rules={[{ required: true, message: "Please enter App name" }]}
-          >
-            <AntInput allowClear className="w-full" />
-          </Form.Item>
-          {/* <Form.Item
-            name="country"
-            label="Country"
-            rules={[{ required: true, message: "Please select a country" }]}
-          >
-            <Select
-              showSearch
-              options={languages.map((lang) => ({ label: lang, value: lang }))}
-            />
-          </Form.Item> */}
-          <Form.Item
-            name="releaseName"
-            label="Release Name"
-            rules={[{ required: true, message: "Please enter Release name" }]}
-          >
-            <AntInput allowClear className="w-full" />
-          </Form.Item>
-          <Form.Item
-            name="countryNotes"
-            label="Release Notes"
-            rules={[{ required: true, message: "Please enter Release Notes" }]}
-          >
-            <TextArea rows={5} />
-          </Form.Item>
-          <Form.Item
-            name="file"
-            rules={[{ required: false, message: "Please select a bundle" }]}
-          >
-            <DynamicUpload
-              label="Bundle"
-              onSetListFiles={onSetListFiles}
-              listFiles={listFiles["file"] || []}
-              accept=".aab, .AAB"
-            />
-          </Form.Item>
-          <Button type="primary" htmlType="submit">
-            Submit
+            New release
           </Button>
-        </Form>
+        </div>
       </div>
       <Collapse defaultActiveKey={["0"]}>
         <Panel header="Release status table" key="0">
@@ -416,6 +307,11 @@ function CreateNewRelease() {
           )}
         </Panel>
       </Collapse>
+
+      <ModalAddRelease
+        isOpen={isAddRelease}
+        onClose={() => setIsAddRelease(false)}
+      />
     </Page>
   );
 }

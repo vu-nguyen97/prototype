@@ -14,12 +14,27 @@ import {
 import Modal from "antd/lib/modal";
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 
+export const getUploadRule = (listFiles, message = "Please select file") => ({
+  required: true,
+  message,
+  validator: (rule, value, callback) => {
+    return new Promise((resolve, reject) => {
+      if (listFiles?.length) {
+        resolve("");
+      }
+      reject();
+    });
+  },
+});
+
 function DynamicUpload(props) {
   const { Dragger } = Upload;
   const {
     multiple,
+    wrapperClass,
     className,
     field,
+    isShowLabel,
     label,
     note,
     listFiles,
@@ -114,6 +129,12 @@ function DynamicUpload(props) {
     setPreviewOpen(false);
   };
 
+  const openMultiplePreview = (file) => {
+    setPreviewImage(URL.createObjectURL(file));
+    setPreviewTitle(file.name);
+    setPreviewOpen(true);
+  };
+
   const getModalSize = () => {
     let width = 520;
     if (typeof listSizes?.[0] === "string") {
@@ -128,13 +149,15 @@ function DynamicUpload(props) {
   };
 
   return (
-    <div className="mb-6">
-      <div className="">
-        <span className="text-[#ff4d4f] mr-1 mt-2">*</span>
-        <span className={className}>
-          {getLabelFromCamelCaseStr(label || field, false)}
-        </span>
-      </div>
+    <div className={wrapperClass}>
+      {isShowLabel && (
+        <div className="">
+          <span className="text-[#ff4d4f] mr-1 mt-2">*</span>
+          <span className={className}>
+            {getLabelFromCamelCaseStr(label || field, false)}
+          </span>
+        </div>
+      )}
       {note && (
         <div className="text-gray-600 mb-3">
           <span className="font-semibold mr-1">Note:</span>
@@ -185,13 +208,13 @@ function DynamicUpload(props) {
                           alt=" "
                           referrerPolicy="no-referrer"
                           onError={handleErrorImage}
-                          onClick={() => setPreviewImage(file)}
+                          onClick={() => openMultiplePreview(file)}
                           title="Click to view the image"
                         />
                       )}
                       <div
                         className="grow flex itens-center justify-between truncate ml-2 cursor-pointer"
-                        onClick={() => setPreviewImage(file)}
+                        onClick={() => openMultiplePreview(file)}
                       >
                         {file.name}
                       </div>
@@ -250,14 +273,18 @@ function DynamicUpload(props) {
 DynamicUpload.defaultProps = {
   multiple: false,
   accept: ".png, .jpeg",
+  wrapperClass: "mb-6",
+  isShowLabel: true,
 };
 
 DynamicUpload.propTypes = {
   multiple: PropTypes.bool,
   accept: PropTypes.string,
+  wrapperClass: PropTypes.string,
   className: PropTypes.string,
   field: PropTypes.string,
-  label: PropTypes.string,
+  isShowLabel: PropTypes.bool,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   note: PropTypes.string,
   listFiles: PropTypes.array,
   onSetListFiles: PropTypes.func,

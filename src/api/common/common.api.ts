@@ -33,3 +33,7 @@ export const getCpiCampaignById: QueryFunc = async ({ queryKey }) => {
 export const getCurrency: QueryFunc = async () => {
   return await service.get("/rule-config/currency");
 };
+
+export const getListStore: QueryFunc = async () => {
+  return await service.get("/google-play-stores");
+};
