@@ -24,7 +24,7 @@ const Members = () => {
     const getListRole = service.get("/role");
     const getListApp = service.get("/store-app");
     const getAllUser = service.get("/user/findAll");
-    const getListStore = service.get("/google-play-stores")
+    const getListStore = service.get("/google-play-stores");
     Promise.all([getListRole, getListApp, getAllUser, getListStore]).then(
       (res: any) => {
         setIsLoading(false);
@@ -59,7 +59,7 @@ const Members = () => {
 
   const onDeactive = (memberData) => {
     setIsLoading(true);
-    service.post(`/user/deactiveUser`, {id: memberData.id}).then(
+    service.post(`/user/deactiveUser`, { id: memberData.id }).then(
       (res: any) => {
         const newTableData = listMember.map((mem) =>
           mem.id === memberData.id
@@ -77,7 +77,7 @@ const Members = () => {
 
   const onActive = (memberData) => {
     setIsLoading(true);
-    service.post("/user/activeUser", {id: memberData.id}).then(
+    service.post("/user/activeUser", { id: memberData.id }).then(
       (res: any) => {
         const newTableData = listMember.map((mem) =>
           mem.id === memberData.id
@@ -114,7 +114,7 @@ const Members = () => {
         </div>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-3">
         <MemberTable
           onEdit={onEditUser}
           listData={filteredData}

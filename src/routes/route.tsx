@@ -146,7 +146,6 @@ const AppRoutes = () => (
           path="settings/default-ads-config"
           element={getPage(<Configs />)}
         />
-        <Route path="connectors" element={getPage(<DataConnectors />)} />
         <Route path="vnc-viewer" element={getPage(<VncViewer />)} />
         <Route
           path="settings/google-play-account"
@@ -161,6 +160,10 @@ const AppRoutes = () => (
           element={getPage(<SeleniumClients />)}
         />
         <Route path="settings/account" element={getPage(<Account />)} />
+        <Route
+          path="settings/connectors"
+          element={getPage(<DataConnectors />)}
+        />
         <Route
           path="settings/notifications"
           element={getPage(<Notifications />)}

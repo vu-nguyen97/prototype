@@ -45,9 +45,13 @@ const GoogleAccount = () => {
 
   const onSyncApp = (record) => {
     setIsLoading(true);
-    service.post(`/google-play-stores/sync-apps`,{storeId: record.id}).then(
+    service.post(`/google-play-stores/sync-apps`, { storeId: record.id }).then(
       (res: any) => {
-        toast(res.message || "Apps will be synced in the background. You will be notified when it's done!", { type: "success" });
+        toast(
+          res.message ||
+            "Apps will be synced in the background. You will be notified when it's done!",
+          { type: "success" }
+        );
         setIsLoading(false);
       },
       () => setIsLoading(false)
@@ -60,7 +64,7 @@ const GoogleAccount = () => {
       <div>
         <div>
           <div className="flex justify-between">
-            <div className="page-title">Developer Accounts</div>
+            <div className="page-title">Developer accounts</div>
 
             <div className="flex space-x-2">
               <Button
@@ -79,7 +83,6 @@ const GoogleAccount = () => {
             onDelete={onDelete}
             onSyncApp={onSyncApp}
             listData={listGPStore}
-            
           />
         </div>
       </div>
