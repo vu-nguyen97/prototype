@@ -52,12 +52,12 @@ export default function EditMainStoreListing() {
       .get(`/main_listing?appId=${urlParams.appId}`)
       .then((res: any) => {
         setIsLoading(false);
-        setMainListing(res.results[0]);
+        setMainListing(res.results);
         if (res.results) {
           form.setFieldsValue({
-            shortDescription: res.results[0]?.shortDescription,
-            fullDescription: res.results[0]?.fullDescription,
-            url: res.results[0]?.youtubeVideoUrl,
+            shortDescription: res.results?.shortDescription,
+            fullDescription: res.results?.fullDescription,
+            url: res.results?.youtubeVideoUrl,
           });
         }
       })
@@ -120,14 +120,14 @@ export default function EditMainStoreListing() {
         console.log("main");
         toast(res.message, { type: "success" });
         setIsLoading(false);
+        form.resetFields();
+        setListFiles({});
       },
       (err) => {
         setIsLoading(false);
         toast(err, { type: "error" });
       }
     );
-
-    form.resetFields();
   };
   return (
     <Page>
@@ -163,7 +163,7 @@ export default function EditMainStoreListing() {
               name="fullDescription"
               label="Full description"
               rules={[
-                { required: true, message: "Please anter full description" },
+                { required: true, message: "Please enter full description" },
               ]}
             >
               <AntInput.TextArea

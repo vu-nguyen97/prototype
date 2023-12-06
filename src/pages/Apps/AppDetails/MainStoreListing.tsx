@@ -1,7 +1,9 @@
 import React, { useDeferredValue, useEffect, useState } from "react";
 import Loading from "../../../utils/Loading";
 import {
+  Badge,
   Button,
+  Carousel,
   Descriptions,
   DescriptionsProps,
   Form,
@@ -61,53 +63,49 @@ const MainStoreListing = () => {
 
   const [modalOpen, setIsModalOpen] = useState(false);
 
-  const [mainListings, setMainListings] = useState<any[]>([]);
-  const [selectedMainListing, setSelectedMainListing] = useState<any>(null);
+  const [mainListing, setMainListing] = useState<any>(null);
 
   const [task, setTask] = useState<any>();
-
-  const columns = [
-    {
-      title: "App Name",
-      dataIndex: "appName",
-      key: "appName",
-    },
-    {
-      title: "Version timestamp",
-      dataIndex: "createdAt",
-      key: "createdAt",
-      render: (text, record) => <TimeAgoComponent createDate={record.createdAt} />,
-    },
-    {
-      title: "Action",
-      render: (record) => (
-        <Tooltip title="View Details">
-          <IoMdEye
-            size={20}
-            className="cursor-pointer"
-            onClick={() => {
-              setSelectedMainListing(record);
-              setIsModalOpen(true);
-            }}
-          />
-        </Tooltip>
-      ),
-    },
-  ];
 
   const items = [
     {
       key: "1",
       label: "App Name",
-      children: selectedMainListing?.appName,
+      children: mainListing?.appName,
       span: 2,
     },
     {
       key: "9",
       label: "Youtube Video",
       children: (
-        <a href={selectedMainListing?.youtubeVideoUrl} target="_blank">
-          {selectedMainListing?.youtubeVideoUrl}
+        <a href={mainListing?.youtubeVideoUrl} target="_blank">
+          {mainListing?.youtubeVideoUrl}
+        </a>
+      ),
+      span: 2,
+    },
+    {
+      key: "10",
+      label: "Status",
+      children: (
+        <>
+          {mainListing?.status === "Live" ? (
+            <Badge status="success" text={mainListing?.status} />
+          ) : mainListing?.status === "Changes in review" ? (
+            <Badge status="processing" text={mainListing?.status} />
+          ) : (
+            <Badge status="error" text={mainListing?.status} />
+          )}
+        </>
+      ),
+      span: 2,
+    },
+    {
+      key: "11",
+      label: "Main Listing URL",
+      children: (
+        <a href="https://example.com" target="_blank">
+          https://example.com
         </a>
       ),
       span: 2,
@@ -115,13 +113,13 @@ const MainStoreListing = () => {
     {
       key: "2",
       label: "Short Description",
-      children: selectedMainListing?.shortDescription,
+      children: mainListing?.shortDescription,
       span: 4,
     },
     {
       key: "3",
       label: "Full Description",
-      children: selectedMainListing?.fullDescription,
+      children: mainListing?.fullDescription,
       span: 4,
     },
 
@@ -130,8 +128,8 @@ const MainStoreListing = () => {
       label: "App Icon",
       children: (
         <img
-          src={selectedMainListing?.appIconUrl}
-          alt={selectedMainListing?.appName}
+          src={mainListing?.appIconUrl}
+          alt={mainListing?.appName}
           className="w-[200px] h-[200px]"
         />
       ),
@@ -141,10 +139,7 @@ const MainStoreListing = () => {
       key: "5",
       label: "Feature Graphic",
       children: (
-        <img
-          src={selectedMainListing?.featureGraphicUrl}
-          alt={selectedMainListing?.appName}
-        />
+        <img src={mainListing?.featureGraphicUrl} alt={mainListing?.appName} />
       ),
       span: 2,
     },
@@ -153,11 +148,11 @@ const MainStoreListing = () => {
       label: "Phone Screenshots",
       children: (
         <div className="flex gap-2 flex-wrap">
-          {selectedMainListing?.phoneScreenshotsUrl?.map((el, idx) => (
+          {mainListing?.phoneScreenshotsUrl?.map((el, idx) => (
             <img
               key={idx}
               src={el}
-              alt={selectedMainListing?.appName}
+              alt={mainListing?.appName}
               className="max-w-[200px]"
             />
           ))}
@@ -170,11 +165,11 @@ const MainStoreListing = () => {
       label: "7-inch tablet screenshots",
       children: (
         <div className="flex gap-2 flex-wrap">
-          {selectedMainListing?.tablet7ScreenshotsUrl?.map((el, idx) => (
+          {mainListing?.tablet7ScreenshotsUrl?.map((el, idx) => (
             <img
               key={idx}
               src={el}
-              alt={selectedMainListing?.appName}
+              alt={mainListing?.appName}
               className="max-w-[200px]"
             />
           ))}
@@ -187,11 +182,11 @@ const MainStoreListing = () => {
       label: "10-inch tablet screenshots",
       children: (
         <div className="flex gap-2 flex-wrap">
-          {selectedMainListing?.tablet10ScreenshotsUrl?.map((el, idx) => (
+          {mainListing?.tablet10ScreenshotsUrl?.map((el, idx) => (
             <img
               key={idx}
               src={el}
-              alt={selectedMainListing?.appName}
+              alt={mainListing?.appName}
               className="max-w-[200px]"
             />
           ))}
@@ -211,8 +206,7 @@ const MainStoreListing = () => {
       .then(
         axios.spread((res1: any, res2: any) => {
           setIsLoading(false);
-          setMainListings(res1.results);
-          // setSelectedMainListing(res1.results[0]);
+          setMainListing(res1.results);
           setTask(res2.results);
         })
       )
@@ -248,59 +242,42 @@ const MainStoreListing = () => {
     <Page>
       {loading && <Loading />}
       <h1 style={{ fontSize: 40, fontWeight: "bold" }}>Main Store Listing</h1>
-      <div className="flex gap-4 items-center mb-4">
-        <Button
-          type="primary"
-          onClick={() => fetchMainStoreListing()}
-          loading={
-            task ? task.state === "RUNNING" || task.state === "CREATED" : false
-          }
-        >
-          Fetch main store listing
-        </Button>
-        <span className="text-md font-[500] flex gap-1">
-          <span>Last Sync: </span>
-          {task ? (
-            task.state === "FAILED" ? (
-              "Last sync failed"
-            ) : (
-              <TimeAgoComponent createDate={task ? task.createdAt : 0} />
-            )
-          ) : (
-            "None"
-          )}
-        </span>
-      </div>
-      <Table columns={columns} dataSource={mainListings} />
-      <Modal
-        width={"80%"}
-        open={modalOpen}
-        title="Main Store Listing"
-        onCancel={() => {
-          setIsModalOpen(false);
-          setSelectedMainListing(null);
-        }}
-        footer={[
+      <div className="bg-white p-3">
+        <div className="flex gap-4 items-center mb-4">
           <Button
-            key="back"
             type="primary"
-            onClick={() => {
-              setIsModalOpen(false);
-              setSelectedMainListing(null);
-            }}
+            onClick={() => fetchMainStoreListing()}
+            loading={
+              task
+                ? task.state === "RUNNING" || task.state === "CREATED"
+                : false
+            }
           >
-            Close
-          </Button>,
-        ]}
-      >
-        <Descriptions bordered column={4} labelStyle={{ fontWeight: "bold" }}>
-          {items.map((el, idx) => (
-            <Descriptions.Item key={el.key} label={el.label} span={el.span}>
-              {el.children}
-            </Descriptions.Item>
-          ))}
-        </Descriptions>
-      </Modal>
+            Fetch main store listing
+          </Button>
+          <span className="text-md font-[500] flex gap-1">
+            <span>Last Sync: </span>
+            {task ? (
+              task.state === "FAILED" ? (
+                "Last sync failed"
+              ) : (
+                <TimeAgoComponent createDate={task ? task.createdAt : 0} />
+              )
+            ) : (
+              "None"
+            )}
+          </span>
+        </div>
+        {mainListing && (
+          <Descriptions bordered column={4} labelStyle={{ fontWeight: "bold" }}>
+            {items.map((el, idx) => (
+              <Descriptions.Item key={el.key} label={el.label} span={el.span}>
+                {el.children}
+              </Descriptions.Item>
+            ))}
+          </Descriptions>
+        )}
+      </div>
     </Page>
   );
 };
