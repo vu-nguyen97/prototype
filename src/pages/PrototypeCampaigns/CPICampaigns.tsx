@@ -74,9 +74,8 @@ function Apps() {
     Promise.all([ getListApp]).then(
       (res: any) => {
         let chooseableList = res[0].results.filter(
-          (app: any) => app.unityGameId !== null
+          (app: any) => app.unityGameId !== 0
         )
-        console.log("chooseableList",chooseableList);
         setListStoreApp(chooseableList);
       },
     );

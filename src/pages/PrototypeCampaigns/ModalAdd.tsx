@@ -23,7 +23,7 @@ function ModalAdd(props) {
   } = props;
 
   const [activedApp, setActivedApp] = useState<object[]>();
-
+  const [campaignName, setCampaignName] = useState("");
   const onCloseModal = () => {
     onClose();
     setTimeout(() => {
@@ -32,17 +32,28 @@ function ModalAdd(props) {
     }, 300);
   };
 
+  useEffect(() => {
+    form.setFieldsValue({
+      campaignName,
+    });
+    
+  }, [campaignName]);
+
   const onFinish = (values) => {
-    const { name , apps} = values;
-    const storeApp = getActivedApp(listStoreApps, apps);
-    onSubmit(name, storeApp);
+    const { campaignName , apps} = values;
+    const regex = /(?=[A-Z])/;
+    const index = apps.toString().search(regex);
+    const part1 = apps.substring(0, index);
+    const part2 = apps.toString().substring(index);
+    onSubmit(campaignName, part1);
   };
 
-  const onSubmit = (name: any , apps: any) => {
+  const onSubmit = (campaignName: any , appId: any) => {
     const payload = {
-      name,
-      appId: apps?.packageId,
+      name: campaignName,
+      appId,
     };
+    console.log(payload)
     setIsLoading(true);
     service.post("/cpi-campaigns", payload).then(
       (res: any) => {
@@ -50,7 +61,7 @@ function ModalAdd(props) {
         setIsLoading(false);
         onCloseModal();
         setTimeout(() => {
-          navigate('/apps/'+ res.results.id +'/themes');
+          navigate('/apps/'+ res.results.id +'/themes',  {state: { packageId: appId}});
         }, 1000);
       },
       () => setIsLoading(false)
@@ -80,22 +91,10 @@ function ModalAdd(props) {
             htmlType="submit"
             form="FormAddNewCpiCampaign"
           >
-            Save
+            Next
           </Button>,
         ]}
       >
-
-        <Form.Item
-          name="name"
-          label="Campaign name"
-          rules={[{ required: true, message: "Please enter campaign name" }]}
-        >
-          <AntInput
-            allowClear
-            placeholder=""
-            className="w-full"
-          />
-        </Form.Item>
         <Form.Item name="apps" label="App" rules={[{ required: true, message: "Please select an app" }]}>
           <SelectStoreApp
             isMultiple={false}
@@ -104,10 +103,30 @@ function ModalAdd(props) {
             setActivedApp={(apps) => {
               setActivedApp(apps);
               form.setFieldsValue({ apps });
+              console.log(apps);
+              const regex = /(?=[A-Z])/;
+              const index = apps.toString().search(regex);
+              const part2 = apps.toString().substring(index);
+              const words = part2.split(' ');
+              const capitalizedWords = words.map(word => word.toUpperCase());
+              const result = `CPI_PRTT_${capitalizedWords.join('_')}`;  
+              setCampaignName(result);
             }}
           />
         </Form.Item>
-
+        <Form.Item
+          name="campaignName"
+          label="Campaign name"
+          rules={[{ required: true, message: "Please enter campaign name" }]}
+        >
+          <AntInput
+            allowClear
+            placeholder=""
+            className="w-full"
+            value={campaignName}
+            onChange={(e) => setCampaignName(e.target.value)}
+          />
+        </Form.Item>
       </Modal>
     </Form>
   );
