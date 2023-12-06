@@ -222,7 +222,7 @@ function Sidebar({
                 <Transition
                   unmountOnExit
                   show={sidebarExpanded}
-                  className="text-base font-semibold ml-3.5 transform ease-in line-clamp-2"
+                  className="text-base font-semibold ml-3.5 transform ease-in line-clamp-2 break-all"
                   enterStart="opacity-0"
                   entering="whitespace-nowrap"
                   enterEndDelay="200"

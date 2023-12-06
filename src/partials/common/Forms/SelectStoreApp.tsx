@@ -33,7 +33,6 @@ function SelectStoreApp(props) {
     onFocusFunc
   } = props;
 
-  console.log(listApp);
   const onGetKey = (data) => {
     if (getKey) {
       return getKey(data);

@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import Page from "../../utils/composables/Page";
 import SeleniumClientsTable from "./SeleniumClientsTables";
 import { Client } from "@stomp/stompjs";
-// import Loading from "../../utils/Loading";
-// import service from "../../partials/services/axios.config";
 
 // @ts-ignore
 const SOCKET_URL = `${import.meta.env.VITE_WS_HOST}/ws-falcon-bss-prtt`;
@@ -25,11 +23,13 @@ const SeleniumClients = () => {
 
   useEffect(() => {
     const onConnected = () => {
+      setIsLoading(true);
       client.subscribe(`/topic/selenium-clients`, function (msg) {
         if (msg.body) {
           const jsonBody = JSON.parse(msg.body);
           if (!jsonBody) return;
           setListSeleniumClients(jsonBody.clients);
+          isLoading && setIsLoading(false);
         }
       });
     };
@@ -53,16 +53,14 @@ const SeleniumClients = () => {
 
   return (
     <Page>
-      {/* {isLoading && <Loading />} */}
-      <div>
-        <div>
-          <div className="flex justify-between">
-            <div className="page-title">Clients</div>
-          </div>
-        </div>
-        <div className="mt-2">
-          <SeleniumClientsTable listData={listSeleniumClients} />
-        </div>
+      <div className="flex justify-between">
+        <div className="page-title">Clients</div>
+      </div>
+      <div className="mt-2">
+        <SeleniumClientsTable
+          listData={listSeleniumClients}
+          isLoading={isLoading}
+        />
       </div>
     </Page>
   );

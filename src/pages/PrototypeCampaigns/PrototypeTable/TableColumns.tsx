@@ -47,12 +47,12 @@ export default function getColumns(props) {
     },
     {
       title: "Start date",
-      render: (rd) => (new Date(rd.createdDate).toISOString().split('T')[0]),
+      render: (rd) => rd.startDate,
       sorter: sortByString("createdDate"),
     },
     {
       title: "End date",
-      render: (rd) => ( new Date(new Date(rd.createdDate).getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]),
+      render: (rd) => rd.endDate,
       sorter: sortByString("createdDate"),
     },
     { title: "Actived", render: (rd) => rd.active?.toString() },

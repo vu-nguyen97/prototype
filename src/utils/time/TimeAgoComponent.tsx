@@ -50,7 +50,7 @@ TimeAgoComponent.defaultProps = {
 };
 TimeAgoComponent.propTypes = {
   className: PropTypes.string,
-  createDate: PropTypes.number,
+  createDate: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 
 export default TimeAgoComponent;
