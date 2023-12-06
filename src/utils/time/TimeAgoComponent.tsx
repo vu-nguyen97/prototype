@@ -17,7 +17,7 @@ const TimeAgoComponent = (props) => {
   }, [createDate]);
 
   const getAgoStr = () => {
-    // if (createDate === undefined) return "";
+    if (createDate === undefined) return "";
     if (!createDate) {
       return "NaN";
     }
@@ -46,11 +46,11 @@ const TimeAgoComponent = (props) => {
 };
 
 TimeAgoComponent.defaultProps = {
-  className: "",
+  className: "min-w-[90px]",
 };
 TimeAgoComponent.propTypes = {
   className: PropTypes.string,
-  createDate: PropTypes.number,
+  createDate: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 
 export default TimeAgoComponent;

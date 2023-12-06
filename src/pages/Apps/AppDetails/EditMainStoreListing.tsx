@@ -52,12 +52,12 @@ export default function EditMainStoreListing() {
       .get(`/main_listing?appId=${urlParams.appId}`)
       .then((res: any) => {
         setIsLoading(false);
-        setMainListing(res.results);
+        setMainListing(res.results[0]);
         if (res.results) {
           form.setFieldsValue({
-            shortDescription: res.results?.shortDescription,
-            fullDescription: res.results?.fullDescription,
-            url: res.results?.youtubeVideoUrl,
+            shortDescription: res.results[0]?.shortDescription,
+            fullDescription: res.results[0]?.fullDescription,
+            url: res.results[0]?.youtubeVideoUrl,
           });
         }
       })
@@ -114,7 +114,7 @@ export default function EditMainStoreListing() {
     //   formData.append("tablet10Screenshots", el);
     // });
     // console.log(tenInchScreenshots.length);
-
+    setIsLoading(true);
     service.post("/main_listing", formData).then(
       (res: any) => {
         console.log("main");
@@ -167,7 +167,7 @@ export default function EditMainStoreListing() {
               ]}
             >
               <AntInput.TextArea
-                rows={3}
+                rows={10}
                 placeholder="Enter content (max 4000 characters)"
                 maxLength={4000}
                 allowClear

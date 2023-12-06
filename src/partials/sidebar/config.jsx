@@ -35,18 +35,11 @@ export const SidebarConfigs = [
     preload: () => import("../../pages/PrototypeCampaigns/CPICampaigns"),
   },
   {
-    id: 4,
-    url: "/connectors",
-    label: "Data Connectors",
-    iconEl: <AiOutlineNodeIndex size={20} />,
-    preload: () => import("../../pages/DataConnectors/DataConnectors"),
-  },
-  {
     id: 5,
     url: "/release",
-    label: "Create new release",
+    label: "Releases",
     iconEl: <MdNewReleases size={20} />,
-    preload: () => import("../../pages/CreateNewRelease/CreateNewRelease"),
+    preload: () => import("../../pages/Releases/Releases"),
   },
   {
     id: 8,
@@ -62,6 +55,12 @@ export const SidebarConfigs = [
     label: "Settings",
     iconEl: <AiOutlineTool size={20} />,
     children: [
+      {
+        url: "/settings/connectors",
+        label: "Data Connectors",
+        iconEl: <AiOutlineNodeIndex size={20} />,
+        preload: () => import("../../pages/DataConnectors/DataConnectors"),
+      },
       {
         url: "/settings/selenium-clients",
         label: "Automated Clients",

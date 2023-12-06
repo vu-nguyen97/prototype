@@ -6,8 +6,6 @@ import AntInput from "antd/lib/input/Input";
 import service from "../../partials/services/axios.config";
 import AppTable from "./AppTable";
 import { Select } from "antd";
-import { RootState } from "../../redux/store";
-import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import TimeAgoComponent from "../../utils/time/TimeAgoComponent";
 
@@ -21,28 +19,12 @@ function Apps(props) {
   const [selectedDeveloperId, setSelectedDeveloperId] = useState<string>();
   const [lastSyncAppsAt, setLastSyncAppsAt] = useState<number>();
 
-  const storeId = useSelector(
-    (state: RootState) => state.account.userData.storeId
-  );
-  const isAdmin = useSelector(
-    (state: RootState) => state.account.userData.isAdmin
-  );
-
   useEffect(() => {
     setIsLoading(true);
-    if (isAdmin) {
-      service.get("/google-play-stores").then(
-        (res: any) => initData(res.results),
-        () => setIsLoading(false)
-      );
-    } else {
-      service.get("/google-play-stores/" + storeId).then(
-        (res: any) => {
-          initData(res.results?.id ? [res.results] : []);
-        },
-        () => setIsLoading(false)
-      );
-    }
+    service.get("/google-play-stores").then(
+      (res: any) => initData(res.results),
+      () => setIsLoading(false)
+    );
   }, []);
 
   const initData = (listData) => {
@@ -74,9 +56,7 @@ function Apps(props) {
         setListAppRender(res.results);
         setIsLoading(false);
       },
-      () => {
-        setIsLoading(false);
-      }
+      () => setIsLoading(false)
     );
   };
 
@@ -121,11 +101,10 @@ function Apps(props) {
         <div className="bg-white p-4 rounded-sm shadow mt-2">
           <div className="flex items-center flex-wrap -mx-1 2xl:-mx-2 -mt-3">
             <Select
-              // allowClear
               placeholder="Store name"
               value={selectedDeveloperId}
               onChange={handleSelectChange}
-              className="xs:!w-[300px] !mx-1 2xl:!mx-2 !mt-3 w"
+              className="w-full xs:!w-[280px] !mx-1 2xl:!mx-2 !mt-3 w"
             >
               {listDeveloper.map((item) => (
                 <Select.Option key={item.id} value={item.id}>
@@ -136,7 +115,7 @@ function Apps(props) {
             <AntInput
               allowClear
               placeholder="Search by app name"
-              className="xs:!w-[300px] mx-1 2xl:!mx-2 mt-3"
+              className="xs:!w-[260px] mx-1 2xl:!mx-2 mt-3"
               prefix={<SearchOutlined />}
               value={search}
               onChange={(e) => {
@@ -144,20 +123,22 @@ function Apps(props) {
                 handleSearch(e.target.value);
               }}
             />
-            <div className="xs:!w-[300px] mx-1 2xl:!mx-2 mt-3 ml-50">
-              <span className="flex">
-                <div className="font-semibold ml-10 mr-1">Last sync at:</div>
-                <TimeAgoComponent createDate={lastSyncAppsAt} />
-              </span>
-            </div>
-            <Button
-              type="primary"
-              className="mx-1 2xl:!mx-2 mt-3"
-              onClick={() => handleSyncApps()}
-            >
-              Sync now
-            </Button>
           </div>
+        </div>
+
+        <div className="flex justify-start items-center my-3 min-h-[24px]">
+          <span className="flex mr-2">
+            <div className="font-semibold mr-1">Last sync at:</div>
+            <TimeAgoComponent createDate={lastSyncAppsAt} />
+          </span>
+          <Button
+            type="primary"
+            onClick={() => handleSyncApps()}
+            size="small"
+            className="!text-xs2"
+          >
+            Sync now
+          </Button>
         </div>
         <AppTable listData={listAppRender} isLoading={isLoading} />
       </div>

@@ -16,16 +16,14 @@ function SeleniumClientsTable(props) {
       title: "ID",
       render: (record) => (
         <div className="flex items-center">
-          <div>
-            <div className=" text-black text-base">{record.id}</div>
-          </div>
+          <div className="">{record.id}</div>
         </div>
       ),
     },
     {
       title: "Account",
       render: (record) => (
-        <div className="font-bold text-black whitespace-nowrap md:whitespace-normal" style={{ fontSize: "1rem" }} >
+        <div className="whitespace-nowrap md:whitespace-normal">
           {record.name}
         </div>
       ),
@@ -36,9 +34,7 @@ function SeleniumClientsTable(props) {
     },
     {
       title: "Last Ping",
-      render: (record) => (
-        <TimeAgoComponent createDate={record?.lastPing}/>
-      ),
+      render: (record) => <TimeAgoComponent createDate={record?.lastPing} />,
     },
   ];
 
@@ -46,17 +42,20 @@ function SeleniumClientsTable(props) {
     if (_state === "IDLE" || _state === "idle") {
       return (
         <div className="bold flex">
-          <FaMugHot fontSize="1.5rem" className="text-gray-600"/>
-          <span className="font-semibold  text-gray-600 ml-5 mt-1">{_state}</span>
+          <FaMugHot fontSize="1.5rem" className="text-gray-600" />
+          <span className="font-semibold  text-gray-600 ml-5 mt-1">
+            {_state}
+          </span>
         </div>
       );
     }
     if (_state === "PROCESSING" || _state === "processing") {
       return (
         <div className="bold flex">
-          <FaSpinner className="spin text-green-600" fontSize="1.5rem"
-          />
-          <span className="font-semibold text-green-600 ml-5 mt-1">{_state}</span>
+          <FaSpinner className="spin text-green-600" fontSize="1.5rem" />
+          <span className="font-semibold text-green-600 ml-5 mt-1">
+            {_state}
+          </span>
         </div>
       );
     }
@@ -84,7 +83,6 @@ function SeleniumClientsTable(props) {
       loading={isLoading}
       dataSource={[...listData]}
       scroll={{ x: 600 }}
-      size="middle"
       pagination={pagination}
       onChange={(pagination) => {
         pagination?.pageSize && setPageSize(pagination?.pageSize);

@@ -42,12 +42,9 @@ function AppTable(props) {
       title: "Name",
       sorter: sortByString("name"),
       render: (record) => (
-        <div className="flex space-x-2 ml-2">
-          <img
-            src={record.icon}
-            style={{ width: 22, height: 22, marginRight: 10 }}
-          />
-          {record.name}
+        <div className="flex items-center space-x-2 md:ml-1.5">
+          <img src={record.icon} className="w-8 h-8 rounded" />
+          <div>{record.name}</div>
         </div>
       ),
     },
@@ -131,7 +128,6 @@ function AppTable(props) {
 
   return (
     <Table
-      className="mt-6"
       id="app-table"
       rowKey={(record) => record.id}
       // @ts-ignore

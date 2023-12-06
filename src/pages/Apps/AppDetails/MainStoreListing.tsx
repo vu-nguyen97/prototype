@@ -1,6 +1,14 @@
 import React, { useDeferredValue, useEffect, useState } from "react";
 import Loading from "../../../utils/Loading";
-import { Button, Form } from "antd";
+import {
+  Button,
+  Descriptions,
+  DescriptionsProps,
+  Form,
+  Modal,
+  Table,
+  Tooltip,
+} from "antd";
 import AntInput from "antd/lib/input";
 import DynamicUpload from "../../../partials/common/Forms/DynamicUpload";
 import service from "../../../partials/services/axios.config";
@@ -12,6 +20,7 @@ import { Typography, Space } from "antd";
 import Page from "../../../utils/composables/Page";
 import axios from "axios";
 import TimeAgoComponent from "../../../utils/time/TimeAgoComponent";
+import { IoMdEye } from "react-icons/io";
 
 const { Text } = Typography;
 
@@ -47,15 +56,150 @@ const ASSET_FIELDS = [
 ];
 
 const MainStoreListing = () => {
-  const [form] = Form.useForm();
   const urlParams = useParams();
   const [loading, setIsLoading] = useState(false);
 
   const [modalOpen, setIsModalOpen] = useState(false);
 
-  const [mainListing, setMainListing] = useState<any>(null);
+  const [mainListings, setMainListings] = useState<any[]>([]);
+  const [selectedMainListing, setSelectedMainListing] = useState<any>(null);
 
   const [task, setTask] = useState<any>();
+
+  const columns = [
+    {
+      title: "App Name",
+      dataIndex: "appName",
+      key: "appName",
+    },
+    {
+      title: "Version timestamp",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (text, record) => <TimeAgoComponent createDate={record.createdAt} />,
+    },
+    {
+      title: "Action",
+      render: (record) => (
+        <Tooltip title="View Details">
+          <IoMdEye
+            size={20}
+            className="cursor-pointer"
+            onClick={() => {
+              setSelectedMainListing(record);
+              setIsModalOpen(true);
+            }}
+          />
+        </Tooltip>
+      ),
+    },
+  ];
+
+  const items = [
+    {
+      key: "1",
+      label: "App Name",
+      children: selectedMainListing?.appName,
+      span: 2,
+    },
+    {
+      key: "9",
+      label: "Youtube Video",
+      children: (
+        <a href={selectedMainListing?.youtubeVideoUrl} target="_blank">
+          {selectedMainListing?.youtubeVideoUrl}
+        </a>
+      ),
+      span: 2,
+    },
+    {
+      key: "2",
+      label: "Short Description",
+      children: selectedMainListing?.shortDescription,
+      span: 4,
+    },
+    {
+      key: "3",
+      label: "Full Description",
+      children: selectedMainListing?.fullDescription,
+      span: 4,
+    },
+
+    {
+      key: "4",
+      label: "App Icon",
+      children: (
+        <img
+          src={selectedMainListing?.appIconUrl}
+          alt={selectedMainListing?.appName}
+          className="w-[200px] h-[200px]"
+        />
+      ),
+      span: 2,
+    },
+    {
+      key: "5",
+      label: "Feature Graphic",
+      children: (
+        <img
+          src={selectedMainListing?.featureGraphicUrl}
+          alt={selectedMainListing?.appName}
+        />
+      ),
+      span: 2,
+    },
+    {
+      key: "6",
+      label: "Phone Screenshots",
+      children: (
+        <div className="flex gap-2 flex-wrap">
+          {selectedMainListing?.phoneScreenshotsUrl?.map((el, idx) => (
+            <img
+              key={idx}
+              src={el}
+              alt={selectedMainListing?.appName}
+              className="max-w-[200px]"
+            />
+          ))}
+        </div>
+      ),
+      span: 4,
+    },
+    {
+      key: "7",
+      label: "7-inch tablet screenshots",
+      children: (
+        <div className="flex gap-2 flex-wrap">
+          {selectedMainListing?.tablet7ScreenshotsUrl?.map((el, idx) => (
+            <img
+              key={idx}
+              src={el}
+              alt={selectedMainListing?.appName}
+              className="max-w-[200px]"
+            />
+          ))}
+        </div>
+      ),
+      span: 4,
+    },
+    {
+      key: "8",
+      label: "10-inch tablet screenshots",
+      children: (
+        <div className="flex gap-2 flex-wrap">
+          {selectedMainListing?.tablet10ScreenshotsUrl?.map((el, idx) => (
+            <img
+              key={idx}
+              src={el}
+              alt={selectedMainListing?.appName}
+              className="max-w-[200px]"
+            />
+          ))}
+        </div>
+      ),
+      span: 4,
+    },
+  ];
 
   useEffect(() => {
     setIsLoading(true);
@@ -67,7 +211,8 @@ const MainStoreListing = () => {
       .then(
         axios.spread((res1: any, res2: any) => {
           setIsLoading(false);
-          setMainListing(res1.results);
+          setMainListings(res1.results);
+          // setSelectedMainListing(res1.results[0]);
           setTask(res2.results);
         })
       )
@@ -103,144 +248,59 @@ const MainStoreListing = () => {
     <Page>
       {loading && <Loading />}
       <h1 style={{ fontSize: 40, fontWeight: "bold" }}>Main Store Listing</h1>
-
-      {mainListing ? (
-        <div className="bg-white p-5">
-          <div className="flex gap-5 mb-4 items-center">
-            <Button
-              type="primary"
-              onClick={() => fetchMainStoreListing()}
-              loading={
-                task
-                  ? task.state === "RUNNING" || task.state === "CREATED"
-                  : false
-              }
-            >
-              Fetch main store listing
-            </Button>
-            <span className="text-md font-[500] flex gap-1">
-              <span>Last Sync: </span>
-              {task ? (
-                task.state === "FAILED" ? (
-                  "Last sync failed"
-                ) : (
-                  <TimeAgoComponent createDate={task ? task.createdAt : 0} />
-                )
-              ) : (
-                "None"
-              )}
-            </span>
-          </div>
-          <div className="px-6">
-            <Title level={3}>App Name: </Title>
-            <Text className="font-normal text-lg px-8">
-              {mainListing.appName}
-            </Text>
-            <Title level={3}>Short Description:</Title>
-            <Text className="font-normal text-lg px-8">
-              {mainListing.shortDescription}
-            </Text>
-            <Title level={3}>Full Description:</Title>
-            <div className="font-normal text-lg px-8 text-justify">
-              {mainListing.fullDescription}
-            </div>
-            {mainListing.youtubeVideoUrl && (
-              <>
-                <Title level={3}>Youtube Video Url:</Title>
-                <Text>{mainListing.youtubeVideoUrl}</Text>
-              </>
-            )}
-            <Title level={3}>App Icon:</Title>
-            <div className="flex justify-center">
-              <img
-                src={mainListing.appIconUrl}
-                width={200}
-                height={200}
-                alt="App Icon"
-              />
-            </div>
-            <Title className="mt-6" level={3}>
-              Feature Graphic:
-            </Title>
-            <div className="flex justify-center">
-              <img
-                src={mainListing.featureGraphicUrl}
-                width={200}
-                height={200}
-                alt="Feature Graphic"
-              />
-            </div>
-            <Title level={3} className="mt-6">
-              Phone Screenshots:
-            </Title>
-            <div className="flex flex-wrap justify-center">
-              {mainListing.phoneScreenshotsUrl.map((el, index) => (
-                <div key={index} className="p-2">
-                  <img
-                    src={el}
-                    width={200}
-                    height={200}
-                    alt={`Phone Screenshot ${index + 1}`}
-                  />
-                </div>
-              ))}
-            </div>
-            <Title level={3} className="mt-6">
-              7-inch tablet Screenshots:
-            </Title>
-            <div className="flex flex-wrap justify-center">
-              {mainListing.tablet7ScreenshotsUrl.map((el, index) => (
-                <div key={index} className="p-2">
-                  <img
-                    src={el}
-                    width={200}
-                    height={200}
-                    alt={`7-inch tablet Screenshot ${index + 1}`}
-                  />
-                </div>
-              ))}
-            </div>
-            <Title level={3} className="mt-6">
-              10-inch tablet Screenshots:
-            </Title>
-            <div className="flex flex-wrap justify-center">
-              {mainListing.tablet10ScreenshotsUrl.map((el, index) => (
-                <div key={index} className="p-2">
-                  <img
-                    src={el}
-                    width={200}
-                    height={200}
-                    alt={`10-inch tablet Screenshot ${index + 1}`}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-          <ModalEditMainListing
-            setIsLoading={setIsLoading}
-            onClose={() => {
+      <div className="flex gap-4 items-center mb-4">
+        <Button
+          type="primary"
+          onClick={() => fetchMainStoreListing()}
+          loading={
+            task ? task.state === "RUNNING" || task.state === "CREATED" : false
+          }
+        >
+          Fetch main store listing
+        </Button>
+        <span className="text-md font-[500] flex gap-1">
+          <span>Last Sync: </span>
+          {task ? (
+            task.state === "FAILED" ? (
+              "Last sync failed"
+            ) : (
+              <TimeAgoComponent createDate={task ? task.createdAt : 0} />
+            )
+          ) : (
+            "None"
+          )}
+        </span>
+      </div>
+      <Table columns={columns} dataSource={mainListings} />
+      <Modal
+        width={"80%"}
+        open={modalOpen}
+        title="Main Store Listing"
+        onCancel={() => {
+          setIsModalOpen(false);
+          setSelectedMainListing(null);
+        }}
+        footer={[
+          <Button
+            key="back"
+            type="primary"
+            onClick={() => {
               setIsModalOpen(false);
+              setSelectedMainListing(null);
             }}
-            modalOpen={modalOpen}
-          />
-        </div>
-      ) : (
-        <div className="bg-white p-5">
-          <div className="flex gap-5 items-center">
-            <Button type="primary" onClick={() => fetchMainStoreListing()}>
-              Fetch main store listing
-            </Button>
-            <span className="text-md font-[500] flex gap-1">
-              <span>Last Sync: </span>
-              {task ? (
-                "None"
-              ) : (
-                <TimeAgoComponent createDate={task && task.createdAt} />
-              )}
-            </span>
-          </div>
-        </div>
-      )}
+          >
+            Close
+          </Button>,
+        ]}
+      >
+        <Descriptions bordered column={4} labelStyle={{ fontWeight: "bold" }}>
+          {items.map((el, idx) => (
+            <Descriptions.Item key={el.key} label={el.label} span={el.span}>
+              {el.children}
+            </Descriptions.Item>
+          ))}
+        </Descriptions>
+      </Modal>
     </Page>
   );
 };

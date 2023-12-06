@@ -81,9 +81,7 @@ const Overview = React.lazy(() => import("../pages/App/overview/Overview"));
 const Notifications = React.lazy(
   () => import("../pages/Settings/Notifications/Notifications")
 );
-const CreateNewRelease = React.lazy(
-  () => import("../pages/CreateNewRelease/CreateNewRelease")
-);
+const Releases = React.lazy(() => import("../pages/Releases/Releases"));
 const StoreAppDetail = React.lazy(() => import("../pages/Apps/AppDetail"));
 const CustomStoreListing = React.lazy(
   () => import("../pages/Apps/AppDetails/CustomStoreListing")
@@ -148,7 +146,6 @@ const AppRoutes = () => (
           path="settings/default-ads-config"
           element={getPage(<Configs />)}
         />
-        <Route path="connectors" element={getPage(<DataConnectors />)} />
         <Route path="vnc-viewer" element={getPage(<VncViewer />)} />
         <Route
           path="settings/google-play-account"
@@ -164,6 +161,10 @@ const AppRoutes = () => (
         />
         <Route path="settings/account" element={getPage(<Account />)} />
         <Route
+          path="settings/connectors"
+          element={getPage(<DataConnectors />)}
+        />
+        <Route
           path="settings/notifications"
           element={getPage(<Notifications />)}
         />
@@ -172,7 +173,7 @@ const AppRoutes = () => (
           <Route index element={getPage(<StoreAppDetail />)} />
         </Route>
 
-        <Route path="release" element={getPage(<CreateNewRelease />)} />
+        <Route path="release" element={getPage(<Releases />)} />
 
         <Route element={<AdminRoutes />}>
           <Route path="networks" element={getPage(<NetworkConfig />)} />

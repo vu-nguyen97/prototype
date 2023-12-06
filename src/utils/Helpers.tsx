@@ -122,7 +122,7 @@ export function capitalizeWord(str) {
 }
 
 export function getLabelFromCamelCaseStr(str, toUpper = true) {
-  if (!str) return str;
+  if (!str || typeof str !== "string") return str;
 
   let results = "";
   let i = 0;
@@ -523,3 +523,12 @@ export const getAppFromAdNetwork = (apps) => {
     (el) => el.networkConnector?.network?.networkType?.type === AD_NETWORK_TYPE
   );
 };
+
+export function matchYoutubeUrl(url) {
+  const p =
+    /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+  if (url.match(p)) {
+    return url.match(p)[1];
+  }
+  return false;
+}
