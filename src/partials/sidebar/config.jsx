@@ -104,13 +104,13 @@ export const SidebarAppConfigs = [
     iconEl: <BiPalette size={20} />,
     preload: () => import("../../pages/App/Variants/AppVariants"),
   },
-  {
-    id: 6,
-    url: "/settings",
-    label: "Settings",
-    iconEl: <AiOutlineSetting size={20} />,
-    preload: () => import("../../pages/App/setting/Settings"),
-  },
+  // {
+  //   id: 6,
+  //   url: "/settings",
+  //   label: "Settings",
+  //   iconEl: <AiOutlineSetting size={20} />,
+  //   preload: () => import("../../pages/App/setting/Settings"),
+  // },
 ];
 
 export const SidebarStoreAppConfigs = [

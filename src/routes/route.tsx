@@ -136,7 +136,7 @@ const AppRoutes = () => (
             element={getAppPage(<CampaignDetail />, false)}
           />
           <Route path="themes" element={getAppPage(<AppVariants />)} />
-          <Route path="settings" element={getAppPage(<Settings />)} />
+          {/* <Route path="settings" element={getAppPage(<Settings />)} /> */}
         </Route>
 
         <Route path="add-campaign" element={getPage(<AddCampaign />)} />
@@ -169,9 +169,9 @@ const AppRoutes = () => (
           element={getPage(<Notifications />)}
         />
 
-        <Route path="store-app/:id">
+        {/* <Route path="store-app/:id">
           <Route index element={getPage(<StoreAppDetail />)} />
-        </Route>
+        </Route> */}
 
         <Route path="release" element={getPage(<Releases />)} />
 
