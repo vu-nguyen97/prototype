@@ -1,19 +1,15 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
 import Table from "antd/lib/table";
-import Tooltip from "antd/lib/tooltip";
-import { Link } from "react-router-dom";
-import service from "../../partials/services/axios.config";
-import { toast } from "react-toastify";
-import { AiOutlineUpload } from "react-icons/ai";
-import { AiOutlineClose } from "react-icons/ai";
+import moment from "moment";
+import PropTypes from "prop-types";
+import React, { useState } from "react";
 import { AiOutlineCheck } from "react-icons/ai";
+import { toast } from "react-toastify";
+import service from "../../partials/services/axios.config";
 import {
   sortByBool,
   sortByString,
   sortNumberWithNullable,
 } from "../../utils/Helpers";
-import moment from "moment";
 
 function AppTable(props) {
   const defaultPageSize = 10;
@@ -42,7 +38,12 @@ function AppTable(props) {
       title: "Name",
       sorter: sortByString("name"),
       render: (record) => (
-        <div className="flex items-center space-x-2 md:ml-1.5">
+        <div
+          className="flex items-center space-x-2 md:ml-1.5 cursor-pointer"
+          onClick={() => {
+            window.location.href = `/apps/${record.consoleAppId}/main-store-listing`;
+          }}
+        >
           <img src={record.icon} className="w-8 h-8 rounded" />
           <div>{record.name}</div>
         </div>
@@ -97,9 +98,13 @@ function AppTable(props) {
                 <span className="text-green-500 ml-0.5">Linked</span>
               </div>
             ) : (
-              <div className="flex items-center">
-                <AiOutlineClose size={14} className="text-red-500" />
-                <span className="text-red-500 ml-0.5">Not Linked</span>
+              <div className="flex items-center cursor-pointer">
+                <span
+                  className="text-blue-400 ml-0.5 cursor-pointer"
+                  onClick={() => createUnityApp(record)}
+                >
+                  <u>Link now</u>
+                </span>
               </div>
               // <div className="flex items-center space-x-2">
               //   <Tooltip title="Not linked yet">
@@ -140,12 +145,6 @@ function AppTable(props) {
       onChange={(pagination) => {
         pagination?.pageSize && setPageSize(pagination?.pageSize);
       }}
-      onRow={(record) => ({
-        onClick: () => {
-          window.location.href = `/apps/${record.consoleAppId}/main-store-listing`;
-        },
-        style: { cursor: "pointer" },
-      })}
     />
   );
 }
