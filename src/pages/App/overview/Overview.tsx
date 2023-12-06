@@ -16,13 +16,14 @@ function Overview(props) {
     const [listAppVariant, setListAppVariant] = useState<any>([]);
     const [listAds, setListAds] = useState<any>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [criteria, setCriteria] = useState("1");
+    const [criteria, setCriteria] = useState("0");
     let {appId} = useParams();
     useEffect(() => {
         setIsLoading(true);
         service.get("/report?CPICampaignId="+appId).then(
             (res: any) => {
                 setListReport(res.results);
+                console.log(res.results)
                 setIsLoading(false);
             },
             () => setIsLoading(false)
@@ -32,36 +33,35 @@ function Overview(props) {
   return (
     <Page>
       {isLoading ? <Loading/>:
-      <div className="mb-4" id="OverviewPage">
-          <ul>
-              <li style={{backgroundColor: "#EEEEEE"}}>
-                  <h1 style={{fontSize: "20px", marginLeft: "5px"}}>Compare according to<Dropdown
-                      className="!ml-0 xs:!ml-2"
-                      menu={{
-                          selectable: true,
-                          // selectedKeys: [filter],
-                          items: [
-                              { key: "1", label: "impression" },
-                              { key: "2", label: "click" },
-                              { key: "3", label: "install"},
-                              { key: "4", label: "cost"}
-                          ],
-                          onClick: (item) => setCriteria(item.key),
-                      }}
-                      trigger={["click"]}
-                  >
-                      <button className="custom-btn-light">
-                          {criteria=="1"&&"impression"}
-                          {criteria=="2"&&"click"}
-                          {criteria=="3"&&"install"}
-                          {criteria=="4"&&"cost"}
-                      </button>
-                  </Dropdown></h1>
+      <div className="bg-white p-4 rounded-sm shadow mt-2" id="OverviewPage">
+          <div className="flex items-center flex-wrap -mx-1 2xl:-mx-2 -mt-3">
+              <div style={{ width: "40%", borderColor: "black", borderWidth: 2, marginLeft: "5%",marginRight: "5%", marginTop: "1%", marginBottom: "1%",textAlign: 'center'}}>
+                  <h1 style={{fontSize: "20px", marginTop: 10}}>IMPRESSION</h1>
                   <Container listReport = {listReport} listChart = {[{ key: "1", label: "PieChart" },
                       { key: "2", label: "DoughnutChart"},
-                      { key: "3", label: "BarChart"}]} criteria={criteria}/>
-              </li>
-          </ul>
+                      { key: "3", label: "BarChart"}]} criteria="0"/>
+              </div>
+              <div style={{ width: "40%", borderColor: "black", borderWidth: 2, marginLeft: "5%",marginRight: "5%",marginTop: "1%", marginBottom: "1%",textAlign: 'center'}}>
+                  <h1 style={{fontSize: "20px", marginTop: 10}}>CLICK</h1>
+                  <Container listReport = {listReport} listChart = {[{ key: "1", label: "PieChart" },
+                      { key: "2", label: "DoughnutChart"},
+                      { key: "3", label: "BarChart"}]} criteria="1"/>
+              </div>
+              </div>
+            <div className="flex items-center flex-wrap -mx-1 2xl:-mx-2 -mt-3">
+              <div style={{ width: "40%", borderColor: "black", borderWidth: 2, marginLeft: "5%",marginRight: "5%",marginTop: "1%", marginBottom: "1%",textAlign: 'center'}}>
+                  <h1 style={{fontSize: "20px", marginTop: 10}}>INSTALL</h1>
+                  <Container listReport = {listReport} listChart = {[{ key: "1", label: "PieChart" },
+                      { key: "2", label: "DoughnutChart"},
+                      { key: "3", label: "BarChart"}]} criteria="2"/>
+              </div>
+              <div style={{ width: "40%", borderColor: "black", borderWidth: 2, marginLeft: "5%",marginRight: "5%",marginTop: "1%", marginBottom: "1%",textAlign: 'center'}}>
+                  <h1 style={{fontSize: "20px", marginTop: 10}}>COST</h1>
+                  <Container listReport = {listReport} listChart = {[{ key: "1", label: "PieChart" },
+                      { key: "2", label: "DoughnutChart"},
+                      { key: "3", label: "BarChart"}]} criteria="3"/>
+              </div>
+          </div>
       </div>}
     </Page>
   );

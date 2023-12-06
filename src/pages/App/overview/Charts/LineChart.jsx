@@ -1,37 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Line } from 'react-chartjs-2';
-const LineChart = (props) => {
-    const list = props.props;
+import moment from 'moment';
+
+const LineChart = ({listReport, criteria}) => {
+    function getRandomColor() {
+        return '#' + Math.floor(Math.random() * 16777215).toString(16);
+    }
     const data = {
-        labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4'],
-        datasets: [
-            {
-                label: list[0].appName,
-                data: [list[0].retention_d0,list[0].retention_d1,list[0].retention_d2,list[0].retention_d3],
-                borderColor: 'rgba(255, 99, 132, 1)',
-                fill: false,
-            },
-            {
-                label: list[1].appName,
-                data: [list[1].retention_d0,list[1].retention_d1,list[1].retention_d2,list[1].retention_d3],
-                borderColor: 'blue',
-                fill: false,
-            },
-        ],
-    };
-    const options = {
-        responsive: true,
-        maintainAspectRatio: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
+        labels:  [...new Set(listReport.map(report => moment(report.dateTime).format('MM-DD')))].sort((a, b) => moment(a, 'MM-DD').diff(moment(b, 'MM-DD'))),
+        datasets: [...new Set(listReport.map(report => report?.campaignName))].map(name => {
+          return {
+            label: name,
+            data: listReport.filter(report => report?.campaignName === name).map(report => ((criteria==0)?report?.impression:(criteria==1)?report?.click:(criteria==2)?report?.install:report?.cost)),
+            fill: false,
+            borderColor: getRandomColor()
+          };
+        })
+      };
+      const options = {
+        scales: {
+          x: {
             title: {
-                display: true,
-                text: 'Line Chart',
+              display: true,
+              text: 'Day',
             },
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Value',
+            },
+          },
         },
-    };
+      };
 
     return (
         <div  className="w-full h-full relative" style={{backgroundColor: "white", paddingRight: 20, paddingLeft: 20, paddingBottom: 20}}>
