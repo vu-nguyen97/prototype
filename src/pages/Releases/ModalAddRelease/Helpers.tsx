@@ -3,9 +3,9 @@ import React from "react";
 import { AiOutlineQuestionCircle } from "@react-icons/all-files/ai/AiOutlineQuestionCircle";
 
 export const getDefaultReleaseNote = (name) =>
-  "Game Launch - Version 1.0\n\n🚀 Welcome to " +
+  "Game Launch - Version 1.0\n\n Welcome to " +
   name +
-  " - Version 1.0! 🚀\n\n" +
+  " - Version 1.0! \n\n" +
   "Explore a new world, meet unique characters, and enjoy stunning visuals. " +
   "Adapt to dynamic weather, engage in community challenges, and unlock exclusive rewards. Update now for an unforgettable gaming experience!\n\n" +
   "- The " +
@@ -14,12 +14,7 @@ export const getDefaultReleaseNote = (name) =>
 
 export const getShortDescription = (name) =>
   name +
-  " - Version 1.0\n\n" +
-  "Embark on a thrilling adventure in our new game! Dive into a captivating world, meet unique characters, and enjoy stunning visuals." +
-  " With dynamic weather, community challenges, and exclusive rewards, Version 1.0 offers an unforgettable gaming experience. Update now and start your journey!\n\n" +
-  "- The " +
-  name +
-  " Team 🚀";
+  "Uncover mysteries and conquer challenges in our inaugural game release.";
 
 export const getFullDescription = (name) =>
   name +
@@ -42,7 +37,7 @@ export const getFullDescription = (name) =>
   "Get ready for a gaming odyssey that will keep you hooked!\n\n" +
   "- The " +
   name +
-  " Team 🚀";
+  " Team ";
 
 export const ASSET_FIELDS = [
   {

@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import Page from "../../utils/composables/Page";
-import service from "../../partials/services/axios.config";
-import { Button } from "antd";
-import ReleaseStatusTable from "./ReleaseStatusTable";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
-import ModalAddRelease from "./ModalAddRelease/ModalAddRelease";
-import AppTemplate from "./Templates/AppTemplate";
-import Modal from "antd/lib/modal";
-import AntInput from "antd/lib/input/Input";
 import SearchOutlined from "@ant-design/icons/lib/icons/SearchOutlined";
+import { Button } from "antd";
+import AntInput from "antd/lib/input/Input";
+import Modal from "antd/lib/modal";
 import Select from "antd/lib/select";
+import React, { useEffect, useState } from "react";
+import service from "../../partials/services/axios.config";
+import Page from "../../utils/composables/Page";
+import ModalAddRelease from "./ModalAddRelease/ModalAddRelease";
+import ReleaseStatusTable from "./ReleaseStatusTable";
+import AppTemplate from "./Templates/AppTemplate";
 
 function Releases() {
   const [isLoading, setIsLoading] = useState(false);
@@ -119,7 +119,7 @@ function Releases() {
       <div className="my-4">
         <span className="font-semibold">Note:</span> All releases will utilize{" "}
         <span className="text-link" onClick={showTemplateInfo}>
-          this template
+          this app content template
         </span>{" "}
         for submission to the Google Play Store.
       </div>

@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import Button from "antd/lib/button";
-import Modal from "antd/lib/modal/Modal";
 import Form from "antd/lib/form";
+import AntInput from "antd/lib/input";
+import Modal from "antd/lib/modal/Modal";
+import Select from "antd/lib/select";
+import moment from "moment";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FIELD_REQUIRED } from "../../../constants/formMessage";
-import Select from "antd/lib/select";
+import DynamicUpload, {
+  getUploadRule,
+} from "../../../partials/common/Forms/DynamicUpload";
 import service from "../../../partials/services/axios.config";
-import AntInput from "antd/lib/input";
+import { matchYoutubeUrl } from "../../../utils/Helpers";
 import Loading from "../../../utils/Loading";
-import moment from "moment";
 import {
   AssetNotes,
   getDefaultReleaseNote,
   getFullDescription,
   getShortDescription,
 } from "./Helpers";
-import DynamicUpload, {
-  getUploadRule,
-} from "../../../partials/common/Forms/DynamicUpload";
-import { matchYoutubeUrl } from "../../../utils/Helpers";
 
 function ModalAddRelease(props) {
   const [form] = Form.useForm();
@@ -101,7 +101,9 @@ function ModalAddRelease(props) {
 
     formData.append("shortDescription", shortDescription);
     formData.append("fullDescription", fullDescription);
-    formData.append("youtubeUrl", url);
+    if (url) {
+      formData.append("youtubeUrl", url);
+    }
 
     listFiles["assets"].forEach((el) => {
       formData.append("assets", el);

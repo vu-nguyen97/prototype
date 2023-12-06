@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import Page from "../../utils/composables/Page";
-import Button from "antd/lib/button/button";
 import SearchOutlined from "@ant-design/icons/lib/icons/SearchOutlined";
-import AntInput from "antd/lib/input/Input";
-import service from "../../partials/services/axios.config";
-import AppTable from "./AppTable";
 import { Select } from "antd";
+import Button from "antd/lib/button/button";
+import AntInput from "antd/lib/input/Input";
+import React, { useEffect, useState } from "react";
+import TimeAgo from 'react-timeago';
 import { toast } from "react-toastify";
-import TimeAgoComponent from "../../utils/time/TimeAgoComponent";
+import service from "../../partials/services/axios.config";
+import Page from "../../utils/composables/Page";
+import AppTable from "./AppTable";
 
 function Apps(props) {
   const [isLoading, setIsLoading] = useState(false);
@@ -129,7 +129,7 @@ function Apps(props) {
         <div className="flex justify-start items-center my-3 min-h-[24px]">
           <span className="flex mr-2">
             <div className="font-semibold mr-1">Last sync at:</div>
-            <TimeAgoComponent createDate={lastSyncAppsAt} />
+            <TimeAgo date={lastSyncAppsAt} />
           </span>
           <Button
             type="primary"

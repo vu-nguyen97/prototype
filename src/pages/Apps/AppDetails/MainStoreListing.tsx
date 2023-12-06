@@ -1,28 +1,17 @@
-import React, { useDeferredValue, useEffect, useState } from "react";
-import Loading from "../../../utils/Loading";
 import {
   Badge,
   Button,
-  Carousel,
   Descriptions,
-  DescriptionsProps,
-  Form,
-  Modal,
-  Table,
-  Tooltip,
+  Typography
 } from "antd";
-import AntInput from "antd/lib/input";
-import DynamicUpload from "../../../partials/common/Forms/DynamicUpload";
-import service from "../../../partials/services/axios.config";
-import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
-import ModalEditMainListing from "./ModalEditMainListing";
-import Title from "antd/lib/typography/Title";
-import { Typography, Space } from "antd";
-import Page from "../../../utils/composables/Page";
 import axios from "axios";
-import TimeAgoComponent from "../../../utils/time/TimeAgoComponent";
-import { IoMdEye } from "react-icons/io";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import TimeAgo from "react-timeago";
+import { toast } from "react-toastify";
+import service from "../../../partials/services/axios.config";
+import Loading from "../../../utils/Loading";
+import Page from "../../../utils/composables/Page";
 
 const { Text } = Typography;
 
@@ -261,7 +250,7 @@ const MainStoreListing = () => {
               task.state === "FAILED" ? (
                 "Last sync failed"
               ) : (
-                <TimeAgoComponent createDate={task ? task.createdAt : 0} />
+                <TimeAgo date={task ? task.createdAt : 0} />
               )
             ) : (
               "None"

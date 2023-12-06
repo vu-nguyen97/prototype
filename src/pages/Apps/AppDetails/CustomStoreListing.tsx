@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
-import Page from "../../../utils/composables/Page";
-import Loading from "../../../utils/Loading";
 import Button from "antd/lib/button";
-import ModalAddCustomListing from "./ModalAddCustomListing";
-import ConnectorTable from "../../DataConnectors/ConnectorTable/ConnectorTable";
-import CustomStoreListingTable from "./CustomStoreListingTable";
-import { useParams } from "react-router-dom";
-import service from "../../../partials/services/axios.config";
-import { toast } from "react-toastify";
 import axios from "axios";
-import TimeAgoComponent from "../../../utils/time/TimeAgoComponent";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import TimeAgo from "react-timeago";
+import { toast } from "react-toastify";
+import service from "../../../partials/services/axios.config";
+import Loading from "../../../utils/Loading";
+import Page from "../../../utils/composables/Page";
+import CustomStoreListingTable from "./CustomStoreListingTable";
+import ModalAddCustomListing from "./ModalAddCustomListing";
 const CustomStoreListing = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenModalAddApp, setIsOpenModalAddApp] = useState(false);
@@ -118,11 +117,7 @@ const CustomStoreListing = () => {
               <span className="ml-auto flex gap-4 items-center">
                 <div className="flex gap-1">
                   <div className="text-md font-[500]">Last Sync:</div>
-                  {task ? (
-                    <TimeAgoComponent createDate={task ? task.createdAt : 0} />
-                  ) : (
-                    "None"
-                  )}
+                  {task ? <TimeAgo date={task ? task.createdAt : 0} /> : "None"}
                 </div>
                 <Button
                   type="primary"
