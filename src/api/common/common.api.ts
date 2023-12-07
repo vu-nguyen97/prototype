@@ -49,3 +49,8 @@ export const getCurrency: QueryFunc = async () => {
 export const getListStore: QueryFunc = async () => {
   return await service.get("/google-play-stores");
 };
+
+export const getUnityStore = async () => {
+  const allStore: ResponseAPI = await service.get("/store-app");
+  return allStore?.results?.filter((app: any) => app.unityGameId !== 0) || [];
+};

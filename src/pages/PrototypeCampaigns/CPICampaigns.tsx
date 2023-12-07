@@ -227,8 +227,6 @@ function Apps() {
       <ModalAdd
         isOpen={isOpenModalAddApp}
         onClose={() => setIsOpenModalAddApp(false)}
-        setIsLoading={setIsLoading}
-        listStoreApps={listStoreApp}
       />
     </Page>
   );
