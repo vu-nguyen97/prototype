@@ -242,7 +242,6 @@ function ModalAddCustomListing(props) {
           />
         </Form.Item>
         <DynamicUpload
-          className={"font-bold"}
           field={"assets"}
           label={"Assets"}
           multiple={true}

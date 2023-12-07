@@ -1,9 +1,4 @@
-import {
-  Badge,
-  Button,
-  Descriptions,
-  Typography
-} from "antd";
+import { Badge, Button, Descriptions, Typography } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -12,49 +7,46 @@ import { toast } from "react-toastify";
 import service from "../../../partials/services/axios.config";
 import Loading from "../../../utils/Loading";
 import Page from "../../../utils/composables/Page";
-
-const { Text } = Typography;
-
-const ASSET_FIELDS = [
-  {
-    field: "iconImg",
-    label: "App icon",
-    note: "Must be a PNG or JPEG, up to 1 MB, 512 px by 512 px.",
-  },
-  {
-    field: "featureImg",
-    label: "Feature graphic",
-    note: "Your feature graphic must be a PNG or JPEG, up to 15 MB, and 1,024 px by 500px.",
-  },
-  {
-    field: "phoneScreenshots",
-    label: "Phone screenshots",
-    note: "Upload 2-8 phone screenshots. Screenshots must be PNG or JPEG, up to 8 MB each, 16:9 or 9:16 aspect ratio, with each side between 320 px and 3,840 px.",
-    multiple: true,
-  },
-  {
-    field: "sevenInchScreenshots",
-    label: "7-inch tablet screenshots",
-    note: "Upload up to eight 7-inch tablet screenshots. Screenshots must be PNG or JPEG, up to 8 MB each, 16:9 or 9:16 aspect ratio, with each side between 320 px and 3,840 px.",
-    multiple: true,
-  },
-  {
-    field: "tenInchScreenshots",
-    label: "10-inch tablet screenshots",
-    note: "Upload up to eight 10-inch tablet screenshots. Screenshots must be PNG or JPEG, up to 8 MB each, 16:9 or 9:16 aspect ratio, with each side between 1,080 px and 7,680 px.",
-    multiple: true,
-  },
-];
+import AntInput from "antd/lib/input";
+import ImagePreview, {
+  ImgFile,
+} from "../../../partials/common/Modal/ImagePreview";
+import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
+import EditMainStoreListing from "./EditMainStoreListing";
 
 const MainStoreListing = () => {
   const urlParams = useParams();
   const [loading, setIsLoading] = useState(false);
 
-  const [modalOpen, setIsModalOpen] = useState(false);
-
-  const [mainListing, setMainListing] = useState<any>(null);
+  const [imgPreview, setImgPreview] = useState<ImgFile>({});
+  const [mainListing, setMainListing] = useState<any>();
+  const [isEdit, setIsEdit] = useState(false);
 
   const [task, setTask] = useState<any>();
+
+  const getViewableImg = (url, classNames = "") => (
+    <img
+      src={url}
+      title="Click to view this image"
+      alt={mainListing?.appName}
+      className={`cursor-pointer ${classNames}`}
+      onClick={() => setImgPreview({ url })}
+    />
+  );
+
+  const viewListImgs = (list) => {
+    if (!list?.length) return <></>;
+
+    return (
+      <div className="flex gap-2 flex-wrap">
+        {list.map((el, idx) => (
+          <React.Fragment key={idx}>
+            {getViewableImg(el, "max-w-[200px]")}
+          </React.Fragment>
+        ))}
+      </div>
+    );
+  };
 
   const items = [
     {
@@ -108,79 +100,47 @@ const MainStoreListing = () => {
     {
       key: "3",
       label: "Full Description",
-      children: mainListing?.fullDescription,
+      children: (
+        <AntInput.TextArea
+          className="!p-0 !border-0 !ring-0 !outline-0 !outline-transparent"
+          readOnly
+          rows={10}
+          value={mainListing?.fullDescription}
+        />
+      ),
       span: 4,
     },
-
     {
       key: "4",
       label: "App Icon",
-      children: (
-        <img
-          src={mainListing?.appIconUrl}
-          alt={mainListing?.appName}
-          className="w-[200px] h-[200px]"
-        />
+      children: getViewableImg(
+        mainListing?.appIconUrl,
+        "w-[200px] h-[200px] object-cover"
       ),
       span: 2,
     },
     {
       key: "5",
       label: "Feature Graphic",
-      children: (
-        <img src={mainListing?.featureGraphicUrl} alt={mainListing?.appName} />
-      ),
+      children: getViewableImg(mainListing?.featureGraphicUrl, "object-cover"),
       span: 2,
     },
     {
       key: "6",
       label: "Phone Screenshots",
-      children: (
-        <div className="flex gap-2 flex-wrap">
-          {mainListing?.phoneScreenshotsUrl?.map((el, idx) => (
-            <img
-              key={idx}
-              src={el}
-              alt={mainListing?.appName}
-              className="max-w-[200px]"
-            />
-          ))}
-        </div>
-      ),
+      children: viewListImgs(mainListing?.phoneScreenshotsUrl),
       span: 4,
     },
     {
       key: "7",
       label: "7-inch tablet screenshots",
-      children: (
-        <div className="flex gap-2 flex-wrap">
-          {mainListing?.tablet7ScreenshotsUrl?.map((el, idx) => (
-            <img
-              key={idx}
-              src={el}
-              alt={mainListing?.appName}
-              className="max-w-[200px]"
-            />
-          ))}
-        </div>
-      ),
+      children: viewListImgs(mainListing?.tablet7ScreenshotsUrl),
       span: 4,
     },
     {
       key: "8",
       label: "10-inch tablet screenshots",
-      children: (
-        <div className="flex gap-2 flex-wrap">
-          {mainListing?.tablet10ScreenshotsUrl?.map((el, idx) => (
-            <img
-              key={idx}
-              src={el}
-              alt={mainListing?.appName}
-              className="max-w-[200px]"
-            />
-          ))}
-        </div>
-      ),
+      children: viewListImgs(mainListing?.tablet10ScreenshotsUrl),
       span: 4,
     },
   ];
@@ -195,7 +155,7 @@ const MainStoreListing = () => {
       .then(
         axios.spread((res1: any, res2: any) => {
           setIsLoading(false);
-          setMainListing(res1.results);
+          setMainListing(res1.results || {});
           setTask(res2.results);
         })
       )
@@ -227,12 +187,24 @@ const MainStoreListing = () => {
       });
   };
 
+  const onEdit = () => {
+    setIsEdit(true);
+  };
+
   return (
     <Page>
       {loading && <Loading />}
-      <h1 style={{ fontSize: 40, fontWeight: "bold" }}>Main Store Listing</h1>
-      <div className="bg-white p-3">
-        <div className="flex gap-4 items-center mb-4">
+      <div className="flex justify-between flex-col xs:flex-row">
+        <div className="page-title">Main store listing</div>
+        <div className="mt-1 sm:mt-0">
+          <Button icon={<EditOutlined />} onClick={onEdit}>
+            Edit
+          </Button>
+        </div>
+      </div>
+
+      <div className="bg-white p-4 mt-2">
+        <div className="flex gap-4 items-center">
           <Button
             type="primary"
             onClick={() => fetchMainStoreListing()}
@@ -244,7 +216,7 @@ const MainStoreListing = () => {
           >
             Fetch main store listing
           </Button>
-          <span className="text-md font-[500] flex gap-1">
+          <span className="text-md font-medium flex gap-1">
             <span>Last Sync: </span>
             {task ? (
               task.state === "FAILED" ? (
@@ -258,7 +230,12 @@ const MainStoreListing = () => {
           </span>
         </div>
         {mainListing && (
-          <Descriptions bordered column={4} labelStyle={{ fontWeight: "bold" }}>
+          <Descriptions
+            bordered
+            column={4}
+            labelStyle={{ fontWeight: "bold" }}
+            className="mt-4"
+          >
             {items.map((el, idx) => (
               <Descriptions.Item key={el.key} label={el.label} span={el.span}>
                 {el.children}
@@ -267,6 +244,13 @@ const MainStoreListing = () => {
           </Descriptions>
         )}
       </div>
+
+      <EditMainStoreListing
+        isOpen={isEdit}
+        onClose={() => setIsEdit(false)}
+        mainListing={mainListing}
+      />
+      <ImagePreview imgPreview={imgPreview} setImgPreview={setImgPreview} />
     </Page>
   );
 };

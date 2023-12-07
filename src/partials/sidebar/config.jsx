@@ -11,6 +11,8 @@ import { AiOutlineNodeIndex } from "@react-icons/all-files/ai/AiOutlineNodeIndex
 import { BiPalette } from "@react-icons/all-files/bi/BiPalette";
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdNewReleases } from "react-icons/md";
+import { GoChecklist } from "react-icons/go";
+import { MdOutlineCyclone } from "react-icons/md";
 
 export const SidebarConfigs = [
   {
@@ -118,21 +120,14 @@ export const SidebarStoreAppConfigs = [
     id: 0,
     url: "/main-store-listing",
     label: "Main Store Listing",
-    iconEl: <AiOutlineDashboard size={20} />,
+    iconEl: <GoChecklist size={20} />,
     preload: () => import("../../pages/Apps/AppDetails/MainStoreListing"),
-  },
-  {
-    id: 2,
-    url: "/edit-main-listing",
-    label: "Edit Main Store Listing",
-    iconEl: <AiOutlineEdit size={20} />,
-    preload: () => import("../../pages/Apps/AppDetails/EditMainStoreListing"),
   },
   {
     id: 1,
     url: "/custom-store-listing",
     label: "Custom Store Listing",
-    iconEl: <BiPalette size={20} />,
+    iconEl: <MdOutlineCyclone size={20} />,
     preload: () => import("../../pages/Apps/AppDetails/CustomStoreListing"),
   },
 ];
