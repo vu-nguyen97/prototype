@@ -226,7 +226,7 @@ function Sidebar({
         <div className="my-7">
           <div>
             <div className="text-white flex items-center">
-              <div className="flex-1 flex items-center">
+              <div className="w-full flex items-center">
                 {appState?.icon ? (
                   <GamePlatformIcon
                     app={appState}
@@ -239,7 +239,7 @@ function Sidebar({
                 <Transition
                   unmountOnExit
                   show={sidebarExpanded}
-                  className="text-base font-semibold ml-3.5 transform ease-in line-clamp-2 break-all"
+                  className="text-base font-semibold ml-3.5 transform ease-in line-clamp-2 break-words"
                   enterStart="opacity-0"
                   entering="whitespace-nowrap"
                   enterEndDelay="200"

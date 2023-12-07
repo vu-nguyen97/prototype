@@ -45,20 +45,18 @@ function NewTheme(props) {
   const [form] = Form.useForm();
   const urlParams = useParams();
 
-  const {title, target} = props;
+  const { title, target } = props;
 
   const targetId = target === `APP` ? urlParams.id : urlParams.appId!;
   const endpoint = target === `APP` ? `/store-app-theme` : urlParams.appId!;
-
-
-  
 
   const [isLoading, setIsLoading] = useState(false);
   const [listFiles, setListFiles] = useState<any>({});
 
   const initialValues = {
     name: "Falcon AI Assistant 2",
-    shortDescription: "Lead the Crowd, Control of your Army, Clash the Enemies and Take Over the Castle",
+    shortDescription:
+      "Lead the Crowd, Control of your Army, Clash the Enemies and Take Over the Castle",
     fullDescription: `Thrilling survival adventure! A thrilling racing experience that will have you on the edge of your seat until the very finish!
     Lead the Crowd, Control of your Army, Clash the Enemies and Take Over the Castle!
     
@@ -166,7 +164,7 @@ function NewTheme(props) {
       <div className="font-bold text-base mb-4">{title}</div>
       <div className="max-w-5xl">
         <Form.Item
-        className="font-bold"
+          className="font-bold"
           name="name"
           label="Name"
           rules={[{ required: true, message: FIELD_REQUIRED }]}
@@ -192,7 +190,7 @@ function NewTheme(props) {
           />
         </Form.Item>
         <Form.Item
-        className="font-bold"
+          className="font-bold"
           name="fullDescription"
           label="Full description"
           rules={[{ required: true, message: FIELD_REQUIRED }]}
@@ -214,7 +212,6 @@ function NewTheme(props) {
           return (
             <DynamicUpload
               key={field}
-              className={'font-bold'}
               field={field}
               label={label}
               note={note}
@@ -236,7 +233,7 @@ function NewTheme(props) {
 NewTheme.propTypes = {
   target: String,
   title: String,
-  endpoint: String
+  endpoint: String,
 };
 
 export default NewTheme;

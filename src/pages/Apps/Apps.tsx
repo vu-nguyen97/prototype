@@ -3,7 +3,7 @@ import { Select } from "antd";
 import Button from "antd/lib/button/button";
 import AntInput from "antd/lib/input/Input";
 import React, { useEffect, useState } from "react";
-import TimeAgo from 'react-timeago';
+import TimeAgo from "react-timeago";
 import { toast } from "react-toastify";
 import service from "../../partials/services/axios.config";
 import Page from "../../utils/composables/Page";
@@ -128,7 +128,7 @@ function Apps(props) {
 
         <div className="flex justify-start items-center my-3 min-h-[24px]">
           <span className="flex mr-2">
-            <div className="font-semibold mr-1">Last sync at:</div>
+            <div className="font-semibold mr-1">Last sync:</div>
             <TimeAgo date={lastSyncAppsAt} />
           </span>
           <Button
