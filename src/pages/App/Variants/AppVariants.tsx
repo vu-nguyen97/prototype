@@ -1,15 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Page from "../../../utils/composables/Page";
-import {
-  createSearchParams,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
 import service from "../../../partials/services/axios.config";
-import moment from "moment";
 import {
-  DATE_RANGE_FORMAT,
   getLastDay,
   onClickRangePickerFooter,
 } from "../../../partials/common/Forms/RangePicker";
@@ -19,13 +11,7 @@ import { EXTRA_FOOTER } from "../../../constants/constants";
 import Tag from "antd/lib/tag";
 import Button from "antd/lib/button/button";
 import Loading from "../../../utils/Loading";
-import { useQuery } from "@tanstack/react-query";
-import { getCpiCampaignById } from "../../../api/common/common.api";
-import { GET_STORE_APP_BY_ID } from "../../../api/constants.api";
-import Tabs from "antd/lib/tabs";
-import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
-import VariantDetail from "./VariantDetail";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 
 export default function AppVariants() {
   const location = useLocation();
@@ -35,37 +21,36 @@ export default function AppVariants() {
   const [isLoading, setIsLoading] = useState(true);
   const [listCustomListing, setListCustomListing] = useState<any>({});
   const [app, setApp] = useState<any>({});
+
   const onChangeRangePicker = (dates) => {
     setDateRange(dates);
   };
+
   useEffect(() => {
+    console.log("?????", packageId);
     setIsLoading(true);
-    service
-      .get("/store-app/"+packageId)
-      .then(
-        (res: any) => {
-          setApp(res.results);
-          setIsLoading(false);
-        },
-        () => setIsLoading(false)
-      );
+    service.get("/store-app/" + packageId).then(
+      (res: any) => {
+        const newApp = res.results || {};
+        setApp(newApp);
+
+        if (!Object.keys(newApp).length) return setIsLoading(false);
+        service.get("/" + newApp.consoleAppId + "/custom_listings").then(
+          (res: any) => {
+            setListCustomListing(res.results);
+            setIsLoading(false);
+          },
+          () => setIsLoading(false)
+        );
+      },
+      () => setIsLoading(false)
+    );
   }, []);
-  useEffect(() => {
-    setIsLoading(true);
-    service
-      .get("/" + app.consoleAppId + "/custom_listings")
-      .then(
-        (res: any) => {
-          setListCustomListing(res.results);
-          setIsLoading(false);
-        },
-        () => setIsLoading(false)
-      );
-  }, [app]);
-    return(
-      <Page>
-        {isLoading && <Loading />}
-        <div className="page-title">Comparing Themes</div>
+
+  return (
+    <Page>
+      {isLoading && <Loading />}
+      <div className="page-title">Comparing Themes</div>
       <div className="bg-white p-4 rounded-sm shadow mt-2 mb-5">
         <div className="flex items-center flex-wrap -mx-1 2xl:-mx-2 -mt-3">
           <div className="flex items-center !mt-3 !mx-1 2xl:!mx-2">
@@ -98,23 +83,25 @@ export default function AppVariants() {
             />
           </div>
 
-          <Button
-            type="primary"
-            className="mx-1 2xl:!mx-2 mt-3"
-          >
+          <Button type="primary" className="mx-1 2xl:!mx-2 mt-3">
             Set
           </Button>
         </div>
       </div>
       <div className="bg-white p-4 rounded-sm shadow mt-2 mb-5">
-        <h1 style={{fontWeight: "bold", fontSize: 20}}>Notes :</h1>
-        <h1 style={{fontSize: 15}}>-The Unity Ads campaign name is automatically by combining the CPI Campaign name with the Listing name.</h1>
-        <h1 style={{fontSize: 15}}>Example: (prttat_special_force_dark | prttat_special_force_light)</h1>
-        <h1 style={{fontSize: 15}}>-The Unity Ads budget is configured automatically by default.</h1>
+        <h1 style={{ fontWeight: "bold", fontSize: 20 }}>Notes :</h1>
+        <h1 style={{ fontSize: 15 }}>
+          -The Unity Ads campaign name is automatically by combining the CPI
+          Campaign name with the Listing name.
+        </h1>
+        <h1 style={{ fontSize: 15 }}>
+          Example: (prttat_special_force_dark | prttat_special_force_light)
+        </h1>
+        <h1 style={{ fontSize: 15 }}>
+          -The Unity Ads budget is configured automatically by default.
+        </h1>
       </div>
-      <div>
-
-      </div>
-      </Page>
-    )
+      <div></div>
+    </Page>
+  );
 }

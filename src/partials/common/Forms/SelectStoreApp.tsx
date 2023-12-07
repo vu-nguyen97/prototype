@@ -12,7 +12,7 @@ import { maxTagPlaceholder } from "./MaxTagPlaceholder";
 export const getActivedApp = (listApp: any[] = [], activedId: string = "") => {
   if (!listApp?.length || !activedId) return {};
 
-  const results = listApp.find((el) => el.storeId + el.name === activedId);
+  const results = listApp.find((el) => el.packageId + el.name === activedId);
   return results || {};
 };
 
@@ -30,7 +30,7 @@ function SelectStoreApp(props) {
     filterOption,
     autoFocus,
     placeholder,
-    onFocusFunc
+    onFocusFunc,
   } = props;
 
   const onGetKey = (data) => {
@@ -87,7 +87,7 @@ function SelectStoreApp(props) {
     <Select
       loading={loading}
       className={`w-full ${classNames}`}
-      placeholder= {placeholder || "App name / Package name" }
+      placeholder={placeholder || "App name / Package name"}
       mode={isMultiple ? "multiple" : undefined}
       maxTagCount="responsive"
       maxTagPlaceholder={(v) => maxTagPlaceholder(v, activedApp, onChangeValue)}
