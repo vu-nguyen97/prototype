@@ -7,6 +7,18 @@ export function getDateRange(date: moment.Moment = moment()) {
   return date.format(DATE_RANGE_FORMAT);
 }
 
+export function getCampDay() {
+  return [moment().add(1, "days"), moment().add(3, "days")];
+}
+
+export function getFutureDay(day) {
+  return [moment().add(1, "days"), moment().add(day, "days")];
+}
+
+export function getNearest14Days() {
+  return [moment().subtract(7, "days"), moment().add(7, "days")];
+}
+
 export function getSkanDay() {
   return [moment().subtract(10, "days"), moment().subtract(3, "days")];
 }

@@ -5,10 +5,15 @@ import Modal from "antd/lib/modal/Modal";
 import AppVariants, { FORM_LISTING } from "../App/Variants/AppVariants";
 
 function ModalAdd(props) {
-  const { isOpen, onClose } = props;
+  const { isOpen, onClose, submitCb } = props;
 
   const onCloseModal = () => {
     onClose();
+  };
+
+  const onSubmit = () => {
+    onCloseModal();
+    submitCb && submitCb();
   };
 
   return (
@@ -16,6 +21,7 @@ function ModalAdd(props) {
       title="Add new campaign"
       width={900}
       open={isOpen}
+      maskClosable={false}
       onCancel={onCloseModal}
       footer={[
         <Button key="back" htmlType="button" onClick={onCloseModal}>
@@ -27,11 +33,11 @@ function ModalAdd(props) {
           htmlType="submit"
           form={FORM_LISTING}
         >
-          Next
+          Add
         </Button>,
       ]}
     >
-      <AppVariants isModalCreate submitCb={onClose} />
+      <AppVariants submitCb={onSubmit} />
     </Modal>
   );
 }
@@ -39,6 +45,7 @@ function ModalAdd(props) {
 ModalAdd.propTypes = {
   isOpen: PropTypes.bool,
   onClose: PropTypes.func,
+  submitCb: PropTypes.func,
 };
 
 export default ModalAdd;

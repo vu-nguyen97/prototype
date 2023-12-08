@@ -109,7 +109,7 @@ SelectStoreApp.defaultProps = {
   classNames: "",
   isMultiple: false,
   loading: false,
-  autoFocus: true,
+  autoFocus: false,
 };
 
 SelectStoreApp.propTypes = {

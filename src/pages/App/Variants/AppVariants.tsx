@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import Page from "../../../utils/composables/Page";
 import service from "../../../partials/services/axios.config";
 import {
-  getLastDay,
+  DATE_RANGE_FORMAT,
+  getCampDay,
   onClickRangePickerFooter,
 } from "../../../partials/common/Forms/RangePicker";
 import DatePicker from "antd/lib/date-picker";
@@ -30,7 +31,7 @@ export const FORM_LISTING = "FormListing";
 
 export default function AppVariants(props) {
   const [form] = Form.useForm();
-  const { isModalCreate, submitCb } = props;
+  const { submitCb } = props;
 
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +43,7 @@ export default function AppVariants(props) {
   const [groups, setGroups] = useState<Group[]>(defaultGroups);
 
   const initialValues = {
-    time: getLastDay(3),
+    time: getCampDay(),
   };
   const formApp = Form.useWatch("app", form);
 
@@ -80,50 +81,64 @@ export default function AppVariants(props) {
     const id = getActivedApp(listStoreApps, app)?.id;
 
     const params: any = {
-      time1: moment(time[0]).format("DD-MM-YYYY"),
-      time2: moment(time[1]).format("DD-MM-YYYY"),
-      id,
-      campaignName,
+      scheduleStart: moment(time[0]).format(DATE_RANGE_FORMAT),
+      scheduleEnd: moment(time[1]).format(DATE_RANGE_FORMAT),
+      appId: id,
+      name: campaignName,
     };
 
-    // groups.forEach((group: Group) => {
-    //   const {listing, id, creatives} = group
-    //   if (listing) {
-    //     params["listing" + id] = listing
-    //     params["creatives" + id] = creatives
-    //   }
-    // });
+    setIsLoading(true);
+    service.post("/cpi-campaigns", params).then(
+      (res: any) => {
+        const campId = res.results?.id;
+        if (!campId) return setIsLoading(false);
 
-    console.log("values :>> ", values);
-    console.log("groups :>> ", groups, params);
+        const listPromises: any = [];
+        groups.forEach((item: Group, index) => {
+          const formData = new FormData();
 
-    // setIsLoading(true);
-    // service.post("/cpi-campaigns", params).then(
-    //   (res: any) => {
-    //     toast(res.message, { type: "success" });
-    //     setIsLoading(false);
+          formData.append("customListingId", item.listing!);
+          item.creatives.forEach((file, fileIndex) => {
+            formData.append("files", file);
+          });
 
-    //     if (isModalCreate) {
-    //       form.resetFields();
-    //       submitCb && submitCb();
-    //       setTimeout(() => {
-    //         setGroups(defaultGroups)
-    //       }, 300);
-    //     }
-    //   },
-    //   () => setIsLoading(false)
-    // );
+          const newPromise = service.post(
+            `/cpi-campaigns/app-variants?campaignId=${campId}`,
+            formData
+          );
+          listPromises.push(newPromise);
+        });
+
+        Promise.all(listPromises).then(
+          (appVariantsRes: any) => {
+            setIsLoading(false);
+            toast("Your campaign has been successfully created!", {
+              type: "success",
+            });
+
+            if (submitCb) {
+              form.resetFields();
+              submitCb(res.results);
+              setGroups(defaultGroups);
+              setActiveKey([defaultGroups[0].id]);
+            }
+          },
+          () => setIsLoading(false)
+        );
+      },
+      () => setIsLoading(false)
+    );
   };
 
   const sessionTitle = "font-bold text-lg text-black";
   const contentComp = (
     <>
       {isLoading && <Loading />}
-      {!isModalCreate && <div className="page-title">Comparing Themes</div>}
+      {!submitCb && <div className="page-title">Comparing Themes</div>}
 
       <div
         className={classNames(
-          !isModalCreate && "bg-white rounded-sm shadow mt-2 mb-5 lg:p-6 p-4"
+          !submitCb && "bg-white rounded-sm shadow mt-2 mb-5 lg:p-6 p-4"
         )}
       >
         <div className="font-bold text-black">Notes :</div>
@@ -149,7 +164,7 @@ export default function AppVariants(props) {
           onFinish={onFinish}
           initialValues={initialValues}
         >
-          <div className={classNames(!isModalCreate && "max-w-[700px]")}>
+          <div className={classNames(!submitCb && "max-w-[700px]")}>
             <div className={`${sessionTitle} mt-6 mb-1.5`}>Ads Interval:</div>
             <Form.Item
               className="ml-2 md:ml-4"
@@ -189,12 +204,12 @@ export default function AppVariants(props) {
             </Form.Item>
 
             <div className={`${sessionTitle} mt-6`}>Campaign information</div>
-            <div className="ml-2 md:ml-4">
+            <div className="md:ml-4">
               <DynamicCampName form={form} listStoreApps={listStoreApps} />
             </div>
 
             <div className={`${sessionTitle} mt-6`}>Comparing listings</div>
-            <div className="mt-4 ml-2 md:ml-4">
+            <div className="mt-4 md:ml-4">
               <ListingGroup
                 form={form}
                 title=""
@@ -206,7 +221,7 @@ export default function AppVariants(props) {
               />
             </div>
           </div>
-          {!isModalCreate && (
+          {!submitCb && (
             <Button
               type="primary"
               className="min-w-[120px] mt-6 mb-4"
@@ -221,12 +236,11 @@ export default function AppVariants(props) {
     </>
   );
 
-  if (isModalCreate) return contentComp;
+  if (submitCb) return contentComp;
 
   return <Page>{contentComp}</Page>;
 }
 
 AppVariants.propTypes = {
-  isModalCreate: PropTypes.bool,
   submitCb: PropTypes.func,
 };

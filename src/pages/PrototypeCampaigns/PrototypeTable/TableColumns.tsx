@@ -4,18 +4,10 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 import GamePlatformIcon from "../../../partials/common/GamePlatformIcon";
 import DefaultAppImg from "../../../partials/common/DefaultAppImg";
+import { getDateCol } from "../../../partials/common/Table/Helper";
 
 export default function getColumns(props) {
   const { data } = props;
-
-  const getDate = (field, title) => ({
-    title,
-    sorter: sortByDate(field),
-    render: (record) => {
-      if (!record[field]) return "";
-      return moment(record[field])?.format("DD/MM/YYYY HH:mm");
-    },
-  });
 
   return [
     {
@@ -38,22 +30,33 @@ export default function getColumns(props) {
           </Link>
         );
       },
-      sorter: sortByString("name"),
+      // sorter: sortByString("name"),
+    },
+    {
+      title: "Create date",
+      render: getDateCol,
+      // sorter: sortByDate("createdDate"), // sort be
     },
     {
       title: "Created by",
       render: (rd) => rd.createdBy,
-      sorter: sortByString("createdBy"),
+      // sorter: sortByString("createdBy"),
     },
     {
       title: "Start date",
-      render: (rd) => rd.startDate,
-      sorter: sortByString("createdDate"),
+      // sorter: sortByDate("startDate"),
+      render: (record) => {
+        if (!record.startDate) return "";
+        return moment(record.startDate)?.format("DD-MM-YYYY");
+      },
     },
     {
       title: "End date",
-      render: (rd) => rd.endDate,
-      sorter: sortByString("createdDate"),
+      // sorter: sortByDate("endDate"),
+      render: (record) => {
+        if (!record.endDate) return "";
+        return moment(record.endDate)?.format("DD-MM-YYYY");
+      },
     },
     { title: "Actived", render: (rd) => rd.active?.toString() },
   ];

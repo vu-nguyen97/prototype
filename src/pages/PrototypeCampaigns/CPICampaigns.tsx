@@ -2,16 +2,14 @@ import SearchOutlined from "@ant-design/icons/lib/icons/SearchOutlined";
 import AntInput from "antd/lib/input/Input";
 import React, { useEffect, useState } from "react";
 import Page from "../../utils/composables/Page";
-import Loading from "../../utils/Loading";
 import service from "../../partials/services/axios.config";
 import PrototypeTable from "./PrototypeTable/PrototypeTable";
 import {
   DATE_RANGE_FORMAT,
-  getLastDay,
+  getNearest14Days,
   onClickRangePickerFooter,
 } from "../../partials/common/Forms/RangePicker";
 import DatePicker from "antd/lib/date-picker";
-import { disabledDate } from "../../utils/Helpers";
 import { EXTRA_FOOTER } from "../../constants/constants";
 import Tag from "antd/lib/tag";
 import Button from "antd/lib/button/button";
@@ -41,7 +39,7 @@ function Apps() {
   // const [createdBy, setCreatedBy] = useState("");
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
   const [active, setActive] = useState();
-  const [dateRange, setDateRange] = useState<any>(getLastDay(7));
+  const [dateRange, setDateRange] = useState<any>(getNearest14Days());
   const [listDeveloper, setListDeveloper] = useState<any>([]);
   const storeId = useSelector(
     (state: RootState) => state.account.userData.storeId
@@ -121,8 +119,6 @@ function Apps() {
 
   return (
     <Page>
-      {isLoading && <Loading />}
-
       <div className="flex justify-between">
         <div className="page-title">CPI Campaigns</div>
         <div className="flex space-x-2">
@@ -131,7 +127,7 @@ function Apps() {
             icon={<PlusOutlined />}
             onClick={(e) => setIsOpenModalAddApp(true)}
           >
-            New CPI Campaign
+            New campaign
           </Button>
         </div>
       </div>
@@ -151,7 +147,7 @@ function Apps() {
             placeholder="Store"
             value={selectedValue}
             onChange={handleSelectChange}
-            className="xs:!w-[150px] mx-1 2xl:!mx-2 !mt-3"
+            className="w-full xs:w-[150px] !mx-1 2xl:!mx-2 !mt-3"
           >
             {listDeveloper.map((item) => (
               <Select.Option key={item.id} value={item.id}>
@@ -161,7 +157,7 @@ function Apps() {
           </Select>
           <SelectStoreApp
             placeholder="App / package"
-            classNames="xs:w-[200px] mx-1 2xl:!mx-2 !mt-3"
+            classNames="w-full xs:w-[200px] !mx-1 2xl:!mx-2 !mt-3"
             listApp={listStoreApp}
             activedApp={selectedApp}
             setActivedApp={handleSelectChangeApp}
@@ -169,7 +165,7 @@ function Apps() {
           <Select
             allowClear
             placeholder="Status"
-            className="xs:!w-[110px] !mx-1 2xl:!mx-2 !mt-3"
+            className="w-full xs:!w-[110px] !mx-1 2xl:!mx-2 !mt-3"
             value={active}
             onChange={setActive}
           >
@@ -183,12 +179,11 @@ function Apps() {
           </Select>
 
           <DatePicker.RangePicker
-            className="w-full xs:w-auto mx-1 2xl:!mx-2 !mt-3"
+            className="w-full xs:w-auto !mx-1 2xl:!mx-2 !mt-3"
             open={isOpenDateRange}
             onOpenChange={(open) => setIsOpenDateRange(open)}
             value={dateRange}
             onChange={onChangeRangePicker}
-            disabledDate={disabledDate}
             renderExtraFooter={() => (
               <div className="flex py-2.5">
                 {EXTRA_FOOTER.map((obj, idx) => (
@@ -220,6 +215,7 @@ function Apps() {
       </div>
 
       <PrototypeTable
+        isLoading={isLoading}
         data={listApp}
         tableFilters={tableFilters}
         setTableFilters={setTableFilters}
@@ -227,6 +223,8 @@ function Apps() {
       <ModalAdd
         isOpen={isOpenModalAddApp}
         onClose={() => setIsOpenModalAddApp(false)}
+        submitCb={(newCamp) => {}}
+        // submitCb={(newCamp) => onSearchData()}
       />
     </Page>
   );

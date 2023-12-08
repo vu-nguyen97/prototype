@@ -6,7 +6,7 @@ import { RequiredMark } from "../../../../utils/helper/UIHelper";
 import { Group, Listing } from "./interface";
 import { bulkLink } from "../../../AddCampaign/constants";
 import { PlusIcon } from "../../../AddCampaign/Helpers";
-import FormEl from "./FormEl";
+import FormEl, { DYNAMIC_CREATIVES, DYNAMIC_LISTING } from "./FormEl";
 import { getGroupListing } from "../Helpers";
 
 function ListingGroup(props) {
@@ -43,7 +43,9 @@ function ListingGroup(props) {
       const activedKey = activeKey.find((key) => !newKeys.includes(key));
       const activedGroup: Group = groups.find((el) => el.id === activedKey);
 
-      if (!activedGroup?.listing || !activedGroup.creatives?.length) return;
+      if (!activedGroup?.listing || !activedGroup.creatives?.length) {
+        return validateGroup(activedGroup, form);
+      }
     }
 
     if (!newKeys.length) {
@@ -75,7 +77,9 @@ function ListingGroup(props) {
   };
 
   return (
-    <div className={classNames("border p-5 shadow-md rounded", className)}>
+    <div
+      className={classNames("border p-3 md:p-5 shadow-md rounded", className)}
+    >
       {title && (
         <div className="mb-2">
           {RequiredMark} {title}
@@ -109,7 +113,7 @@ function ListingGroup(props) {
                 />
               }
             >
-              <div className="ml-6">
+              <div className="md:ml-6">
                 <FormEl
                   form={form}
                   group={group}
@@ -122,12 +126,19 @@ function ListingGroup(props) {
           );
         })}
       </Collapse>
-      {addBidGroupLink({ groups, setGroups, setActiveKey })}
+      {addBidGroupLink({ groups, setGroups, setActiveKey, form })}
     </div>
   );
 }
 
 export default ListingGroup;
+
+const validateGroup = (group, form) => {
+  form.validateFields([
+    DYNAMIC_LISTING + group?.id,
+    DYNAMIC_CREATIVES + group?.id,
+  ]);
+};
 
 export const addBidGroupLink = (params: any = {}) => (
   <div className={bulkLink} onClick={() => onPlusGroup(params)}>
@@ -136,7 +147,7 @@ export const addBidGroupLink = (params: any = {}) => (
   </div>
 );
 
-export const onPlusGroup = ({ groups, setGroups, setActiveKey }) => {
+export const onPlusGroup = ({ groups, setGroups, setActiveKey, form }) => {
   if (!groups?.length) {
     setGroups([{ id: 0 }]);
     setActiveKey([0]);
@@ -145,9 +156,13 @@ export const onPlusGroup = ({ groups, setGroups, setActiveKey }) => {
 
   const lastGroup = groups[groups.length - 1];
   const newId = lastGroup.id + 1;
-  const hasErrForm = groups.some((group: Group) => {
-    if (!group.listing || !group.creatives?.length) return true;
-    return false;
+
+  let hasErrForm = false;
+  groups.forEach((group: Group) => {
+    if (!group.listing || !group.creatives?.length) {
+      form && validateGroup(group, form);
+      hasErrForm = true;
+    }
   });
   if (hasErrForm) return;
 
