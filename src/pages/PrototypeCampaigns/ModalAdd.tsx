@@ -13,7 +13,7 @@ function ModalAdd(props) {
 
   return (
     <Modal
-      title="Add New Campaign"
+      title="Add new campaign"
       width={900}
       open={isOpen}
       onCancel={onCloseModal}

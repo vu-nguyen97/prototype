@@ -16,23 +16,23 @@ import Tooltip from "antd/lib/tooltip";
 function AppTable(props) {
   const defaultPageSize = 10;
   const [pageSize, setPageSize] = useState(defaultPageSize);
-  const { listData, isLoading } = props;
+  const { listData, isLoading, setLoadingPage, linkUnityCb } = props;
 
   const createUnityApp = (record) => {
+    setLoadingPage(true);
     service
       .post("/create-unity-app", {
         store: "google",
         storeId: record.packageId,
       })
-      .then((res: any) => {
-        toast(res.message, { type: "success" });
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
-      })
-      .catch((error) => {
-        toast(error.message, { type: "error" });
-      });
+      .then(
+        (res: any) => {
+          setLoadingPage(false);
+          toast(res.message, { type: "success" });
+          linkUnityCb(res.results);
+        },
+        () => setLoadingPage(false)
+      );
   };
 
   const columns = [
@@ -145,6 +145,8 @@ AppTable.defaultProps = {
 AppTable.propTypes = {
   isLoading: PropTypes.bool,
   listData: PropTypes.array,
+  setLoadingPage: PropTypes.func,
+  linkUnityCb: PropTypes.func,
 };
 
 export default AppTable;

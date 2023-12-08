@@ -41,6 +41,7 @@ function ModalAddAndEdit(props) {
     totalDay: 3,
     language: EN_LANGUAGE,
     countries: [],
+    bid: DEFAULT_BID,
   };
 
   const onCloseModal = () => {

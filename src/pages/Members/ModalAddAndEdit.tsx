@@ -93,7 +93,6 @@ function ModalAddAndEdit(props) {
         toast(res.message || "Invite member success!", { type: "success" });
         setIsLoading(false);
         onCloseModal();
-        window.location.reload();
       },
       () => setIsLoading(false)
     );

@@ -6,18 +6,16 @@ import { toast } from "react-toastify";
 import ModalAddGPStore from "./ModalAddGPStore";
 import Button from "antd/lib/button";
 import ModalEditGPStore from "./ModalEditGPStore";
-import ModalConfirmDeleteGPStore from "./ModalConfirmDeleteGPStore";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
+import Loading from "../../utils/Loading";
 
 const GoogleAccount = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(false);
   const [listGPStore, setListGPStore] = useState<any>([]);
   const [isOpenModalAdd, setIsOpenModalAdd] = useState(false);
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   const [editedStore, setEditedStore] = useState<any>({});
-  const [deleteStore, setDeleteStore] = useState<any>({});
-  const [isOpenModalConfirmDelete, setIsOpenModalConfirmDelete] =
-    useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -31,14 +29,22 @@ const GoogleAccount = () => {
   }, []);
 
   const onEditData = (record) => {
-    console.log(record);
     setEditedStore(record);
     setIsOpenModalEdit(true);
   };
 
   const onDelete = (record) => {
-    setDeleteStore(record);
-    setIsOpenModalConfirmDelete(true);
+    setLoadingPage(true);
+    service.delete("/google-play-stores/" + record.id).then(
+      (res: any) => {
+        toast(res.message || "Delete developer account successfully!", {
+          type: "success",
+        });
+        setLoadingPage(false);
+        setListGPStore(listGPStore.filter((el) => el.id !== record.id));
+      },
+      () => setLoadingPage(false)
+    );
   };
 
   const onSyncApp = (record) => {
@@ -58,6 +64,7 @@ const GoogleAccount = () => {
 
   return (
     <Page>
+      {loadingPage && <Loading />}
       <div className="flex justify-between">
         <div className="page-title">Developer accounts</div>
 
@@ -84,20 +91,18 @@ const GoogleAccount = () => {
       <ModalAddGPStore
         isOpen={isOpenModalAdd}
         onClose={() => setIsOpenModalAdd(false)}
-        setIsLoading={setIsLoading}
+        setIsLoading={setLoadingPage}
+        setListGPStore={setListGPStore}
       />
-
       <ModalEditGPStore
         isOpen={isOpenModalEdit}
-        onClose={() => setIsOpenModalEdit(false)}
-        setIsLoading={setIsLoading}
+        onClose={() => {
+          setIsOpenModalEdit(false);
+          setEditedStore({});
+        }}
+        setIsLoading={setLoadingPage}
         data={editedStore}
-      />
-      <ModalConfirmDeleteGPStore
-        isOpen={isOpenModalConfirmDelete}
-        onClose={() => setIsOpenModalConfirmDelete(false)}
-        setIsLoading={setIsLoading}
-        data={deleteStore}
+        setListGPStore={setListGPStore}
       />
     </Page>
   );
