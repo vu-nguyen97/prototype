@@ -34,33 +34,39 @@ function Overview(props) {
     <Page>
       {isLoading ? <Loading/>:
       <div className="bg-white p-4 rounded-sm shadow mt-2" id="OverviewPage">
-          <div className="flex items-center flex-wrap -mx-1 2xl:-mx-2 -mt-3">
-              <div style={{ width: "40%", borderColor: "black", borderWidth: 2, marginLeft: "5%",marginRight: "5%", marginTop: "1%", marginBottom: "1%",textAlign: 'center'}}>
-                  <h1 style={{fontSize: "20px", marginTop: 10}}>IMPRESSION</h1>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-6 gap-x-6">
+            <div>
+            <div className="w-100 border-black border-2 ml-5 mr-5 mt-1 mb-1 text-center">
+                  <h1  className="text-xl mt-3">IMPRESSION</h1>
                   <Container listReport = {listReport} listChart = {[{ key: "1", label: "PieChart" },
                       { key: "2", label: "DoughnutChart"},
                       { key: "3", label: "BarChart"}]} criteria="0"/>
               </div>
-              <div style={{ width: "40%", borderColor: "black", borderWidth: 2, marginLeft: "5%",marginRight: "5%",marginTop: "1%", marginBottom: "1%",textAlign: 'center'}}>
-                  <h1 style={{fontSize: "20px", marginTop: 10}}>CLICK</h1>
+            </div>
+            <div>
+            <div className="w-100 border-black border-2 ml-5 mr-5 mt-1 mb-1 text-center">
+                  <h1  className="text-xl mt-3">CLICK</h1>
                   <Container listReport = {listReport} listChart = {[{ key: "1", label: "PieChart" },
                       { key: "2", label: "DoughnutChart"},
                       { key: "3", label: "BarChart"}]} criteria="1"/>
               </div>
-              </div>
-            <div className="flex items-center flex-wrap -mx-1 2xl:-mx-2 -mt-3">
-              <div style={{ width: "40%", borderColor: "black", borderWidth: 2, marginLeft: "5%",marginRight: "5%",marginTop: "1%", marginBottom: "1%",textAlign: 'center'}}>
-                  <h1 style={{fontSize: "20px", marginTop: 10}}>INSTALL</h1>
+            </div>
+            <div>
+            <div className="w-100 border-black border-2 ml-5 mr-5 mt-1 mb-1 text-center">
+                  <h1  className="text-xl mt-3">INSTALL</h1>
                   <Container listReport = {listReport} listChart = {[{ key: "1", label: "PieChart" },
                       { key: "2", label: "DoughnutChart"},
                       { key: "3", label: "BarChart"}]} criteria="2"/>
               </div>
-              <div style={{ width: "40%", borderColor: "black", borderWidth: 2, marginLeft: "5%",marginRight: "5%",marginTop: "1%", marginBottom: "1%",textAlign: 'center'}}>
-                  <h1 style={{fontSize: "20px", marginTop: 10}}>COST</h1>
+            </div>
+            <div>
+            <div  className="w-100 border-black border-2 ml-5 mr-5 mt-1 mb-1 text-center">
+                  <h1  className="text-xl mt-3">COST</h1>
                   <Container listReport = {listReport} listChart = {[{ key: "1", label: "PieChart" },
                       { key: "2", label: "DoughnutChart"},
                       { key: "3", label: "BarChart"}]} criteria="3"/>
               </div>
+            </div>
           </div>
       </div>}
     </Page>
