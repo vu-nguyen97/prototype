@@ -49,7 +49,7 @@ export const getBarChartSkeleton = () => {
 export const getLineChartSkeleton = () => {
   // @ts-ignore
   const color = tailwindConfig().theme.colors.slate[200];
-  const fakedPoints = [382, 571, 589, 621, 420, 588, 280, 480, 534, 349, 496];
+  const fakedPoints = [382, 589, 621, 480, 555, 280, 480, 534, 349, 466];
 
   return {
     labels: fakedPoints.map((el) => ""),
@@ -63,7 +63,7 @@ export const getLineChartSkeleton = () => {
         borderColor: color,
         pointBackgroundColor: color,
         borderWidth: 1,
-        tension: 0.3,
+        tension: 0.15,
         pointRadius: 0,
         pointHoverRadius: 0,
         clip: 20,
