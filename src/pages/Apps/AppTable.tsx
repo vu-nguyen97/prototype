@@ -42,7 +42,7 @@ function AppTable(props) {
       render: (record) => (
         <Link
           to={`/apps/${record.consoleAppId}/main-store-listing`}
-          className="flex items-center space-x-2 md:ml-1.5 !text-antPrimary hover:!text-antPrimary/90"
+          className="flex items-center space-x-2 md:ml-1.5 !text-blue-600 hover:!text-blue-600/80"
         >
           <img src={record.icon} className="w-8 h-8 rounded" />
           <div>{record.name}</div>

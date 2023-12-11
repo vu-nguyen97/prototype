@@ -5,9 +5,13 @@ import { Link } from "react-router-dom";
 import GamePlatformIcon from "../../../partials/common/GamePlatformIcon";
 import DefaultAppImg from "../../../partials/common/DefaultAppImg";
 import { getDateCol } from "../../../partials/common/Table/Helper";
+import Tooltip from "antd/lib/tooltip";
+import { AiOutlineEdit } from "@react-icons/all-files/ai/AiOutlineEdit";
+import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
+import Popconfirm from "antd/lib/popconfirm";
 
 export default function getColumns(props) {
-  const { data } = props;
+  const { data, onEdit, onDelete } = props;
 
   return [
     {
@@ -59,5 +63,37 @@ export default function getColumns(props) {
       },
     },
     { title: "Actived", render: (rd) => rd.active?.toString() },
+    {
+      title: "Action",
+      render: (text, record, idx) => {
+        const { active } = record;
+
+        return (
+          <div className="flex space-x-2 ml-2">
+            <>
+              <Tooltip title="Edit connector">
+                <AiOutlineEdit
+                  size={20}
+                  className="text-slate-600 hover:text-antPrimary cursor-pointer"
+                  onClick={() => onEdit(record)}
+                />
+              </Tooltip>
+
+              <Popconfirm
+                placement="left"
+                title="Remove this campaign?"
+                onConfirm={() => onDelete(record)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Tooltip title="Delete connector">
+                  <DeleteOutlined className="icon-danger text-xl cursor-pointer" />
+                </Tooltip>
+              </Popconfirm>
+            </>
+          </div>
+        );
+      },
+    },
   ];
 }

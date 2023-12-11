@@ -176,7 +176,6 @@ export default function AppVariants(props) {
                 className="w-full xs:w-auto"
                 open={isOpenDateRange}
                 onOpenChange={(open) => setIsOpenDateRange(open)}
-                disabledDate={disabledDate}
                 renderExtraFooter={() => (
                   <div className="flex py-2.5">
                     {EXTRA_FOOTER.map((obj, idx) => (

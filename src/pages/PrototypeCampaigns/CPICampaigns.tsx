@@ -217,6 +217,7 @@ function Apps() {
       <PrototypeTable
         isLoading={isLoading}
         data={listApp}
+        setData={setListApp}
         tableFilters={tableFilters}
         setTableFilters={setTableFilters}
       />
