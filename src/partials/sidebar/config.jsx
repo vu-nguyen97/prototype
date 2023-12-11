@@ -13,15 +13,16 @@ import { AiOutlineEdit } from "react-icons/ai";
 import { MdNewReleases } from "react-icons/md";
 import { GoChecklist } from "react-icons/go";
 import { MdOutlineCyclone } from "react-icons/md";
+import { DEFAULT_SIDEBAR_TAB } from "../../constants/constants";
 
 export const SidebarConfigs = [
-  {
-    id: 0,
-    url: "/",
-    label: "Dashboard",
-    iconEl: <AiOutlineDashboard size={20} />,
-    preload: () => import("../../pages/Dashboard/Dashboard"),
-  },
+  // {
+  //   id: DEFAULT_SIDEBAR_TAB, // DEFAULT_SIDEBAR_TAB = 0
+  //   url: "/",
+  //   label: "Dashboard",
+  //   iconEl: <AiOutlineDashboard size={20} />,
+  //   preload: () => import("../../pages/Dashboard/Dashboard"),
+  // },
   {
     id: 1,
     url: "/apps",
@@ -30,7 +31,7 @@ export const SidebarConfigs = [
     preload: () => import("../../pages/Apps/Apps"),
   },
   {
-    id: 2,
+    id: DEFAULT_SIDEBAR_TAB,
     url: "/cpi-campaigns",
     label: "CPI Campaigns",
     iconEl: <FaGooglePlay size={16} />,

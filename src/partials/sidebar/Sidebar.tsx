@@ -6,6 +6,7 @@ import {
   PROTOTYPE_CAMP_PATH,
   SIDEBAR_EXPANDED,
   APP_PATH,
+  DEFAULT_SIDEBAR_TAB,
 } from "../../constants/constants";
 import classNames from "classnames";
 import { useDispatch } from "react-redux";
@@ -162,7 +163,7 @@ function Sidebar({
         }
       });
     });
-    setActivedNav(activedTab);
+    setActivedNav(activedTab === undefined ? DEFAULT_SIDEBAR_TAB : activedTab);
     setInitActivedSubNav(activedSubTab);
   };
 

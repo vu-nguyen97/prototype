@@ -183,7 +183,8 @@ const AppRoutes = () => (
           path="/external-url/:appId/:pageCode"
           element={getPage(<ExternalUrlRoutes />)}
         />
-        <Route path="" element={getPage(<Dashboard />)} />
+        <Route path="" element={getPage(<CPICampaigns />)} />
+        {/* <Route path="" element={getPage(<Dashboard />)} /> */}
         <Route path="error-404" element={getPage(<Page404 />)} />
         <Route path="*" element={getPage(<Page404 />)} />
       </Route>
