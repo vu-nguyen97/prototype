@@ -1,7 +1,17 @@
 import React from "react";
 import Modal from "antd/lib/modal";
 
-function ImagePreview({ imgPreview, setImgPreview }) {
+export interface ImgFile {
+  url?: string;
+  name?: string;
+}
+
+interface ImagePreviewProps {
+  imgPreview: ImgFile;
+  setImgPreview: (newValue: any) => void;
+}
+
+function ImagePreview({ imgPreview, setImgPreview }: ImagePreviewProps) {
   const previewName = imgPreview?.name;
   const previewTitle = previewName
     ? "View " + imgPreview?.name

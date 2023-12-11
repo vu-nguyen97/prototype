@@ -36,16 +36,6 @@ const MemberTable = (props) => {
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      ...getColumnSearchProps({
-        dataIndex: "name",
-        callback: (value) => onSearchTable(value, "name"),
-        customFilter: () => true,
-      }),
-      sorter: sortByString("name"),
-    },
-    {
       title: "Email",
       dataIndex: "email",
       ...getColumnSearchProps({
@@ -55,26 +45,39 @@ const MemberTable = (props) => {
       }),
       sorter: sortByString("email"),
     },
-    {
-      title: "Phone",
-      dataIndex: "phone",
-      sorter: sortByString("phone"),
-    },
+    // {
+    //   title: "Name",
+    //   dataIndex: "name",
+    //   ...getColumnSearchProps({
+    //     dataIndex: "name",
+    //     callback: (value) => onSearchTable(value, "name"),
+    //     customFilter: () => true,
+    //   }),
+    //   sorter: sortByString("name"),
+    // },
+    // {
+    //   title: "Phone",
+    //   dataIndex: "phone",
+    //   sorter: sortByString("phone"),
+    // },
     {
       title: "Role",
-      dataIndex: "role",
-      sorter: sortByString("phone"),
+      filters: ROLE_FILTER,
+      filterIcon: filterIcon,
+      onFilter: (value, record) =>
+        filterColumn(value, record, "", (el) => el.role),
+      sorter: (a, b) => ("" + a.role).localeCompare(b.role),
+      render: (record) => capitalizeWord(record.role),
     },
-    // {
-    //   title: "Role",
-    //   dataIndex: "role",
-    //   filters: ROLE_FILTER,
-    //   filterIcon: filterIcon,
-    //   onFilter: (value, record) =>
-    //     filterColumn(value, record, "", (el) => el.role?.name),
-    //   sorter: (a, b) => ("" + a.role.name).localeCompare(b.role.name),
-    //   render: (record) => capitalizeWord(record.role.name),
-    // },
+    {
+      title: "Store",
+      render: (record) => {
+        if (record.role === ROLES.admin) {
+          return "All";
+        }
+        return record.storeName;
+      },
+    },
     {
       title: "Status",
       filters: STATUS_FILTER,
@@ -85,31 +88,16 @@ const MemberTable = (props) => {
         record.active ? STATUS_FILTER[0].text : STATUS_FILTER[1].text,
     },
     {
-      title: "Apps",
-      width: "30%",
-      render: (record) => {
-        // if (record.role.name === ROLES.admin) {
-        //   return "All";
-        // }
-
-        const { storeApps } = record;
-        if (!storeApps || !storeApps.length) return "";
-
-        const listApp = storeApps.map((app) => app?.name);
-        return showListData(listApp, "app");
-      },
-    },
-    {
       title: "Action",
       render: (record) => (
         <div className="flex space-x-2 ml-2">
-          <Tooltip title="Edit member">
+          {/* <Tooltip title="Edit member">
             <AiOutlineEdit
               size={20}
               className="text-slate-600 hover:text-antPrimary cursor-pointer"
               onClick={() => onEdit(record)}
             />
-          </Tooltip>
+          </Tooltip> */}
 
           {record.active ? (
             <Tooltip title="Lock member">

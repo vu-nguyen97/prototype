@@ -12,14 +12,16 @@ import Button from "antd/lib/button/button";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
 import ModalAddAndEdit from "./Modal/ModalAddAndEdit";
 import ModalEdit from "./Modal/ModalEdit";
+import Loading from "../../utils/Loading";
 
 export default function Configs() {
-  const [configs, setConfigs] = useState([]);
   const defaultPageSize = 10;
   const [pageSize, setPageSize] = useState(defaultPageSize);
   const [columns, setColumns] = useState(getColumns({}));
   const [isLoading, setIsLoading] = useState(false);
-  const [record, setRecord] = useState([])
+  const [loadingPage, setLoadingPage] = useState(false);
+  const [configs, setConfigs] = useState([]);
+  const [record, setRecord] = useState([]);
   const [searchData, setSearchData] = useState<any>({});
   const [filterByMaxMin, setFilterByMaxMin] = useState<any>({});
   const [isOpenModalEdit, setIsOpenModalEdit] = useState<any>(false);
@@ -42,7 +44,7 @@ export default function Configs() {
         configs,
         onSearchTable,
         onFilterTable,
-        onOpenModalEdit
+        onOpenModalEdit,
       })
     );
   }, [configs]);
@@ -64,7 +66,7 @@ export default function Configs() {
   const onOpenModalEdit = (value) => {
     setRecord(value);
     setIsOpenModalEdit(true);
-  }
+  };
 
   const onSubmitConfig = () => {};
 
@@ -84,19 +86,21 @@ export default function Configs() {
   const pagination = {
     pageSize,
     showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+    hideOnSinglePage: true,
   };
 
   return (
     <Page>
+      {loadingPage && <Loading />}
       <div className="flex justify-between">
         <div className="page-title">Configs</div>
-        <Button
+        {/* <Button
           type="primary"
           icon={<PlusOutlined />}
           onClick={(e) => setIsOpenAddModal(true)}
         >
           Add Config
-        </Button>
+        </Button> */}
       </div>
 
       <Table
@@ -116,17 +120,17 @@ export default function Configs() {
       <ModalAddAndEdit
         isOpen={isOpenAddModal}
         onClose={() => setIsOpenAddModal(false)}
-        setIsLoading={setIsLoading}
+        setIsLoading={setLoadingPage}
         onSubmit={onSubmitConfig}
       />
 
       <ModalEdit
         isOpen={isOpenModalEdit}
         onClose={() => setIsOpenModalEdit(false)}
-        setIsLoading={setIsLoading}
+        setIsLoading={setLoadingPage}
         data={record}
+        setConfigs={setConfigs}
       />
-
     </Page>
   );
 }

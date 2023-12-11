@@ -81,7 +81,7 @@ function BidGroupForm(props) {
       form.setFieldsValue({
         [DYNAMIC_COUNTRIES + el.id]: el.countries,
         [DYNAMIC_BID + el.id]: el.bid,
-      })
+      });
     });
   }, [props]);
 
@@ -203,7 +203,7 @@ function BidGroupForm(props) {
                 </>
               }
             >
-              <div className="ml-6">
+              <div className="md:ml-6">
                 <BidRateGroup
                   type={type}
                   bidGroup={bidGroup}

@@ -222,7 +222,7 @@ function ModalAddRelease(props) {
           ]}
         >
           <AntInput.TextArea
-            rows={5}
+            rows={2}
             placeholder="Enter content (max 80 characters)"
             maxLength={80}
             allowClear
@@ -234,7 +234,7 @@ function ModalAddRelease(props) {
           rules={[{ required: true, message: "Please anter full description" }]}
         >
           <AntInput.TextArea
-            rows={8}
+            rows={10}
             placeholder="Enter content (max 4000 characters)"
             maxLength={4000}
             allowClear

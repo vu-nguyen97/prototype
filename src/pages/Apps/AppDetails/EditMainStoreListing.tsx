@@ -6,67 +6,29 @@ import service from "../../../partials/services/axios.config";
 import AntInput from "antd/lib/input";
 import DynamicUpload from "../../../partials/common/Forms/DynamicUpload";
 import Loading from "../../../utils/Loading";
-import Page from "../../../utils/composables/Page";
+import Modal from "antd/lib/modal";
 
-const ASSET_FIELDS = [
-  {
-    field: "iconImg",
-    label: "App icon",
-    note: "Must be a PNG or JPEG, up to 1 MB, 512 px by 512 px.",
-  },
-  {
-    field: "featureImg",
-    label: "Feature graphic",
-    note: "Your feature graphic must be a PNG or JPEG, up to 15 MB, and 1,024 px by 500px.",
-  },
-  {
-    field: "phoneScreenshots",
-    label: "Phone screenshots",
-    note: "Upload 2-8 phone screenshots. Screenshots must be PNG or JPEG, up to 8 MB each, 16:9 or 9:16 aspect ratio, with each side between 320 px and 3,840 px.",
-    multiple: true,
-  },
-  {
-    field: "sevenInchScreenshots",
-    label: "7-inch tablet screenshots",
-    note: "Upload up to eight 7-inch tablet screenshots. Screenshots must be PNG or JPEG, up to 8 MB each, 16:9 or 9:16 aspect ratio, with each side between 320 px and 3,840 px.",
-    multiple: true,
-  },
-  {
-    field: "tenInchScreenshots",
-    label: "10-inch tablet screenshots",
-    note: "Upload up to eight 10-inch tablet screenshots. Screenshots must be PNG or JPEG, up to 8 MB each, 16:9 or 9:16 aspect ratio, with each side between 1,080 px and 7,680 px.",
-    multiple: true,
-  },
-];
-
-export default function EditMainStoreListing() {
+export default function EditMainStoreListing({ isOpen, onClose, mainListing }) {
   const [form] = Form.useForm();
   const [listFiles, setListFiles] = useState<any>({});
   const urlParams = useParams();
   const [isLoading, setIsLoading] = useState(false);
-  const [mainListing, setMainListing] = useState<any>(null);
 
   useEffect(() => {
-    setIsLoading(true);
-    service
-      .get(`/main_listing?appId=${urlParams.appId}`)
-      .then((res: any) => {
-        setIsLoading(false);
-        setMainListing(res.results);
-        if (res.results) {
-          form.setFieldsValue({
-            shortDescription: res.results?.shortDescription,
-            fullDescription: res.results?.fullDescription,
-            url: res.results?.youtubeVideoUrl,
-          });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        toast(error.message, { type: "error" });
-        setIsLoading(false);
-      });
-  }, []);
+    if (!Object.keys(mainListing || {}).length) return;
+    form.setFieldsValue({
+      shortDescription: mainListing.shortDescription,
+      fullDescription: mainListing.fullDescription,
+      url: mainListing.youtubeVideoUrl,
+    });
+  }, [mainListing]);
+
+  const onCloseModal = () => {
+    onClose();
+    setTimeout(() => {
+      setListFiles({});
+    }, 300);
+  };
 
   const onSetListFiles = (fieldName, files) => {
     const newListFiles = { ...listFiles };
@@ -75,130 +37,109 @@ export default function EditMainStoreListing() {
   };
 
   const onFinish = (values) => {
-    console.log("values", values);
     const { shortDescription, fullDescription, url } = values;
-
-    const {
-      // featureImg,
-      // iconImg,
-      // phoneScreenshots,
-      // sevenInchScreenshots,
-      // tenInchScreenshots,
-      assets,
-    } = listFiles;
+    const { assets } = listFiles;
 
     const formData = new FormData();
-
-    formData.append("appId", urlParams.appId);
+    formData.append("appId", urlParams.appId!);
     formData.append("shortDescription", shortDescription);
     formData.append("fullDescription", fullDescription);
+
     if (url) {
       formData.append("youtubeVideoUrl", url);
     }
-
     assets.forEach((el) => {
       formData.append("assets", el);
     });
 
-    // formData.append("featureGraphic", featureImg[0]);
-    // formData.append("appIcon", iconImg[0]);
-    // phoneScreenshots.forEach((el) => {
-    //   formData.append("phoneScreenshots", el);
-    // });
-    // console.log(phoneScreenshots.length);
-    // sevenInchScreenshots.forEach((el) => {
-    //   formData.append("tablet7Screenshots", el);
-    // });
-    // console.log(sevenInchScreenshots.length);
-    // tenInchScreenshots.forEach((el) => {
-    //   formData.append("tablet10Screenshots", el);
-    // });
-    // console.log(tenInchScreenshots.length);
     setIsLoading(true);
     service.post("/main_listing", formData).then(
       (res: any) => {
-        console.log("main");
         toast(res.message, { type: "success" });
         setIsLoading(false);
         form.resetFields();
         setListFiles({});
       },
-      (err) => {
-        setIsLoading(false);
-        toast(err, { type: "error" });
-      }
+      (err) => setIsLoading(false)
     );
   };
+
   return (
-    <Page>
-      {isLoading && <Loading />}
-      <h1 style={{ fontSize: 40, fontWeight: "bold" }}>
-        Edit main store listing
-      </h1>
-      <div className="flex justify-center">
-        <div className="w-[100%] bg-white p-5">
-          <Form
-            id="MainListingForm"
-            labelAlign="left"
-            form={form}
-            labelCol={{ span: 24 }}
-            wrapperCol={{ span: 24 }}
-            onFinish={onFinish}
+    <Form
+      id="EditMainListingForm"
+      labelAlign="left"
+      form={form}
+      labelCol={{ span: 24 }}
+      wrapperCol={{ span: 24 }}
+      onFinish={onFinish}
+    >
+      <Modal
+        title="Edit main store listing"
+        maskClosable={false}
+        width={900}
+        open={isOpen}
+        onCancel={onCloseModal}
+        footer={[
+          <Button key="back" htmlType="button" onClick={onCloseModal}>
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            htmlType="submit"
+            form="EditMainListingForm"
           >
-            <Form.Item
-              name="shortDescription"
-              label="Short description"
-              rules={[
-                { required: true, message: "Please enter short description" },
-              ]}
-            >
-              <AntInput.TextArea
-                rows={2}
-                placeholder="Enter content (max 80 characters)"
-                maxLength={80}
-                allowClear
-              />
-            </Form.Item>
-            <Form.Item
-              name="fullDescription"
-              label="Full description"
-              rules={[
-                { required: true, message: "Please enter full description" },
-              ]}
-            >
-              <AntInput.TextArea
-                rows={10}
-                placeholder="Enter content (max 4000 characters)"
-                maxLength={4000}
-                allowClear
-              />
-            </Form.Item>
-            <Form.Item
-              name="url"
-              label="Youtube Video URL"
-              rules={[{ required: false, message: "Please enter URL" }]}
-            >
-              <AntInput
-                allowClear
-                placeholder="Enter an URL (max 50 characters)"
-                className="w-full"
-                maxLength={50}
-              />
-            </Form.Item>
-            <DynamicUpload
-              className={"font-bold"}
-              field={"assets"}
-              label={"Assets"}
-              multiple={true}
-              listFiles={listFiles["assets"] || []}
-              onSetListFiles={onSetListFiles}
-            />
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Form>
-        </div>
-      </div>
-    </Page>
+            Edit
+          </Button>,
+        ]}
+      >
+        {isLoading && <Loading />}
+        <Form.Item
+          name="shortDescription"
+          label="Short description"
+          rules={[
+            { required: true, message: "Please enter short description" },
+          ]}
+        >
+          <AntInput.TextArea
+            rows={2}
+            placeholder="Enter content (max 80 characters)"
+            maxLength={80}
+            allowClear
+          />
+        </Form.Item>
+        <Form.Item
+          name="fullDescription"
+          label="Full description"
+          rules={[{ required: true, message: "Please enter full description" }]}
+        >
+          <AntInput.TextArea
+            rows={10}
+            placeholder="Enter content (max 4000 characters)"
+            maxLength={4000}
+            allowClear
+          />
+        </Form.Item>
+        <Form.Item
+          name="url"
+          label="Youtube Video URL"
+          rules={[{ required: false, message: "Please enter URL" }]}
+        >
+          <AntInput
+            allowClear
+            placeholder="Enter an URL (max 50 characters)"
+            className="w-full"
+            maxLength={50}
+          />
+        </Form.Item>
+        <DynamicUpload
+          field={"assets"}
+          label={"Assets"}
+          multiple={true}
+          listFiles={listFiles["assets"] || []}
+          onSetListFiles={onSetListFiles}
+        />
+      </Modal>
+    </Form>
   );
 }

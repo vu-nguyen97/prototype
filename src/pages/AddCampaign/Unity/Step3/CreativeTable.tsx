@@ -110,7 +110,6 @@ function CreativeTable(props) {
             onConfirm={onDelete}
             okText="Yes"
             cancelText="No"
-            className="aaaaa"
           >
             <Button
               danger

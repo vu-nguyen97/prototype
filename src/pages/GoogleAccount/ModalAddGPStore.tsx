@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 function ModalAddGPStore(props) {
   const [form] = Form.useForm();
-  const { isOpen, onClose, setIsLoading } = props;
+  const { isOpen, onClose, setIsLoading, setListGPStore } = props;
   const [listContainer, setListContainer] = useState<any>([]);
   const navigate = useNavigate();
 
@@ -37,7 +37,13 @@ function ModalAddGPStore(props) {
             { type: "success" }
           );
           setIsLoading(false);
-          window.location.reload();
+          onCloseModal();
+
+          const newData = res.results;
+          if (!newData?.id) return;
+          setListGPStore((prev) =>
+            prev?.length ? [...prev, newData] : [newData]
+          );
         },
         () => setIsLoading(false)
       );
@@ -52,7 +58,7 @@ function ModalAddGPStore(props) {
       onFinish={onAddGPStore}
     >
       <Modal
-        title="Add New Developer Account"
+        title="Add new developer account"
         open={isOpen}
         onCancel={onCloseModal}
         footer={[
@@ -64,7 +70,6 @@ function ModalAddGPStore(props) {
             type="primary"
             htmlType="submit"
             form="FormAddNewGPStore"
-            onClick={onCloseModal}
           >
             Save
           </Button>,
@@ -72,17 +77,21 @@ function ModalAddGPStore(props) {
       >
         <Form.Item
           name="accountName"
-          label="Account Name"
-          rules={[{ required: true, message: "Please enter Account Name" }]}
+          label="Account name"
+          rules={[{ required: true, message: "Please enter account name" }]}
         >
-          <AntInput allowClear placeholder="Enter a Name" className="w-full" />
+          <AntInput allowClear placeholder="Enter a name" className="w-full" />
         </Form.Item>
         <Form.Item
           name="accountId"
-          label="Account Id"
-          rules={[{ required: true, message: "Please enter Account ID" }]}
+          label="Account id"
+          rules={[{ required: true, message: "Please enter account id" }]}
         >
-          <AntInput allowClear className="w-full" />
+          <AntInput
+            allowClear
+            placeholder="Enter an account id"
+            className="w-full"
+          />
         </Form.Item>
         <Form.Item
           name="email"
@@ -104,6 +113,7 @@ ModalAddGPStore.propTypes = {
   isOpen: PropTypes.bool,
   onClose: PropTypes.func,
   setIsLoading: PropTypes.func,
+  setListGPStore: PropTypes.func,
 };
 
 export default ModalAddGPStore;

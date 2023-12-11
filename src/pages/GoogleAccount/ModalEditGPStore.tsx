@@ -10,7 +10,7 @@ import { Select } from "antd";
 
 function ModalEditGPStore(props) {
   const [form] = Form.useForm();
-  const { isOpen, onClose, setIsLoading, data } = props;
+  const { isOpen, onClose, setIsLoading, data, setListGPStore } = props;
 
   const onCloseModal = () => {
     onClose();
@@ -30,6 +30,7 @@ function ModalEditGPStore(props) {
 
   const onEditContainer = (values) => {
     const { name, email, container } = values;
+
     setIsLoading(true);
     service
       .put("/google-play-stores/" + data.id, {
@@ -43,11 +44,18 @@ function ModalEditGPStore(props) {
             type: "success",
           });
           setIsLoading(false);
-          window.location.reload();
+          onCloseModal();
+
+          const newData = res.results;
+          if (!newData?.id) return;
+          setListGPStore((prev) =>
+            prev.map((el) => (el.id === data.id ? newData : el))
+          );
         },
         () => setIsLoading(false)
       );
   };
+
   return (
     <Form
       id="ModalEdit"
@@ -70,7 +78,6 @@ function ModalEditGPStore(props) {
             type="primary"
             htmlType="submit"
             form="ModalEdit"
-            onClick={onCloseModal}
           >
             Save
           </Button>,
@@ -99,6 +106,7 @@ ModalEditGPStore.propTypes = {
   isOpen: PropTypes.bool,
   onClose: PropTypes.func,
   setIsLoading: PropTypes.func,
+  setListGPStore: PropTypes.func,
   data: PropTypes.any,
 };
 

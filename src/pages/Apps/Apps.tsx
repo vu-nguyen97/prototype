@@ -3,14 +3,17 @@ import { Select } from "antd";
 import Button from "antd/lib/button/button";
 import AntInput from "antd/lib/input/Input";
 import React, { useEffect, useState } from "react";
-import TimeAgo from 'react-timeago';
+import TimeAgo from "react-timeago";
 import { toast } from "react-toastify";
 import service from "../../partials/services/axios.config";
 import Page from "../../utils/composables/Page";
 import AppTable from "./AppTable";
+import Loading from "../../utils/Loading";
 
 function Apps(props) {
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(false);
+
   const [search, setSearch] = useState("");
   const [listApp, setListApp] = useState<any>([]);
   const [listAppRender, setListAppRender] = useState<any>([]);
@@ -28,25 +31,17 @@ function Apps(props) {
   }, []);
 
   const initData = (listData) => {
-    setIsLoading(false);
-    if (!listData?.length) return setLastSyncAppsAt(0);
+    if (!listData?.length) {
+      setIsLoading(false);
+      return setLastSyncAppsAt(0);
+    }
 
     setListDeveloper(listData);
     setSelectedDeveloperId(listData[0].id);
     setLastSyncAppsAt(Number(listData[0].lastSyncAppsAt));
-  };
 
-  useEffect(() => {
-    setIsLoading(true);
-    service.get("/store-app/devId?devId=" + selectedDeveloperId).then(
-      (res: any) => {
-        setListApp(res.results);
-        setListAppRender(res.results);
-        setIsLoading(false);
-      },
-      () => setIsLoading(false)
-    );
-  }, [selectedDeveloperId]);
+    return getApp(listData[0].id);
+  };
 
   const getApp = (value) => {
     setIsLoading(true);
@@ -65,12 +60,12 @@ function Apps(props) {
     getApp(value);
   };
 
-  const handleSearch = (value) => {
+  const handleSearch = (value, list = listApp) => {
     if (value === null || value === "") {
-      setListAppRender(listApp);
+      setListAppRender(list);
     } else {
       setListAppRender(
-        listApp.filter((app) =>
+        list.filter((app) =>
           app.name.toLowerCase().includes(value.toLowerCase())
         )
       );
@@ -94,8 +89,22 @@ function Apps(props) {
       );
   };
 
+  const linkUnityCb = (res) => {
+    if (!res?.storeId) return;
+
+    const newListApp = listApp.map((el: any) => {
+      if (el.packageId === res.storeId) {
+        return { ...el, unityAppId: res.id, unityGameId: res.gameId };
+      }
+      return el;
+    });
+    setListApp(newListApp);
+    handleSearch(search, newListApp);
+  };
+
   return (
     <Page>
+      {loadingPage && <Loading />}
       <div>
         <div className="page-title">Apps</div>
         <div className="bg-white p-4 rounded-sm shadow mt-2">
@@ -128,7 +137,7 @@ function Apps(props) {
 
         <div className="flex justify-start items-center my-3 min-h-[24px]">
           <span className="flex mr-2">
-            <div className="font-semibold mr-1">Last sync at:</div>
+            <div className="font-semibold mr-1">Last sync:</div>
             <TimeAgo date={lastSyncAppsAt} />
           </span>
           <Button
@@ -140,7 +149,12 @@ function Apps(props) {
             Sync now
           </Button>
         </div>
-        <AppTable listData={listAppRender} isLoading={isLoading} />
+        <AppTable
+          listData={listAppRender}
+          isLoading={isLoading}
+          setLoadingPage={setLoadingPage}
+          linkUnityCb={linkUnityCb}
+        />
       </div>
     </Page>
   );

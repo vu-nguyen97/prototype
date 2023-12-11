@@ -30,7 +30,7 @@ function SelectCustomListing(props) {
     filterOption,
     autoFocus,
     placeholder,
-    onFocusFunc
+    onFocusFunc,
   } = props;
 
   const onGetKey = (data) => {
@@ -39,7 +39,6 @@ function SelectCustomListing(props) {
     }
     return data.storeId + data.name;
   };
-
 
   const listAppEl = listApp?.map((data, idx) => (
     <Select.Option key={data.id} size="large">
@@ -81,7 +80,6 @@ function SelectCustomListing(props) {
       );
     } else {
       setActivedApp(values);
-      console.log(values);
     }
   };
 
@@ -89,7 +87,7 @@ function SelectCustomListing(props) {
     <Select
       loading={loading}
       className={`w-full ${classNames}`}
-      placeholder= {placeholder || "App name / Package name" }
+      placeholder={placeholder || "Select listing"}
       mode={isMultiple ? "multiple" : undefined}
       maxTagCount="responsive"
       maxTagPlaceholder={(v) => maxTagPlaceholder(v, activedApp, onChangeValue)}
@@ -111,7 +109,7 @@ SelectCustomListing.defaultProps = {
   classNames: "",
   isMultiple: false,
   loading: false,
-  autoFocus: true,
+  autoFocus: false,
 };
 
 SelectCustomListing.propTypes = {

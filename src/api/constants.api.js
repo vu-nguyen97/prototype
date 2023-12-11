@@ -10,7 +10,9 @@ export const LIST_EMAIL_BY_APP = "listEmailByApp";
 export const LIST_CURRENCY = "listCurrency";
 export const LIST_STORE = "listStore";
 
+export const GET_UNITY_STORE = "getUnityStore";
 export const GET_STORE_APP_BY_ID = "getStoreAppById";
+export const GET_APP_BY_ID = "getAppById";
 
 // Asset
 export const LIST_ASSETS_BY_FOLDER = "listAssetsByFolder";

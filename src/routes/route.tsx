@@ -7,7 +7,6 @@ import {
 } from "../utils/ProtectedRoutes";
 import { FallbackProvider } from "../utils/composables/FallbackProvider";
 import SeleniumClients from "../pages/SeleniumClients/SeleniumClients";
-import EditMainStoreListing from "../pages/Apps/AppDetails/EditMainStoreListing";
 // import ErrorBoundary from "../utils/ErrorBoundary";
 
 const DefaultLayout = React.lazy(() => import("../partials/layouts/layout"));
@@ -126,17 +125,13 @@ const AppRoutes = () => (
             path="custom-store-listing"
             element={getStoreAppPage(<CustomStoreListing />)}
           />
-          <Route
-            path="edit-main-listing"
-            element={getStoreAppPage(<EditMainStoreListing />)}
-          />
           <Route path="campaigns" element={getAppPage(<Campaigns />)} />
           <Route
             path="campaigns/:campId"
             element={getAppPage(<CampaignDetail />, false)}
           />
           <Route path="themes" element={getAppPage(<AppVariants />)} />
-          <Route path="settings" element={getAppPage(<Settings />)} />
+          {/* <Route path="settings" element={getAppPage(<Settings />)} /> */}
         </Route>
 
         <Route path="add-campaign" element={getPage(<AddCampaign />)} />
@@ -169,9 +164,9 @@ const AppRoutes = () => (
           element={getPage(<Notifications />)}
         />
 
-        <Route path="store-app/:id">
+        {/* <Route path="store-app/:id">
           <Route index element={getPage(<StoreAppDetail />)} />
-        </Route>
+        </Route> */}
 
         <Route path="release" element={getPage(<Releases />)} />
 

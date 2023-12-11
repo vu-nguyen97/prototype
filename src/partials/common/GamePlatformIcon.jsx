@@ -10,7 +10,7 @@ function GamePlatformIcon(props) {
 
   const defaultImgClass =
     "w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-md lg:rounded-2xl";
-  const inputSizeImgClass = "w-5 h-5 rounded-[0.15rem] mr-[21px]";
+  const inputSizeImgClass = "w-5 h-5 rounded-[0.15rem] mr-[10px]";
   const imgClassName = inputSize ? inputSizeImgClass : defaultImgClass;
 
   return (

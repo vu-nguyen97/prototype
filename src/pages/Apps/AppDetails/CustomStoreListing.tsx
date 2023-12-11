@@ -5,10 +5,12 @@ import { useParams } from "react-router-dom";
 import TimeAgo from "react-timeago";
 import { toast } from "react-toastify";
 import service from "../../../partials/services/axios.config";
-import Loading from "../../../utils/Loading";
 import Page from "../../../utils/composables/Page";
 import CustomStoreListingTable from "./CustomStoreListingTable";
 import ModalAddCustomListing from "./ModalAddCustomListing";
+import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
+import classNames from "classnames";
+
 const CustomStoreListing = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenModalAddApp, setIsOpenModalAddApp] = useState(false);
@@ -17,31 +19,9 @@ const CustomStoreListing = () => {
   const [isDraft, setIsDraft] = useState(false);
   const [task, setTask] = useState<any>();
   const urlParams = useParams();
+
   const onEditData = (record) => {};
   const onDelete = (record) => {};
-  const listData = [
-    {
-      id: 1,
-      name: "store-listing-1",
-      group: "group-1",
-      url: "url-1",
-      extype: "extype-1",
-    },
-    {
-      id: 2,
-      name: "store-listing-2",
-      group: "group-2",
-      url: "url-2",
-      extype: "extype-2",
-    },
-    {
-      id: 3,
-      name: "store-listing-3",
-      group: "group-3",
-      url: "url-3",
-      extype: "extype-3",
-    },
-  ];
 
   useEffect(() => {
     reloadCustomListings();
@@ -89,60 +69,61 @@ const CustomStoreListing = () => {
 
   return (
     <Page>
-      {isLoading && <Loading />}
       <div>
-        <h1 style={{ fontSize: 40, fontWeight: "bold" }}>
-          Custom Store Listing
-        </h1>
-        <h2 style={{ fontSize: 20 }}>
+        <div className="page-title">Custom store listing</div>
+        <div className="mt-1 mb-3">
           Customize your store listing to appeal to specific user segments
-        </h2>
-        <div style={{ paddingTop: 30 }}>
-          <div className="mt-1 sm:mt-0">
-            <div className="flex justify-start my-3 gap-4 items-center">
-              <span className="flex gap-4 items-center">
-                <Button
-                  type="primary"
-                  onClick={(e) => setIsOpenModalAddApp(true)}
-                  disabled={isDraft}
-                >
-                  Create Listing
-                </Button>
-                {isDraft && (
-                  <div className="text-red-500 font-bold">
-                    Cannot have custom url listings for draft apps
-                  </div>
-                )}
-              </span>
-              <span className="ml-auto flex gap-4 items-center">
-                <div className="flex gap-1">
-                  <div className="text-md font-[500]">Last Sync:</div>
-                  {task ? <TimeAgo date={task ? task.createdAt : 0} /> : "None"}
-                </div>
-                <Button
-                  type="primary"
-                  onClick={sendUpdateListingRequest}
-                  disabled={isDraft}
-                  loading={
-                    task
-                      ? task.state === "RUNNING" || task.state === "CREATED"
-                      : false
-                  }
-                >
-                  Sync Now
-                </Button>
-              </span>
-            </div>
+        </div>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => setIsOpenModalAddApp(true)}
+          disabled={isDraft}
+        >
+          Create Listing
+        </Button>
 
+        <div
+          className={classNames(
+            "flex justify-between items-end",
+            isDraft ? "mt-6" : "mt-2"
+          )}
+        >
+          {isDraft && (
             <div>
-              <CustomStoreListingTable
-                isLoading={isLoading}
-                onEdit={onEditData}
-                onDelete={onDelete}
-                listData={customListings}
-              />
+              <span className="text-gray-700 font-bold mr-1">Note:</span>
+              <span className="text-red-500 font-medium">
+                Cannot have custom url listings for draft apps
+              </span>
             </div>
+          )}
+          <div className="ml-auto flex gap-4 items-center">
+            <div className="flex gap-1">
+              <div className="font-semibold">Last Sync:</div>
+              {task ? <TimeAgo date={task.createdAt || 0} /> : "None"}
+            </div>
+            <Button
+              type="primary"
+              onClick={sendUpdateListingRequest}
+              disabled={isDraft}
+              loading={
+                task
+                  ? task.state === "RUNNING" || task.state === "CREATED"
+                  : false
+              }
+            >
+              Sync Now
+            </Button>
           </div>
+        </div>
+
+        <div className="mt-2">
+          <CustomStoreListingTable
+            isLoading={isLoading}
+            onEdit={onEditData}
+            onDelete={onDelete}
+            listData={customListings}
+          />
         </div>
       </div>
       <ModalAddCustomListing

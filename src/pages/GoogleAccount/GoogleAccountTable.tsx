@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import service from "../../partials/services/axios.config";
 import { toast } from "react-toastify";
 import TimeAgoComponent from "../../utils/time/TimeAgoComponent";
+import Popconfirm from "antd/lib/popconfirm";
 
 function GoogleAccountTable(props) {
   const defaultPageSize = 20;
@@ -102,13 +103,20 @@ function GoogleAccountTable(props) {
                 />
               </Tooltip>
 
-              <Tooltip title="Delete account">
-                <DeleteOutlined
-                  size={20}
-                  className="icon-danger text-xl cursor-pointer"
-                  onClick={() => onDelete(record)}
-                />
-              </Tooltip>
+              <Popconfirm
+                placement="left"
+                title="Are you sure to delete this store?"
+                onConfirm={() => onDelete(record)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Tooltip title="Delete connector">
+                  <DeleteOutlined
+                    size={20}
+                    className="icon-danger text-xl cursor-pointer"
+                  />
+                </Tooltip>
+              </Popconfirm>
 
               <Tooltip title="Sync app">
                 <AiOutlineReload

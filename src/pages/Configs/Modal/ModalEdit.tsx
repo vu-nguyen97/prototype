@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import Button from "antd/lib/button";
 import Modal from "antd/lib/modal/Modal";
@@ -6,39 +6,36 @@ import Form from "antd/lib/form";
 import InputNumber from "antd/lib/input-number";
 import { toast } from "react-toastify";
 import {
-  APP_REQUIRED,
   COUNTRY_REQUIRED,
   CURRENCY_REQUIRED,
   VALUE_REQUIRED,
 } from "../../../constants/formMessage";
-import SelectCountry from "../../../partials/common/Forms/SelectCountry";
 import {
-  ALL_APP_OPTION,
-  DEFAULT_BID,
   DEFAULT_BID_STEP,
-  DEFAULT_BUDGET,
   DEFAULT_BUDGET_STEP,
-  USD,
 } from "../../../constants/constants";
 import Select from "antd/lib/select";
 import service from "../../../partials/services/axios.config";
-import SelectStoreApp, {
-  getActivedApp,
-} from "../../../partials/common/Forms/SelectStoreApp";
 import AntInput from "antd/lib/input/Input";
 import SelectCountryFromList from "../../../partials/common/Forms/SelectCountryFromList";
 import { COUNTRIES } from "../../../constants/countries";
-import { EN_LANGUAGE, LANGUAGES } from "../../../constants/languages";
+import { LANGUAGES } from "../../../constants/languages";
 
 function ModalEdit(props) {
   const [form] = Form.useForm();
-  const { isOpen, onClose, data } = props;
+  const { isOpen, onClose, data, setIsLoading, setConfigs } = props;
+
   useEffect(() => {
     if (!data?.id) return;
 
     const { name, totalBudget, dailyBudget, totalDay, bids, language } = data;
-    const bid = bids[0].bid;
-    const country = bids[0].country;
+    let bid;
+    let country;
+    if (bids?.length) {
+      bid = bids[0].bid;
+      country = bids.map((el) => el.country);
+    }
+
     form.setFieldsValue({
       name,
       totalBudget,
@@ -46,40 +43,46 @@ function ModalEdit(props) {
       totalDay,
       bid,
       language,
-      country
+      country,
     });
-    
   }, [data?.id]);
 
   const onFinish = (values) => {
-    console.log(values)
-    const request = {
-      language: values.language,
+    const { bid } = values;
+    let bids: any = [];
+
+    values.country.forEach((country) => {
+      bids.push({ country, bid });
+    });
+
+    const params = {
+      ...values,
       type: "DEFAULT",
-      bids: [{
-        bid: values.bid,
-        country: values.country,
-      }],
-      dailyBudget: values.dailyBudget,
-      totalBudget: values.totalBudget,
-      totalDay: values.totalDay,
-      name: values.name
-    }
-    service.put("/config/"+data.id,request).then(
+      bids,
+      bid: undefined,
+      country: undefined,
+    };
+
+    setIsLoading(true);
+    service.put("/config/" + data.id, params).then(
       (res: any) => {
+        setIsLoading(false);
+        onCloseModal();
         toast(res.message || "Edit config success!", { type: "success" });
+        setConfigs((prev) =>
+          prev.map((el) => {
+            if (el.id === data.id) return { ...el, ...params };
+            return el;
+          })
+        );
       },
+      () => setIsLoading(false)
     );
-    window.location.reload();
-  }
+  };
 
   const onCloseModal = () => {
     onClose();
-
-    setTimeout(() => {
-    }, 300);
   };
-
 
   return (
     <Form
@@ -98,7 +101,12 @@ function ModalEdit(props) {
           <Button key="back" htmlType="button" onClick={onCloseModal}>
             Cancel
           </Button>,
-          <Button key="submit" type="primary" htmlType="submit" form="ModalEditConfig" onClick={onCloseModal}>
+          <Button
+            key="submit"
+            type="primary"
+            htmlType="submit"
+            form="ModalEditConfig"
+          >
             Edit
           </Button>,
         ]}
@@ -169,9 +177,9 @@ function ModalEdit(props) {
 ModalEdit.propTypes = {
   isOpen: PropTypes.bool,
   onClose: PropTypes.func,
-  onFinish: PropTypes.func,
   setIsLoading: PropTypes.func,
-  data: PropTypes.any
+  setConfigs: PropTypes.func,
+  data: PropTypes.any,
 };
 
 export default ModalEdit;

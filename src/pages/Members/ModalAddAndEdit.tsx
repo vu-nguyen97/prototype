@@ -36,30 +36,28 @@ function ModalAddAndEdit(props) {
   const handleChange = (value) => {
     setSelectedValue(value);
   };
-  useEffect(() => {
-    if (!memberData?.id) return;
 
-    const { storeApps, email, role } = memberData;
-    let newApps;
-    if (storeApps && Array.isArray(storeApps)) {
-      newApps = storeApps.map((el) => el.storeId + el.name);
-      setActivedApp(newApps);
-    }
+  // useEffect(() => {
+  //   if (!memberData?.id) return;
 
-    form.setFieldsValue({
-      apps: newApps,
-      email,
-      role: role.name,
-    });
-    setActivedRole(role.name);
-  }, [memberData?.id]);
+  //   const { storeId, email, role } = memberData;
+
+  //   setActivedApp(storeId);
+  //   form.setFieldsValue({
+  //     storeId,
+  //     email,
+  //     role,
+  //   });
+  //   setActivedRole(role);
+  // }, [memberData?.id]);
 
   const initialValues = {
     apps: [],
     email: "",
     role: defaultRole,
   };
-  const isEditMode = !!memberData?.id;
+  const isEditMode = false; // Project prototype ko cho sửa
+  // const isEditMode = !!memberData?.id;
 
   const onCloseModal = () => {
     onClose();
@@ -73,11 +71,11 @@ function ModalAddAndEdit(props) {
 
   const onFinish = (values) => {
     const { apps, storeId, email, role } = values;
-    const storeApps = apps?.map((str) => getActivedApp(listStoreApps, str));
 
-    if (isEditMode) {
-      return onSubmitEditUser(role, storeApps);
-    }
+    // const storeApps = apps?.map((str) => getActivedApp(listStoreApps, str));
+    // if (isEditMode) {
+    //   return onSubmitEditUser(role, storeApps);
+    // }
 
     onSubmitInviteUser(email, role, storeId);
   };
@@ -95,35 +93,6 @@ function ModalAddAndEdit(props) {
         toast(res.message || "Invite member success!", { type: "success" });
         setIsLoading(false);
         onCloseModal();
-        window.location.reload();
-      },
-      () => setIsLoading(false)
-    );
-  };
-
-  const onSubmitEditUser = (role, storeApps) => {
-    const params = {
-      id: memberData?.id,
-      role,
-      storeAppIds: storeApps?.map((el) => el.id),
-    };
-
-    setIsLoading(true);
-    service.put("/user/role", params).then(
-      (res: any) => {
-        toast(res.message, { type: "success" });
-        setIsLoading(false);
-        onCloseModal();
-
-        const foundIndex = listMember.findIndex(
-          (item) => item.id === memberData.id
-        );
-        if (foundIndex !== -1) {
-          const newTableData = listMember;
-          newTableData.splice(foundIndex, 1, res.results);
-          setListMember(newTableData);
-        }
-        window.location.reload();
       },
       () => setIsLoading(false)
     );
@@ -162,7 +131,7 @@ function ModalAddAndEdit(props) {
           label="Role"
           rules={[{ required: true, message: OPTION_REQUIRED }]}
         >
-          <Input defaultValue="Default Value" disabled className="w-full" />
+          <Input disabled className="w-full" />
         </Form.Item>
 
         <Form.Item
@@ -178,6 +147,7 @@ function ModalAddAndEdit(props) {
         </Form.Item>
         <Form.Item name="storeId" label="Store">
           <Select
+            placeholder="Select store"
             value={selectedValue}
             onChange={handleChange}
             className="w-full"
