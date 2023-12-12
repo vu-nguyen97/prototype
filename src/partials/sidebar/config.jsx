@@ -11,15 +11,18 @@ import { AiOutlineNodeIndex } from "@react-icons/all-files/ai/AiOutlineNodeIndex
 import { BiPalette } from "@react-icons/all-files/bi/BiPalette";
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdNewReleases } from "react-icons/md";
+import { GoChecklist } from "react-icons/go";
+import { MdOutlineCyclone } from "react-icons/md";
+import { DEFAULT_SIDEBAR_TAB } from "../../constants/constants";
 
 export const SidebarConfigs = [
-  {
-    id: 0,
-    url: "/",
-    label: "Dashboard",
-    iconEl: <AiOutlineDashboard size={20} />,
-    preload: () => import("../../pages/Dashboard/Dashboard"),
-  },
+  // {
+  //   id: DEFAULT_SIDEBAR_TAB, // DEFAULT_SIDEBAR_TAB = 0
+  //   url: "/",
+  //   label: "Dashboard",
+  //   iconEl: <AiOutlineDashboard size={20} />,
+  //   preload: () => import("../../pages/Dashboard/Dashboard"),
+  // },
   {
     id: 1,
     url: "/apps",
@@ -28,7 +31,7 @@ export const SidebarConfigs = [
     preload: () => import("../../pages/Apps/Apps"),
   },
   {
-    id: 2,
+    id: DEFAULT_SIDEBAR_TAB,
     url: "/cpi-campaigns",
     label: "CPI Campaigns",
     iconEl: <FaGooglePlay size={16} />,
@@ -104,13 +107,13 @@ export const SidebarAppConfigs = [
     iconEl: <BiPalette size={20} />,
     preload: () => import("../../pages/App/Variants/AppVariants"),
   },
-  {
-    id: 6,
-    url: "/settings",
-    label: "Settings",
-    iconEl: <AiOutlineSetting size={20} />,
-    preload: () => import("../../pages/App/setting/Settings"),
-  },
+  // {
+  //   id: 6,
+  //   url: "/settings",
+  //   label: "Settings",
+  //   iconEl: <AiOutlineSetting size={20} />,
+  //   preload: () => import("../../pages/App/setting/Settings"),
+  // },
 ];
 
 export const SidebarStoreAppConfigs = [
@@ -118,21 +121,14 @@ export const SidebarStoreAppConfigs = [
     id: 0,
     url: "/main-store-listing",
     label: "Main Store Listing",
-    iconEl: <AiOutlineDashboard size={20} />,
+    iconEl: <GoChecklist size={20} />,
     preload: () => import("../../pages/Apps/AppDetails/MainStoreListing"),
-  },
-  {
-    id: 2,
-    url: "/edit-main-listing",
-    label: "Edit Main Store Listing",
-    iconEl: <AiOutlineEdit size={20} />,
-    preload: () => import("../../pages/Apps/AppDetails/EditMainStoreListing"),
   },
   {
     id: 1,
     url: "/custom-store-listing",
     label: "Custom Store Listing",
-    iconEl: <BiPalette size={20} />,
+    iconEl: <MdOutlineCyclone size={20} />,
     preload: () => import("../../pages/Apps/AppDetails/CustomStoreListing"),
   },
 ];

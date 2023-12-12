@@ -1,74 +1,57 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Page from "../../../utils/composables/Page";
 import LineChart from "./Charts/LineChart";
-import BarChart from "./Charts/BarChart";
-import PieChart from "./Charts/PieChart"
-import DoughnutChart from "./Charts/DoughnutChart";
-import StackBarChart from "./Charts/StackBarChart";
 import service from "../../../partials/services/axios.config";
-import Loading from "../../../utils/Loading";
-import Dropdown from "antd/lib/dropdown";
-import MoreOutlined from "@ant-design/icons/lib/icons/MoreOutlined";
-import Container from "./Components/Container"
 import { useParams } from "react-router-dom";
+
+const SupportedCharts = [
+  { key: "1", label: "PieChart" },
+  { key: "2", label: "DoughnutChart" },
+  { key: "3", label: "BarChart" },
+];
+
 function Overview(props) {
-    const [listReport, setListReport] = useState<any>([]);
-    const [listAppVariant, setListAppVariant] = useState<any>([]);
-    const [listAds, setListAds] = useState<any>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [criteria, setCriteria] = useState("0");
-    let {appId} = useParams();
-    useEffect(() => {
-        setIsLoading(true);
-        service.get("/report?CPICampaignId="+appId).then(
-            (res: any) => {
-                setListReport(res.results);
-                console.log(res.results)
-                setIsLoading(false);
-            },
-            () => setIsLoading(false)
-        );
-    }, []);
+  const { appId } = useParams();
+  const [listReport, setListReport] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setIsLoading(true);
+    service.get("/report?CPICampaignId=" + appId).then(
+      (res: any) => {
+        setListReport(res.results);
+        setIsLoading(false);
+      },
+      () => setIsLoading(false)
+    );
+  }, []);
+
+  const listCharts = [
+    { id: 0, label: "IMPRESSION", field: "impression" },
+    { id: 1, label: "CLICK", field: "click" },
+    { id: 2, label: "INSTALL", field: "install" },
+    { id: 3, label: "COST", field: "cost" },
+  ];
 
   return (
     <Page>
-      {isLoading ? <Loading/>:
-      <div className="bg-white p-4 rounded-sm shadow mt-2" id="OverviewPage">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-6 gap-x-6">
-            <div>
-            <div className="w-100 border-black border-2 ml-5 mr-5 mt-1 mb-1 text-center">
-                  <h1  className="text-xl mt-3">IMPRESSION</h1>
-                  <Container listReport = {listReport} listChart = {[{ key: "1", label: "PieChart" },
-                      { key: "2", label: "DoughnutChart"},
-                      { key: "3", label: "BarChart"}]} criteria="0"/>
-              </div>
-            </div>
-            <div>
-            <div className="w-100 border-black border-2 ml-5 mr-5 mt-1 mb-1 text-center">
-                  <h1  className="text-xl mt-3">CLICK</h1>
-                  <Container listReport = {listReport} listChart = {[{ key: "1", label: "PieChart" },
-                      { key: "2", label: "DoughnutChart"},
-                      { key: "3", label: "BarChart"}]} criteria="1"/>
-              </div>
-            </div>
-            <div>
-            <div className="w-100 border-black border-2 ml-5 mr-5 mt-1 mb-1 text-center">
-                  <h1  className="text-xl mt-3">INSTALL</h1>
-                  <Container listReport = {listReport} listChart = {[{ key: "1", label: "PieChart" },
-                      { key: "2", label: "DoughnutChart"},
-                      { key: "3", label: "BarChart"}]} criteria="2"/>
-              </div>
-            </div>
-            <div>
-            <div  className="w-100 border-black border-2 ml-5 mr-5 mt-1 mb-1 text-center">
-                  <h1  className="text-xl mt-3">COST</h1>
-                  <Container listReport = {listReport} listChart = {[{ key: "1", label: "PieChart" },
-                      { key: "2", label: "DoughnutChart"},
-                      { key: "3", label: "BarChart"}]} criteria="3"/>
-              </div>
+      <div className="page-title">Overview</div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 lg:gap-x-16 mt-3">
+        {listCharts.map((el) => (
+          <div className="bg-white rounded-md border shadow-lg" key={el.id}>
+            <h1 className="font-semibold text-center text-base mt-4">
+              {el.label}
+            </h1>
+            <div className="h-[350px] xs:h-[460px] p-3 xs:p-5 pt-3">
+              <LineChart
+                isLoading={isLoading}
+                data={listReport}
+                field={el.field}
+              />
             </div>
           </div>
-      </div>}
+        ))}
+      </div>
     </Page>
   );
 }

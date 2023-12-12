@@ -6,6 +6,7 @@ import {
   PROTOTYPE_CAMP_PATH,
   SIDEBAR_EXPANDED,
   APP_PATH,
+  DEFAULT_SIDEBAR_TAB,
 } from "../../constants/constants";
 import classNames from "classnames";
 import { useDispatch } from "react-redux";
@@ -13,8 +14,8 @@ import { getSubOrganizationUrl } from "../../utils/Helpers";
 import { BiArrowBack } from "@react-icons/all-files/bi/BiArrowBack";
 import GamePlatformIcon from "../common/GamePlatformIcon";
 import { useQuery } from "@tanstack/react-query";
-import { getCpiCampaignById } from "../../api/common/common.api";
-import { GET_STORE_APP_BY_ID } from "../../api/constants.api";
+import { getAppById, getCpiCampaignById } from "../../api/common/common.api";
+import { GET_APP_BY_ID, GET_STORE_APP_BY_ID } from "../../api/constants.api";
 import Skeleton from "antd/lib/skeleton/Skeleton";
 import Transition from "../../utils/Transition";
 import Navs from "./Navs";
@@ -68,13 +69,30 @@ function Sidebar({
     getCpiCampaignById,
     {
       staleTime: 5 * 60000,
-      enabled: !!urlParams.appId,
+      enabled: !!urlParams.appId && isDetailApp,
+    }
+  );
+
+  const { data: storeListingRes } = useQuery(
+    [GET_APP_BY_ID, urlParams.appId],
+    getAppById,
+    {
+      staleTime: 5 * 60000,
+      enabled: !!urlParams.appId && isStoreApp,
     }
   );
 
   useEffect(() => {
-    setAppState(storeAppRes?.results || {});
+    const data = storeAppRes?.results || {};
+    if (!Object.keys(data).length) return;
+    setAppState(data);
   }, [storeAppRes]);
+
+  useEffect(() => {
+    const data = storeListingRes?.results || {};
+    if (!Object.keys(data).length) return;
+    setAppState(data);
+  }, [storeListingRes]);
 
   // close on click outside
   useEffect(() => {
@@ -145,7 +163,7 @@ function Sidebar({
         }
       });
     });
-    setActivedNav(activedTab);
+    setActivedNav(activedTab === undefined ? DEFAULT_SIDEBAR_TAB : activedTab);
     setInitActivedSubNav(activedSubTab);
   };
 
@@ -209,7 +227,7 @@ function Sidebar({
         <div className="my-7">
           <div>
             <div className="text-white flex items-center">
-              <div className="flex-1 flex items-center">
+              <div className="w-full flex items-center">
                 {appState?.icon ? (
                   <GamePlatformIcon
                     app={appState}
@@ -222,7 +240,7 @@ function Sidebar({
                 <Transition
                   unmountOnExit
                   show={sidebarExpanded}
-                  className="text-base font-semibold ml-3.5 transform ease-in line-clamp-2 break-all"
+                  className="text-base font-semibold ml-3.5 transform ease-in line-clamp-2 break-words"
                   enterStart="opacity-0"
                   entering="whitespace-nowrap"
                   enterEndDelay="200"

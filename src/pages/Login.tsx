@@ -8,7 +8,11 @@ import Page from "../utils/composables/Page";
 import { Logo, PageBg } from "../utils/helper/UIHelper";
 import { useDispatch } from "react-redux";
 import { login, updateUser } from "../redux/account/accountSlice";
-import { REMEMBER_PASSWORD, ROLES } from "../constants/constants";
+import {
+  DEFAULT_ROUTE,
+  REMEMBER_PASSWORD,
+  ROLES,
+} from "../constants/constants";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -63,9 +67,9 @@ const Login = () => {
                 return navigate(from);
               }
 
-              navigate("/");
+              navigate(DEFAULT_ROUTE);
             },
-            () => navigate("/")
+            () => navigate(DEFAULT_ROUTE)
           );
         },
         () => setIsLoading(false)

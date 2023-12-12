@@ -3,6 +3,10 @@ export const REMEMBER_PASSWORD = "remember-password";
 export const ORGANIZATION_PATH = "/organizations";
 export const APP_PATH = "/apps";
 export const PROTOTYPE_CAMP_PATH = "/cpi-campaigns";
+// Login xong sẽ vào trang này đầu tiên
+// Check lại route đặc biệt: <Route path="" ... /> ở file route.tsx
+export const DEFAULT_ROUTE = PROTOTYPE_CAMP_PATH;
+export const DEFAULT_SIDEBAR_TAB = 0;
 
 export const NOT_A_NUMBER = "N/A";
 export const USD = "USD";

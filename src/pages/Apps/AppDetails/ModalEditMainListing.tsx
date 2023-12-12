@@ -179,7 +179,6 @@ export default function ModalEditMainListing(props) {
             return (
               <DynamicUpload
                 key={field}
-                className={"font-bold"}
                 field={field}
                 label={label}
                 note={note}

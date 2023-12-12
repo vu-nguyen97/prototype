@@ -10,27 +10,29 @@ import {
   sortByString,
   sortNumberWithNullable,
 } from "../../utils/Helpers";
+import { Link } from "react-router-dom";
+import Tooltip from "antd/lib/tooltip";
 
 function AppTable(props) {
   const defaultPageSize = 10;
   const [pageSize, setPageSize] = useState(defaultPageSize);
-  const { listData, isLoading } = props;
+  const { listData, isLoading, setLoadingPage, linkUnityCb } = props;
 
   const createUnityApp = (record) => {
+    setLoadingPage(true);
     service
       .post("/create-unity-app", {
         store: "google",
         storeId: record.packageId,
       })
-      .then((res: any) => {
-        toast(res.message, { type: "success" });
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
-      })
-      .catch((error) => {
-        toast(error.message, { type: "error" });
-      });
+      .then(
+        (res: any) => {
+          setLoadingPage(false);
+          toast(res.message, { type: "success" });
+          linkUnityCb(res.results);
+        },
+        () => setLoadingPage(false)
+      );
   };
 
   const columns = [
@@ -38,15 +40,13 @@ function AppTable(props) {
       title: "Name",
       sorter: sortByString("name"),
       render: (record) => (
-        <div
-          className="flex items-center space-x-2 md:ml-1.5 cursor-pointer"
-          onClick={() => {
-            window.location.href = `/apps/${record.consoleAppId}/main-store-listing`;
-          }}
+        <Link
+          to={`/apps/${record.consoleAppId}/main-store-listing`}
+          className="flex items-center space-x-2 md:ml-1.5 !text-blue-600 hover:!text-blue-600/80"
         >
           <img src={record.icon} className="w-8 h-8 rounded" />
           <div>{record.name}</div>
-        </div>
+        </Link>
       ),
     },
     {
@@ -99,25 +99,15 @@ function AppTable(props) {
               </div>
             ) : (
               <div className="flex items-center cursor-pointer">
-                <span
-                  className="text-blue-400 ml-0.5 cursor-pointer"
-                  onClick={() => createUnityApp(record)}
-                >
-                  <u>Link now</u>
-                </span>
+                <Tooltip title="Link this app to Unity">
+                  <span
+                    className="text-blue-400 ml-0.5 cursor-pointer underline"
+                    onClick={() => createUnityApp(record)}
+                  >
+                    Link now
+                  </span>
+                </Tooltip>
               </div>
-              // <div className="flex items-center space-x-2">
-              //   <Tooltip title="Not linked yet">
-              //     <AiOutlineClose size={20} color="red" />
-              //   </Tooltip>
-              //   <Tooltip title="Link Unity App" arrowPointAtCenter>
-              //     <AiOutlineUpload
-              //       size={20}
-              //       className="text-slate-600 hover:text-antPrimary cursor-pointer"
-              //       onClick={() => createUnityApp(record)}
-              //     />
-              //   </Tooltip>
-              // </div>
             )}
           </>
         );
@@ -155,6 +145,8 @@ AppTable.defaultProps = {
 AppTable.propTypes = {
   isLoading: PropTypes.bool,
   listData: PropTypes.array,
+  setLoadingPage: PropTypes.func,
+  linkUnityCb: PropTypes.func,
 };
 
 export default AppTable;

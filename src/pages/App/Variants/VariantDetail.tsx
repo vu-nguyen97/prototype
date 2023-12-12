@@ -8,6 +8,7 @@ const { Panel } = Collapse;
 
 const onCollapseChange = () => {};
 
+// Page này hiện tại ko dùng
 function VariantDetail(props) {
   const {
     data,
@@ -40,14 +41,23 @@ function VariantDetail(props) {
           <div>
             <Collapse defaultActiveKey={["1"]} onChange={onCollapseChange}>
               <Panel header="Custom listing" key="1">
-                <NewListing viewOnlyMode={true} customListing={data.customListing} idx={idx} />
+                <NewListing
+                  viewOnlyMode={true}
+                  customListing={data.customListing}
+                  idx={idx}
+                />
               </Panel>
               <Panel header={unityPanelHeader} key="2">
                 {data && unityAds ? (
                   unityAds.unityCampaignId ? (
                     <UnityAdsDetail data={unityAds} />
                   ) : (
-                    <UnityAdsDetail data={unityAds} finished={false} appVariantId={data.id} setUnityAds={setUnityAds} />
+                    <UnityAdsDetail
+                      data={unityAds}
+                      finished={false}
+                      appVariantId={data.id}
+                      setUnityAds={setUnityAds}
+                    />
                   )
                 ) : (
                   <AddCampaigns

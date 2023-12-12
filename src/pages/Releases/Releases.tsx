@@ -55,6 +55,7 @@ function Releases() {
     Modal.info({
       icon: <></>,
       closable: true,
+      maskClosable: true,
       width: 900,
       content: <AppTemplate templateData={templateData} />,
     });

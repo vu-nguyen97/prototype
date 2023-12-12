@@ -36,7 +36,6 @@ function Step3(props) {
     if (initData) {
       const { creatives, creativeFiles } = initData;
       setCreatives(creatives);
-      console.log('creativeFiles', creativeFiles)
       setCreativeUpload(creativeFiles || {});
       form.setFieldsValue(initData);
     }
@@ -114,7 +113,6 @@ function Step3(props) {
 
       <Form.Item label="Creative">
         <DynamicUpload
-          className="font-bold"
           field={creativeField}
           multiple
           accept={".png, .jpeg, .mp4"}
