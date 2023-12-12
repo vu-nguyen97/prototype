@@ -32,7 +32,8 @@ const MemberTable = (props) => {
   const defaultPageSize = 20;
   const [pageSize, setPageSize] = useState(defaultPageSize);
 
-  const { onEdit, listData, onDeactive, onActive, onSearchTable } = props;
+  const { onEdit, listData, onDeactive, onActive, onSearchTable, isLoading } =
+    props;
 
   const columns = [
     {
@@ -137,6 +138,7 @@ const MemberTable = (props) => {
       id="member-table"
       getPopupContainer={() => document.getElementById("member-table")!}
       rowKey={(record) => record.id}
+      loading={isLoading}
       // @ts-ignore
       columns={columns}
       rowClassName={(record) => (record.active ? "" : "text-red-500")}
@@ -153,6 +155,7 @@ MemberTable.defaultProps = {
 };
 
 MemberTable.propTypes = {
+  isLoading: PropTypes.bool,
   listData: PropTypes.array,
   onEdit: PropTypes.func,
   onDeactive: PropTypes.func,

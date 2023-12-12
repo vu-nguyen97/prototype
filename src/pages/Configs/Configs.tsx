@@ -111,7 +111,7 @@ export default function Configs() {
         columns={columns}
         dataSource={filteredData}
         rowKey={(rd) => rd.id}
-        scroll={{ x: 600 }}
+        scroll={{ x: 800 }}
         loading={isLoading}
         pagination={pagination}
         onChange={onChangeTable}

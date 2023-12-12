@@ -87,6 +87,8 @@ export default function AppVariants(props) {
       name: campaignName,
     };
 
+    if (!submitCb) return; // check and remove
+
     setIsLoading(true);
     service.post("/cpi-campaigns", params).then(
       (res: any) => {
@@ -147,8 +149,9 @@ export default function AppVariants(props) {
             - The Unity Ads campaign name is automatically by combining the CPI
             Campaign name with the Listing name.
           </li>
-          <li className="pl-2.5 mb-0.5">
-            Example: (prttat_special_force_dark | prttat_special_force_light)
+          <li className="xs:pl-2.5 mb-0.5">
+            <span className="font-semibold">Example:</span>{" "}
+            (prttat_special_force_dark | prttat_special_force_light)
           </li>
           <li>
             - The Unity Ads budget is configured automatically by default.
@@ -220,7 +223,7 @@ export default function AppVariants(props) {
               />
             </div>
           </div>
-          {!submitCb && (
+          {/* {!submitCb && (
             <Button
               type="primary"
               className="min-w-[120px] mt-6 mb-4"
@@ -229,7 +232,7 @@ export default function AppVariants(props) {
             >
               Submit
             </Button>
-          )}
+          )} */}
         </Form>
       </div>
     </>

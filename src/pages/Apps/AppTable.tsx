@@ -52,11 +52,7 @@ function AppTable(props) {
     {
       title: "PackageId",
       sorter: sortByString("packageId"),
-      render: (record) => (
-        <div className="whitespace-nowrap md:whitespace-normal">
-          {record.packageId}
-        </div>
-      ),
+      render: (record) => <div className="break-all">{record.packageId}</div>,
     },
     {
       title: "App Status",
@@ -129,7 +125,7 @@ function AppTable(props) {
       columns={columns}
       loading={isLoading}
       dataSource={[...listData]}
-      scroll={{ x: 600 }}
+      scroll={{ x: 900 }}
       size="middle"
       pagination={pagination}
       onChange={(pagination) => {

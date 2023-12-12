@@ -16,24 +16,18 @@ function SeleniumClientsTable(props) {
       title: "ID",
       render: (record) => (
         <div className="flex items-center">
-          <div className="">{record.id}</div>
+          <div className="break-all md:break-normal">{record.id}</div>
         </div>
       ),
     },
     {
       title: "Account",
-      render: (record) => (
-        <div className="whitespace-nowrap md:whitespace-normal">
-          {record.name}
-        </div>
-      ),
+      render: (record) => <div>{record.name}</div>,
     },
     {
-      title: "Task Type",
+      title: "Task type",
       render: (record) => (
-        <div className="whitespace-nowrap md:whitespace-normal">
-          {record.type==null?"None":record.type}
-        </div>
+        <div>{record.type == null ? "None" : record.type}</div>
       ),
     },
     {
@@ -41,7 +35,7 @@ function SeleniumClientsTable(props) {
       render: (record) => formatState(record?.state),
     },
     {
-      title: "Last Ping",
+      title: "Last ping",
       render: (record) => <TimeAgoComponent createDate={record?.lastPing} />,
     },
   ];
@@ -90,7 +84,7 @@ function SeleniumClientsTable(props) {
       columns={columns}
       loading={isLoading}
       dataSource={[...listData]}
-      scroll={{ x: 600 }}
+      scroll={{ x: 700 }}
       pagination={pagination}
       onChange={(pagination) => {
         pagination?.pageSize && setPageSize(pagination?.pageSize);
