@@ -70,7 +70,7 @@ const getBarChartData = (listData, field) => {
   ].sort((a: any, b: any) => moment(a).diff(moment(b)));
 
   const datasets = [
-    ...new Set(listData.map((report) => report?.campaignName)),
+    ...new Set(listData.map((report) => report?.listingName)),
   ].map((name, idx) => {
     const maxColor = CHART_COLORS.length;
     const color = idx < maxColor ? CHART_COLORS[idx] : getRandomColor();
@@ -78,7 +78,7 @@ const getBarChartData = (listData, field) => {
     return {
       label: name,
       data: listData
-        .filter((report) => report?.campaignName === name)
+        .filter((report) => report?.listingName === name)
         .map((report) => report[field]),
       fill: false,
       tension: 0.1,

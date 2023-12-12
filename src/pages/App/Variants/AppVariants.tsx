@@ -26,6 +26,7 @@ import moment from "moment";
 import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import message from "antd/lib/message";
 
 export const FORM_LISTING = "FormListing";
 
@@ -80,6 +81,10 @@ export default function AppVariants(props) {
     const { app, campaignName, time } = values;
     const id = getActivedApp(listStoreApps, app)?.id;
 
+    if (groups?.length === 1) {
+      return message.error("Please create at least two group listings!");
+    }
+
     const params: any = {
       scheduleStart: moment(time[0]).format(DATE_RANGE_FORMAT),
       scheduleEnd: moment(time[1]).format(DATE_RANGE_FORMAT),
@@ -94,43 +99,47 @@ export default function AppVariants(props) {
       (res: any) => {
         const campId = res.results?.id;
         if (!campId) return setIsLoading(false);
-
-        const listPromises: any = [];
-        groups.forEach((item: Group, index) => {
-          const formData = new FormData();
-
-          formData.append("customListingId", item.listing!);
-          item.creatives.forEach((file, fileIndex) => {
-            formData.append("files", file);
-          });
-
-          const newPromise = service.post(
-            `/cpi-campaigns/app-variants?campaignId=${campId}`,
-            formData
-          );
-          listPromises.push(newPromise);
-        });
-
-        Promise.all(listPromises).then(
-          (appVariantsRes: any) => {
-            setIsLoading(false);
-            toast("Your campaign has been successfully created!", {
-              type: "success",
-            });
-
-            if (submitCb) {
-              form.resetFields();
-              submitCb(res.results);
-              setGroups(defaultGroups);
-              setActiveKey([defaultGroups[0].id]);
-            }
-          },
-          () => setIsLoading(false)
-        );
+        processPromisesSequentially(groups, campId);
       },
       () => setIsLoading(false)
     );
   };
+
+  async function processPromisesSequentially(groups, campId) {
+    const totalPromises = groups.length;
+    let completedPromises = 0;
+
+    for (const item of groups) {
+      const formData = new FormData();
+      formData.append("customListingId", item.listing);
+      for (const file of item.creatives) {
+        formData.append("files", file);
+      }
+
+      try {
+        const response = await service.post(
+          `/cpi-campaigns/app-variants?campaignId=${campId}`,
+          formData
+        );
+        completedPromises++;
+        if (completedPromises === totalPromises) {
+          setIsLoading(false);
+          toast("Your campaign has been successfully created!", {
+            type: "success",
+          });
+
+          if (submitCb) {
+            form.resetFields();
+            submitCb();
+            setGroups(defaultGroups);
+            setActiveKey([defaultGroups[0].id]);
+          }
+        }
+      } catch (error) {
+        setIsLoading(false);
+      }
+    }
+  }
 
   const sessionTitle = "font-bold text-lg text-black";
   const contentComp = (
