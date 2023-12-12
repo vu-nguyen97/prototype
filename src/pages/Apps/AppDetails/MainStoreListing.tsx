@@ -44,15 +44,19 @@ const MainStoreListing = () => {
     setAppState(data);
   }, [storeListingRes]);
 
-  const getViewableImg = (url, classNames = "") => (
-    <img
-      src={url}
-      title="Click to view this image"
-      alt={mainListing?.appName}
-      className={`cursor-pointer ${classNames}`}
-      onClick={() => setImgPreview({ url })}
-    />
-  );
+  const getViewableImg = (url, classNames = "") => {
+    if (!url || typeof url !== "string") return <></>;
+
+    return (
+      <img
+        src={url}
+        title="Click to view this image"
+        alt={mainListing.appName}
+        className={`cursor-pointer ${classNames}`}
+        onClick={() => setImgPreview({ url })}
+      />
+    );
+  };
 
   const viewListImgs = (list) => {
     if (!list?.length) return <></>;
