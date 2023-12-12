@@ -13,6 +13,9 @@ import ImagePreview, {
 } from "../../../partials/common/Modal/ImagePreview";
 import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
 import EditMainStoreListing from "./EditMainStoreListing";
+import { useQuery } from "@tanstack/react-query";
+import { GET_APP_BY_ID } from "../../../api/constants.api";
+import { getAppById } from "../../../api/common/common.api";
 
 const MainStoreListing = () => {
   const urlParams = useParams();
@@ -21,8 +24,25 @@ const MainStoreListing = () => {
   const [imgPreview, setImgPreview] = useState<ImgFile>({});
   const [mainListing, setMainListing] = useState<any>();
   const [isEdit, setIsEdit] = useState(false);
+  const [appState, setAppState] = useState<any>({});
+  const [items, setItems] = useState<any>([]);
 
   const [task, setTask] = useState<any>();
+
+  const { data: storeListingRes } = useQuery(
+    [GET_APP_BY_ID, urlParams.appId],
+    getAppById,
+    {
+      staleTime: 5 * 60000,
+      enabled: !!urlParams.appId,
+    }
+  );
+
+  useEffect(() => {
+    const data = storeListingRes?.results || {};
+    if (!Object.keys(data).length) return;
+    setAppState(data);
+  }, [storeListingRes]);
 
   const getViewableImg = (url, classNames = "") => (
     <img
@@ -41,109 +61,121 @@ const MainStoreListing = () => {
       <div className="flex gap-2 flex-wrap">
         {list.map((el, idx) => (
           <React.Fragment key={idx}>
-            {getViewableImg(el, "max-w-[200px]")}
+            {getViewableImg(el, "max-w-[130px] xs:max-w-[200px]")}
           </React.Fragment>
         ))}
       </div>
     );
   };
 
-  const items = [
-    {
-      key: "1",
-      label: "App Name",
-      children: mainListing?.appName,
-      span: 2,
-    },
-    {
-      key: "9",
-      label: "Youtube Video",
-      children: (
-        <a href={mainListing?.youtubeVideoUrl} target="_blank">
-          {mainListing?.youtubeVideoUrl}
-        </a>
-      ),
-      span: 2,
-    },
-    {
-      key: "10",
-      label: "Status",
-      children: (
-        <>
-          {mainListing?.status === "Live" ? (
-            <Badge status="success" text={mainListing?.status} />
-          ) : mainListing?.status === "Changes in review" ? (
-            <Badge status="processing" text={mainListing?.status} />
-          ) : (
-            <Badge status="error" text={mainListing?.status} />
-          )}
-        </>
-      ),
-      span: 2,
-    },
-    {
-      key: "11",
-      label: "Main Listing URL",
-      children: (
-        <a href="https://example.com" target="_blank">
-          https://example.com
-        </a>
-      ),
-      span: 2,
-    },
-    {
-      key: "2",
-      label: "Short Description",
-      children: mainListing?.shortDescription,
-      span: 4,
-    },
-    {
-      key: "3",
-      label: "Full Description",
-      children: (
-        <AntInput.TextArea
-          className="!p-0 !border-0 !ring-0 !outline-0 !outline-transparent"
-          readOnly
-          rows={10}
-          value={mainListing?.fullDescription}
-        />
-      ),
-      span: 4,
-    },
-    {
-      key: "4",
-      label: "App Icon",
-      children: getViewableImg(
-        mainListing?.appIconUrl,
-        "w-[200px] h-[200px] object-cover"
-      ),
-      span: 2,
-    },
-    {
-      key: "5",
-      label: "Feature Graphic",
-      children: getViewableImg(mainListing?.featureGraphicUrl, "object-cover"),
-      span: 2,
-    },
-    {
-      key: "6",
-      label: "Phone Screenshots",
-      children: viewListImgs(mainListing?.phoneScreenshotsUrl),
-      span: 4,
-    },
-    {
-      key: "7",
-      label: "7-inch tablet screenshots",
-      children: viewListImgs(mainListing?.tablet7ScreenshotsUrl),
-      span: 4,
-    },
-    {
-      key: "8",
-      label: "10-inch tablet screenshots",
-      children: viewListImgs(mainListing?.tablet10ScreenshotsUrl),
-      span: 4,
-    },
-  ];
+  useEffect(() => {
+    if (mainListing === undefined) return;
+
+    const customSpan = window.innerWidth < 800 ? 4 : 2;
+    const mainListingUrl =
+      "https://play.google.com/store/apps/details?id=" + appState.packageId;
+
+    const newItems = [
+      {
+        key: "1",
+        label: "App Name",
+        children: mainListing?.appName,
+        span: customSpan,
+      },
+      {
+        key: "9",
+        label: "Youtube Video",
+        children: (
+          <a href={mainListing?.youtubeVideoUrl} target="_blank">
+            {mainListing?.youtubeVideoUrl}
+          </a>
+        ),
+        span: customSpan,
+      },
+      {
+        key: "10",
+        label: "Status",
+        children: (
+          <>
+            {mainListing?.status === "Live" ? (
+              <Badge status="success" text={mainListing?.status} />
+            ) : mainListing?.status === "Changes in review" ? (
+              <Badge status="processing" text={mainListing?.status} />
+            ) : (
+              <Badge status="error" text={mainListing?.status} />
+            )}
+          </>
+        ),
+        span: customSpan,
+      },
+      {
+        key: "11",
+        label: "Main Listing URL",
+        children: mainListingUrl && (
+          <a href={mainListingUrl} target="_blank">
+            {mainListingUrl}
+          </a>
+        ),
+        span: customSpan,
+      },
+      {
+        key: "2",
+        label: "Short Description",
+        children: mainListing?.shortDescription,
+        span: 4,
+      },
+      {
+        key: "3",
+        label: "Full Description",
+        children: (
+          <AntInput.TextArea
+            className="!p-0 !border-0 !ring-0 !outline-0 !outline-transparent"
+            readOnly
+            rows={10}
+            value={mainListing?.fullDescription}
+          />
+        ),
+        span: 4,
+      },
+      {
+        key: "4",
+        label: "App Icon",
+        children: getViewableImg(
+          mainListing?.appIconUrl,
+          "w-32 h-32 xs:w-[200px] xs:h-[200px] object-cover"
+        ),
+        span: customSpan,
+      },
+      {
+        key: "5",
+        label: "Feature Graphic",
+        children: getViewableImg(
+          mainListing?.featureGraphicUrl,
+          "object-cover"
+        ),
+        span: customSpan,
+      },
+      {
+        key: "6",
+        label: "Phone Screenshots",
+        children: viewListImgs(mainListing?.phoneScreenshotsUrl),
+        span: 4,
+      },
+      {
+        key: "7",
+        label: "7-inch tablet screenshots",
+        children: viewListImgs(mainListing?.tablet7ScreenshotsUrl),
+        span: 4,
+      },
+      {
+        key: "8",
+        label: "10-inch tablet screenshots",
+        children: viewListImgs(mainListing?.tablet10ScreenshotsUrl),
+        span: 4,
+      },
+    ];
+    setItems(newItems);
+  }, [mainListing]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -204,7 +236,7 @@ const MainStoreListing = () => {
       </div>
 
       <div className="bg-white p-4 mt-2">
-        <div className="flex gap-4 items-center">
+        <div className="flex flex-col xs:flex-row items-start xs:items-center gap-4">
           <Button
             type="primary"
             onClick={() => fetchMainStoreListing()}
@@ -216,7 +248,7 @@ const MainStoreListing = () => {
           >
             Fetch main store listing
           </Button>
-          <span className="text-md font-medium flex gap-1">
+          <div className="text-md font-medium flex gap-1">
             <span>Last Sync: </span>
             {task ? (
               task.state === "FAILED" ? (
@@ -227,10 +259,11 @@ const MainStoreListing = () => {
             ) : (
               "None"
             )}
-          </span>
+          </div>
         </div>
         {mainListing && (
           <Descriptions
+            size={window.innerWidth < 800 ? "small" : undefined}
             bordered
             column={4}
             labelStyle={{ fontWeight: "bold" }}

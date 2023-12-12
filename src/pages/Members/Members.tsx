@@ -114,7 +114,7 @@ const Members = () => {
         </div>
       </div>
 
-      <div className="mt-3">
+      <div className="mt-2">
         <MemberTable
           onEdit={onEditUser}
           listData={filteredData}

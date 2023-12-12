@@ -367,7 +367,7 @@ function DataConnectors() {
         )}
       </div>
 
-      <div className="mt-3">
+      <div className="mt-2">
         <ConnectorTable
           isAdmin={isAdmin}
           isLoading={isLoadingTable}

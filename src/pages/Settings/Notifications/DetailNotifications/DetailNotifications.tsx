@@ -115,7 +115,7 @@ function DetailNotifications(props) {
           // @ts-ignore
           value={dateRange}
           onChange={onChangeRangePicker}
-          disabledDate={disabledDate}
+          // disabledDate={disabledDate}
           renderExtraFooter={() => (
             <div className="flex py-2.5">
               {EXTRA_FOOTER.map((obj, idx) => (

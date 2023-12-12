@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 
 function ModalEdit(props) {
   const [form] = Form.useForm();
-  const { isOpen, onClose, data, setIsLoading, setTableData } = props;
+  const { isOpen, onClose, data, setIsLoading, updateCb } = props;
 
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
 
@@ -54,7 +54,7 @@ function ModalEdit(props) {
         setIsLoading(false);
         toast(res.message, { type: "success" });
         onCloseModal();
-        // setTableData()
+        updateCb();
       },
       () => setIsLoading(false)
     );

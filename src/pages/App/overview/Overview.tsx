@@ -36,7 +36,7 @@ function Overview(props) {
   return (
     <Page>
       <div className="page-title">Overview</div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 lg:gap-x-16 mt-3">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 lg:gap-x-16 mt-2">
         {listCharts.map((el) => (
           <div className="bg-white rounded-md border shadow-lg" key={el.id}>
             <h1 className="font-semibold text-center text-base mt-4">

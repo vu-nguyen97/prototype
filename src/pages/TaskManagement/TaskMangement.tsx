@@ -8,7 +8,7 @@ import Tag from "antd/lib/tag";
 import Button from "antd/lib/button/button";
 import TaskTable from "./TaskTable";
 import service from "../../partials/services/axios.config";
-import { disabledDate, getLabelFromStr } from "../../utils/Helpers";
+import { getLabelFromStr } from "../../utils/Helpers";
 import { EXTRA_FOOTER } from "../../constants/constants";
 import {
   getLastDay,
@@ -159,7 +159,7 @@ const TaskMangement = () => {
               placeholder="Account"
               value={selectedValue}
               onChange={setSelectedValue}
-              className="xs:!w-[220px] !mx-1 2xl:!mx-2 !mt-3"
+              className="w-full xs:!w-[220px] !mx-1 2xl:!mx-2 !mt-3"
             >
               {listDeveloper.map((item) => (
                 <Select.Option key={item.id} value={item.id}>
@@ -173,7 +173,7 @@ const TaskMangement = () => {
             value={selectedType}
             onChange={setSelectedType}
             placeholder="Type"
-            className="xs:!w-[160px] !mx-1 2xl:!mx-2 !mt-3"
+            className="w-full xs:!w-[160px] !mx-1 2xl:!mx-2 !mt-3"
           >
             {listType.map((item) => (
               <Select.Option key={item.id} value={item.name}>
@@ -186,7 +186,7 @@ const TaskMangement = () => {
             value={selectedState}
             onChange={setSelectedState}
             placeholder="Status"
-            className="xs:!w-[100px] !mx-1 2xl:!mx-2 !mt-3"
+            className="w-full xs:!w-[100px] !mx-1 2xl:!mx-2 !mt-3"
           >
             {listState.map((item) => (
               <Select.Option key={item.id} value={item.name}>
@@ -196,12 +196,11 @@ const TaskMangement = () => {
           </Select>
 
           <DatePicker.RangePicker
-            className="w-full xs:w-auto !mx-1 2xl:!mx-2 !mt-3"
+            className="w-auto !mx-1 2xl:!mx-2 !mt-3"
             open={isOpenDateRange}
             onOpenChange={(open) => setIsOpenDateRange(open)}
             value={dateRange}
             onChange={setDateRange}
-            disabledDate={disabledDate}
             renderExtraFooter={() => (
               <div className="flex py-2.5">
                 {EXTRA_FOOTER.map((obj, idx) => (

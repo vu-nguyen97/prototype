@@ -59,6 +59,14 @@ export const DEFAULT_BUDGET_STEP = 1;
 export const DEFAULT_BUDGET = 100;
 export const DEFAULT_GOAL = 10;
 
+export const CAMPAIGN_STATUS = {
+  draft: "DRAFT",
+  submitted: "SUBMITTED",
+  running: "RUNNING",
+  paused: "PAUSED",
+  failed: "FAILED",
+};
+
 export const EDITABLE_STATS = [
   {
     name: "Bid",
