@@ -70,16 +70,14 @@ function GoogleAccountTable(props) {
       title: "Developer Id",
       render: (record) => (
         <div className="flex items-center">
-          <div className="">{record.id}</div>
+          <div className="break-all md:break-normal">{record.id}</div>
         </div>
       ),
     },
     {
       title: "Email",
       render: (record) => (
-        <div className="whitespace-nowrap md:whitespace-normal">
-          {record.email}
-        </div>
+        <div className="break-all md:break-normal">{record.email}</div>
       ),
     },
     {
@@ -145,7 +143,7 @@ function GoogleAccountTable(props) {
       columns={columns}
       loading={isLoading}
       dataSource={[...listData]}
-      scroll={{ x: 600 }}
+      scroll={{ x: 800 }}
       pagination={pagination}
       onChange={(pagination) => {
         pagination?.pageSize && setPageSize(pagination?.pageSize);

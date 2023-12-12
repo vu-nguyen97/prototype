@@ -25,6 +25,7 @@ import SelectStoreApp, {
 import { getLabelFromStr } from "../../utils/Helpers";
 
 function Apps() {
+  const [initedPage, setInitedPage] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [listApp, setListApp] = useState<any>({});
   const [listStoreApp, setListStoreApp] = useState<any>([]);
@@ -54,6 +55,9 @@ function Apps() {
     service.get("/google-play-stores").then(
       (res: any) => {
         setListDeveloper(res.results);
+        const initedStore = res.results[0]?.id;
+        setSelectedValue(initedStore);
+        onSearchData(initedStore);
       },
       () => {}
     );
@@ -70,17 +74,18 @@ function Apps() {
   }, []);
 
   useEffect(() => {
+    if (!initedPage) return setInitedPage(true);
     onSearchData();
   }, [tableFilters]);
 
-  const onSearchData = () => {
+  const onSearchData = (store = selectedValue) => {
     const params = {
       startDate: moment(dateRange[0])?.format(DATE_RANGE_FORMAT),
       endDate: moment(dateRange[1])?.format(DATE_RANGE_FORMAT),
       page: tableFilters.page,
       pageSize: tableFilters.size,
       name: search,
-      store: selectedValue,
+      store,
       app: getActivedApp(listStoreApp, selectedApp)?.id,
       createdBy: "",
       state: active,
@@ -136,14 +141,6 @@ function Apps() {
 
       <div className="bg-white p-4 rounded-sm shadow mt-2">
         <div className="flex items-center flex-wrap -mx-1 2xl:-mx-2 -mt-3">
-          <AntInput
-            allowClear
-            placeholder="Search name"
-            className="xs:!w-[180px] mx-1 2xl:!mx-2 mt-3"
-            prefix={<SearchOutlined />}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
           <Select
             allowClear
             placeholder="Store"
@@ -157,6 +154,14 @@ function Apps() {
               </Select.Option>
             ))}
           </Select>
+          <AntInput
+            allowClear
+            placeholder="Search name"
+            className="xs:!w-[180px] mx-1 2xl:!mx-2 mt-3"
+            prefix={<SearchOutlined />}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
           <SelectStoreApp
             placeholder="App / package"
             classNames="w-full xs:w-[200px] !mx-1 2xl:!mx-2 !mt-3"
@@ -227,7 +232,6 @@ function Apps() {
         isOpen={isOpenModalAddApp}
         onClose={() => setIsOpenModalAddApp(false)}
         submitCb={(newCamp) => updateCb()}
-        // submitCb={(newCamp) => onSearchData()}
       />
     </Page>
   );

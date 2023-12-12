@@ -32,17 +32,13 @@ function ReleaseStatusTable(props) {
     {
       title: "Release name",
       sorter: sortByString("releaseName"),
-      render: (record) => (
-        <div className="whitespace-nowrap md:whitespace-normal">
-          {record.releaseName}
-        </div>
-      ),
+      render: (record) => <div>{record.releaseName}</div>,
     },
     {
       title: "Created by",
       sorter: sortByString("actionUserEmail"),
       render: (record) => (
-        <div className="whitespace-nowrap md:whitespace-normal">
+        <div className="break-all md:break-normal">
           {record.actionUserEmail}
         </div>
       ),
@@ -52,7 +48,11 @@ function ReleaseStatusTable(props) {
       sorter: sortByDate("createdAt"),
       render: (record) => {
         if (!record.createdAt) return "";
-        return moment(record.createdAt)?.format("DD-MM-YYYY HH:mm");
+        return (
+          <div className="whitespace-nowrap md:whitespace-normal">
+            {moment(record.createdAt)?.format("DD-MM-YYYY HH:mm")}
+          </div>
+        );
       },
     },
     {
@@ -74,14 +74,7 @@ function ReleaseStatusTable(props) {
             break;
         }
 
-        return (
-          <div
-            className="whitespace-nowrap md:whitespace-normal"
-            style={{ color }}
-          >
-            {record.detailStatus}
-          </div>
-        );
+        return <div style={{ color }}>{record.detailStatus}</div>;
       },
     },
   ];
@@ -99,7 +92,7 @@ function ReleaseStatusTable(props) {
       columns={columns}
       loading={isLoading}
       dataSource={[...listData]}
-      scroll={{ x: 600 }}
+      scroll={{ x: 800 }}
       pagination={pagination}
       onChange={(pagination) => {
         pagination?.pageSize && setPageSize(pagination?.pageSize);

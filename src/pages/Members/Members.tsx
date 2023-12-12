@@ -5,13 +5,13 @@ import { toast } from "react-toastify";
 import service from "../../partials/services/axios.config";
 import Page from "../../utils/composables/Page";
 import { checkContainText } from "../../utils/helper/TableHelpers";
-import { capitalizeWord } from "../../utils/Helpers";
 import Loading from "../../utils/Loading";
 import MemberTable from "./MemberTable";
 import ModalAddAndEdit from "./ModalAddAndEdit";
 
 const Members = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingTable, setIsLoadingTable] = useState(false);
   const [listRole, setListRole] = useState<any>([]);
   const [listApp, setListApp] = useState([]);
   const [listStores, setListStores] = useState<any>([]);
@@ -25,15 +25,16 @@ const Members = () => {
     const getListApp = service.get("/store-app");
     const getAllUser = service.get("/user/findAll");
     const getListStore = service.get("/google-play-stores");
+    setIsLoadingTable(true);
     Promise.all([getListRole, getListApp, getAllUser, getListStore]).then(
       (res: any) => {
-        setIsLoading(false);
+        setIsLoadingTable(false);
         setListRole(res[0].results || []);
         setListApp(res[1].results || []);
         setListMember(res[2].results || []);
         setListStores(res[3].results || []);
       },
-      () => setIsLoading(false)
+      () => setIsLoadingTable(false)
     );
   }, []);
 
@@ -121,6 +122,7 @@ const Members = () => {
           onActive={onActive}
           onDeactive={onDeactive}
           onSearchTable={onSearchTable}
+          isLoading={isLoadingTable}
         />
       </div>
 

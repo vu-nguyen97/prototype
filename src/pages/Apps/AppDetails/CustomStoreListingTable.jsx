@@ -18,33 +18,23 @@ function CustomStoreListingTable(props) {
       render: (record) => (
         <div className="flex items-center">
           <div>
-            <div className="font-semibold text-black text-base">
-              {record.listingName}
-            </div>
+            <div className="font-semibold">{record.listingName}</div>
           </div>
         </div>
       ),
     },
     {
       title: "Type",
-      render: (record) => (
-        <div className="whitespace-nowrap md:whitespace-normal">
-          {capitalizeWord(record.type)}
-        </div>
-      ),
+      render: (record) => <div>{capitalizeWord(record.type)}</div>,
     },
     {
       title: "Group",
-      render: (record) => (
-        <div className="whitespace-nowrap md:whitespace-normal">
-          {record.group}
-        </div>
-      ),
+      render: (record) => <div>{record.group}</div>,
     },
     {
       title: "Custom URL",
       render: (record) => (
-        <div className="whitespace-nowrap md:whitespace-normal">
+        <div className="truncate">
           <a href={record.customUrl} target="_blank" rel="noreferrer">
             {record.customUrl}
           </a>
@@ -53,11 +43,7 @@ function CustomStoreListingTable(props) {
     },
     {
       title: "Experiment type",
-      render: (record) => (
-        <div className="whitespace-nowrap md:whitespace-normal">
-          {record.extype}
-        </div>
-      ),
+      render: (record) => <div>{record.extype}</div>,
     },
     {
       title: "Action",
@@ -100,7 +86,7 @@ function CustomStoreListingTable(props) {
       columns={columns}
       loading={isLoading}
       dataSource={[...listData]}
-      scroll={{ x: 600 }}
+      scroll={{ x: 800 }}
       size="middle"
       pagination={pagination}
       onChange={(pagination) => {
