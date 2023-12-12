@@ -10,7 +10,7 @@ import {
   onClickRangePickerFooter,
 } from "../../partials/common/Forms/RangePicker";
 import DatePicker from "antd/lib/date-picker";
-import { EXTRA_FOOTER } from "../../constants/constants";
+import { CAMPAIGN_STATUS, EXTRA_FOOTER } from "../../constants/constants";
 import Tag from "antd/lib/tag";
 import Button from "antd/lib/button/button";
 import moment from "moment";
@@ -22,11 +22,7 @@ import { useSelector } from "react-redux";
 import SelectStoreApp, {
   getActivedApp,
 } from "../../partials/common/Forms/SelectStoreApp";
-
-const ListStatus = [
-  { value: "true", label: "Active" },
-  { value: "false", label: "Inactive" },
-];
+import { getLabelFromStr } from "../../utils/Helpers";
 
 function Apps() {
   const [isLoading, setIsLoading] = useState(false);
@@ -87,7 +83,7 @@ function Apps() {
       store: selectedValue,
       app: getActivedApp(listStoreApp, selectedApp)?.id,
       createdBy: "",
-      active,
+      state: active,
       storeId: isAdmin ? "" : storeId,
     };
 
@@ -103,6 +99,12 @@ function Apps() {
 
   const onChangeRangePicker = (values) => {
     setDateRange(values);
+  };
+
+  const updateCb = () => {
+    setTimeout(() => {
+      onSearchData();
+    }, 500);
   };
 
   const onApply = () => {
@@ -169,10 +171,10 @@ function Apps() {
             value={active}
             onChange={setActive}
           >
-            {ListStatus.map((el: any, idx) => {
+            {Object.values(CAMPAIGN_STATUS).map((el: any, idx) => {
               return (
-                <Select.Option value={el.value} key={idx}>
-                  <div>{el.label}</div>
+                <Select.Option value={el} key={idx}>
+                  <div>{getLabelFromStr(el)}</div>
                 </Select.Option>
               );
             })}
@@ -217,14 +219,14 @@ function Apps() {
       <PrototypeTable
         isLoading={isLoading}
         data={listApp}
-        setData={setListApp}
         tableFilters={tableFilters}
         setTableFilters={setTableFilters}
+        updateCb={updateCb}
       />
       <ModalAdd
         isOpen={isOpenModalAddApp}
         onClose={() => setIsOpenModalAddApp(false)}
-        submitCb={(newCamp) => {}}
+        submitCb={(newCamp) => updateCb()}
         // submitCb={(newCamp) => onSearchData()}
       />
     </Page>

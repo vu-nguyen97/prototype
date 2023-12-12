@@ -7,14 +7,14 @@ import service from "../../../partials/services/axios.config";
 import { toast } from "react-toastify";
 
 function PrototypeTable(props) {
-  const { data, setData, isLoading, tableFilters, setTableFilters } = props;
+  const { data, isLoading, tableFilters, setTableFilters, updateCb } = props;
   const [columns, setColumns] = useState(getColumns({}));
 
   const [isLoadingPage, setIsLoadingPage] = useState(false);
   const [editedRd, setEditedRd] = useState<any>({});
 
   useEffect(() => {
-    setColumns(getColumns({ data, onEdit, onDelete }));
+    setColumns(getColumns({ data, onEdit, onDelete, onChangeStatus }));
   }, [data]);
 
   const onChangeTable = (pagination) => {
@@ -29,13 +29,26 @@ function PrototypeTable(props) {
     setEditedRd(rd);
   };
 
+  const onChangeStatus = (rd, isRunAction) => {
+    const text = isRunAction ? "run" : "stop";
+    setIsLoadingPage(true);
+    service.put(`/cpi-campaigns/${text}/${rd.id}`).then(
+      (res: any) => {
+        setIsLoadingPage(false);
+        toast(res.message, { type: "success" });
+        updateCb();
+      },
+      () => setIsLoadingPage(false)
+    );
+  };
+
   const onDelete = (rd) => {
     setIsLoadingPage(true);
     service.delete(`/cpi-campaigns/${rd.id}`).then(
       (res: any) => {
         setIsLoadingPage(false);
         toast(res.message, { type: "success" });
-        // setData
+        updateCb();
       },
       () => setIsLoadingPage(false)
     );
@@ -70,7 +83,7 @@ function PrototypeTable(props) {
         isOpen={!!editedRd?.id}
         onClose={() => setEditedRd({})}
         data={editedRd}
-        setTableData={setData}
+        updateCb={updateCb}
         setIsLoading={setIsLoadingPage}
       />
     </div>

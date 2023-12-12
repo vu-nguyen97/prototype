@@ -9,36 +9,6 @@ import service from "../../../partials/services/axios.config";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 
-const ASSET_FIELDS = [
-  {
-    field: "iconImg",
-    label: "App icon",
-    note: "Must be a PNG or JPEG, up to 1 MB, 512 px by 512 px.",
-  },
-  {
-    field: "featureImg",
-    label: "Feature graphic",
-    note: "Your feature graphic must be a PNG or JPEG, up to 15 MB, and 1,024 px by 500px.",
-  },
-  {
-    field: "phoneScreenshots",
-    label: "Phone screenshots",
-    note: "Upload 2-8 phone screenshots. Screenshots must be PNG or JPEG, up to 8 MB each, 16:9 or 9:16 aspect ratio, with each side between 320 px and 3,840 px.",
-    multiple: true,
-  },
-  {
-    field: "sevenInchScreenshots",
-    label: "7-inch tablet screenshots",
-    note: "Upload up to eight 7-inch tablet screenshots. Screenshots must be PNG or JPEG, up to 8 MB each, 16:9 or 9:16 aspect ratio, with each side between 320 px and 3,840 px.",
-    multiple: true,
-  },
-  {
-    field: "tenInchScreenshots",
-    label: "10-inch tablet screenshots",
-    note: "Upload up to eight 10-inch tablet screenshots. Screenshots must be PNG or JPEG, up to 8 MB each, 16:9 or 9:16 aspect ratio, with each side between 1,080 px and 7,680 px.",
-    multiple: true,
-  },
-];
 function ModalAddCustomListing(props) {
   const [listFiles, setListFiles] = useState<any>({});
   const urlParams = useParams();
@@ -93,7 +63,7 @@ function ModalAddCustomListing(props) {
 
     const formData = new FormData();
 
-    formData.append("appId", urlParams.appId);
+    formData.append("appId", urlParams.appId!);
     formData.append("listingName", name);
     formData.append("customUrl", customURL);
     formData.append("appName", "Monster Run");
@@ -145,8 +115,8 @@ function ModalAddCustomListing(props) {
       onFinish={onFinish}
     >
       <Modal
-        width={"50%"}
-        title="Add New Store Listing"
+        width={850}
+        title="Add new store listing"
         open={isOpen}
         onCancel={onCloseModal}
         footer={[
@@ -165,7 +135,7 @@ function ModalAddCustomListing(props) {
       >
         <Form.Item
           name="name"
-          label="Store Listing name"
+          label="Store listing name"
           rules={[
             { required: true, message: "Please enter Store Listing name" },
           ]}
@@ -179,7 +149,7 @@ function ModalAddCustomListing(props) {
         </Form.Item>
         <Form.Item
           name="customURL"
-          label="Custom Listing URL"
+          label="Custom listing URL"
           rules={[
             { required: true, message: "Please enter Custom Listing URL" },
           ]}
@@ -193,7 +163,7 @@ function ModalAddCustomListing(props) {
         </Form.Item>
         <Form.Item
           name="appName"
-          label="App Name"
+          label="App name"
           rules={[{ required: true, message: "Please enter app name" }]}
         >
           <AntInput
@@ -205,7 +175,7 @@ function ModalAddCustomListing(props) {
         </Form.Item>
         <Form.Item
           name="url"
-          label="Youtube Video URL"
+          label="Youtube video URL"
           rules={[{ required: false, message: "Please enter URL" }]}
         >
           <AntInput
