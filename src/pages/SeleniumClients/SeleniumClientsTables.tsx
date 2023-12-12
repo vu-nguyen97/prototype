@@ -29,6 +29,14 @@ function SeleniumClientsTable(props) {
       ),
     },
     {
+      title: "Task Type",
+      render: (record) => (
+        <div className="whitespace-nowrap md:whitespace-normal">
+          {record.type==null?"None":record.type}
+        </div>
+      ),
+    },
+    {
       title: "State",
       render: (record) => formatState(record?.state),
     },

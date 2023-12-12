@@ -44,8 +44,9 @@ const GoogleAccount = () => {
   };
 
   const onSyncApp = (record) => {
+    console.log(record);
     setIsLoading(true);
-    service.post(`/google-play-stores/sync-apps`, { storeId: record.id }).then(
+    service.post(`/google-play-stores/`+record.id+`/sync-apps`).then(
       (res: any) => {
         toast(
           res.message ||
