@@ -42,6 +42,12 @@ function CustomStoreListingTable(props) {
       ),
     },
     {
+      title: "Status",
+      render: (record) => {
+        return <div>{record.status}</div>;
+      },
+    },
+    {
       title: "Experiment type",
       render: (record) => <div>{record.extype}</div>,
     },
