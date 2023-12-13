@@ -81,7 +81,7 @@ function ModalAddAndEdit(props) {
             Cancel
           </Button>,
           <Button key="submit" type="primary" htmlType="submit" form={id}>
-            {isEditMode ? "Edit" : "Add"}
+            Save
           </Button>,
         ]}
       >

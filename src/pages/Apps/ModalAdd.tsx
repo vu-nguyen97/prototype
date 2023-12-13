@@ -21,7 +21,7 @@ export const ModalAdd = (props) => {
     screenshots: "",
     store: "",
     storeId: "",
-    avaiavle: false
+    avaiavle: false,
   };
   const [appInfo, setAppInfo] = useState(defaultApp);
   const [appStoreId, setAppStoreId] = useState("");
@@ -60,7 +60,7 @@ export const ModalAdd = (props) => {
   const onSubmit = () => {
     console.log(appInfo);
     setIsLoading(true);
-    service.post("/store-app", {app: appInfo}).then(
+    service.post("/store-app", { app: appInfo }).then(
       (res: any) => {
         setListApp((oldList) => [...oldList, res.results]);
         addStoreApp(queryClient, res.results);
@@ -77,7 +77,7 @@ export const ModalAdd = (props) => {
       title="New app"
       isOpen={isOpen}
       onClose={onCloseModal}
-      submitLabel="Add"
+      submitLabel="Save"
       onSubmit={onSubmit}
     >
       <div className="">

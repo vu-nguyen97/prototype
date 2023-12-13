@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import AntInput from "antd/lib/input";
 import DynamicUpload from "../../../partials/common/Forms/DynamicUpload";
 import { useParams } from "react-router-dom";
+import { getYtbUrlRule } from "../../../utils/Helpers";
 
 const ASSET_FIELDS = [
   {
@@ -162,11 +163,7 @@ export default function ModalEditMainListing(props) {
               allowClear
             />
           </Form.Item>
-          <Form.Item
-            name="url"
-            label="Youtube Video URL"
-            rules={[{ required: false, message: "Please enter URL" }]}
-          >
+          <Form.Item name="url" label="Youtube Video URL" rules={getYtbUrlRule}>
             <AntInput
               allowClear
               placeholder="Enter an URL (max 50 characters)"

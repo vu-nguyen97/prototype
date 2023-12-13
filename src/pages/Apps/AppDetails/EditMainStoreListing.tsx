@@ -7,6 +7,7 @@ import AntInput from "antd/lib/input";
 import DynamicUpload from "../../../partials/common/Forms/DynamicUpload";
 import Loading from "../../../utils/Loading";
 import Modal from "antd/lib/modal";
+import { getYtbUrlRule } from "../../../utils/Helpers";
 
 export default function EditMainStoreListing({ isOpen, onClose, mainListing }) {
   const [form] = Form.useForm();
@@ -15,13 +16,13 @@ export default function EditMainStoreListing({ isOpen, onClose, mainListing }) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!Object.keys(mainListing || {}).length) return;
+    if (!Object.keys(mainListing || {}).length || !isOpen) return;
     form.setFieldsValue({
       shortDescription: mainListing.shortDescription,
       fullDescription: mainListing.fullDescription,
       url: mainListing.youtubeVideoUrl,
     });
-  }, [mainListing]);
+  }, [isOpen, mainListing]);
 
   const onCloseModal = () => {
     onClose();
@@ -49,9 +50,11 @@ export default function EditMainStoreListing({ isOpen, onClose, mainListing }) {
     if (url) {
       formData.append("youtubeVideoUrl", url);
     }
-    assets.forEach((el) => {
-      formData.append("assets", el);
-    });
+    if (assets?.length) {
+      assets.forEach((el) => {
+        formData.append("assets", el);
+      });
+    }
 
     setIsLoading(true);
     service.post("/main_listing", formData).then(
@@ -89,7 +92,7 @@ export default function EditMainStoreListing({ isOpen, onClose, mainListing }) {
             htmlType="submit"
             form="EditMainListingForm"
           >
-            Edit
+            Save
           </Button>,
         ]}
       >
@@ -120,11 +123,7 @@ export default function EditMainStoreListing({ isOpen, onClose, mainListing }) {
             allowClear
           />
         </Form.Item>
-        <Form.Item
-          name="url"
-          label="Youtube Video URL"
-          rules={[{ required: false, message: "Please enter URL" }]}
-        >
+        <Form.Item name="url" label="Youtube Video URL" rules={getYtbUrlRule}>
           <AntInput
             allowClear
             placeholder="Enter an URL (max 50 characters)"
@@ -133,6 +132,7 @@ export default function EditMainStoreListing({ isOpen, onClose, mainListing }) {
           />
         </Form.Item>
         <DynamicUpload
+          isRequireMark={false}
           field={"assets"}
           label={"Assets"}
           multiple={true}

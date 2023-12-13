@@ -35,6 +35,7 @@ function DynamicUpload(props) {
     className,
     field,
     isShowLabel,
+    isRequireMark,
     label,
     note,
     listFiles,
@@ -152,7 +153,7 @@ function DynamicUpload(props) {
     <div className={wrapperClass}>
       {isShowLabel && (
         <div className="">
-          <span className="text-[#ff4d4f] mr-1 mt-2">*</span>
+          {isRequireMark && <span className="text-[#ff4d4f] mr-1 mt-2">*</span>}
           <span className={className}>
             {getLabelFromCamelCaseStr(label || field, false)}
           </span>
@@ -190,7 +191,7 @@ function DynamicUpload(props) {
         {listFiles.length > 0 && (
           <>
             {multiple ? (
-              <>
+              <div className="grid grid-col-1 md:grid-cols-2 gap-y-1 gap-x-2 mt-1 max-h-[400px] overflow-y-auto">
                 {listFiles.map((file, idx) => {
                   const assetUrl = URL.createObjectURL(file);
                   const assetClass =
@@ -198,7 +199,7 @@ function DynamicUpload(props) {
 
                   return (
                     <div
-                      className="mt-1 px-2.5 py-2 rounded-sm border flex items-center justify-between"
+                      className="px-2.5 py-2 rounded-sm border flex items-center justify-between"
                       key={file.uid}
                     >
                       {file.type?.includes("image") && (
@@ -226,7 +227,7 @@ function DynamicUpload(props) {
                     </div>
                   );
                 })}
-              </>
+              </div>
             ) : (
               <div className="mt-2 px-2.5 py-2 rounded-sm border flex items-center justify-between">
                 <div className="grow flex items-center truncate">
@@ -275,6 +276,7 @@ DynamicUpload.defaultProps = {
   accept: ".png, .jpeg",
   wrapperClass: "mb-6",
   isShowLabel: true,
+  isRequireMark: true,
 };
 
 DynamicUpload.propTypes = {
@@ -284,6 +286,7 @@ DynamicUpload.propTypes = {
   className: PropTypes.string,
   field: PropTypes.string,
   isShowLabel: PropTypes.bool,
+  isRequireMark: PropTypes.bool,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   note: PropTypes.string,
   listFiles: PropTypes.array,

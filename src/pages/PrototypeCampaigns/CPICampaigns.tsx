@@ -55,9 +55,10 @@ function Apps() {
     service.get("/google-play-stores").then(
       (res: any) => {
         setListDeveloper(res.results);
-        const initedStore = res.results[0]?.id;
-        setSelectedValue(initedStore);
-        onSearchData(initedStore);
+        // const initedStore = res.results[0]?.id;
+        // setSelectedValue(initedStore);
+        // onSearchData(initedStore);
+        onSearchData();
       },
       () => {}
     );
@@ -232,6 +233,7 @@ function Apps() {
         isOpen={isOpenModalAddApp}
         onClose={() => setIsOpenModalAddApp(false)}
         submitCb={(newCamp) => updateCb()}
+        store={selectedValue}
       />
     </Page>
   );

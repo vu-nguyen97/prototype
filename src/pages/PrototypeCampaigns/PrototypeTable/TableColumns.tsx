@@ -25,7 +25,7 @@ export default function getColumns(props) {
     {
       title: "Name",
       render: (rd) => {
-        const appUrl = "/apps/" + rd.id + "/overview";
+        const appUrl = "/apps/" + rd.id + "/perfomance";
 
         return (
           <Link to={appUrl} className="flex items-center">
@@ -105,10 +105,14 @@ export default function getColumns(props) {
               </Tooltip> */}
 
               {state !== CAMPAIGN_STATUS.failed && (
-                <Tooltip title={checked ? "Pause" : "Run"}>
+                <Tooltip title={checked ? "Pause" : "Submit"}>
                   <Popconfirm
                     placement="left"
-                    title={`${checked ? "Pause" : "Run"} this campaign?`}
+                    title={
+                      checked
+                        ? "Pause this campaign?"
+                        : "Submit this campaign to Unity?"
+                    }
                     onConfirm={() => onChangeStatus(record, !checked)}
                     okText="Yes"
                     cancelText="No"

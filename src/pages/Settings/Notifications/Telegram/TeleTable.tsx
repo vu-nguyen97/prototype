@@ -163,7 +163,7 @@ function TeleTable(props) {
             htmlType="submit"
             onClick={onSubmitLinkApp}
           >
-            Update
+            Save
           </Button>,
         ]}
       >

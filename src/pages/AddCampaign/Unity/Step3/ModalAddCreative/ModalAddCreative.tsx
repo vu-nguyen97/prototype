@@ -65,7 +65,7 @@ function ModalAddCreative(props) {
           disabled={!selectedRecords?.length}
           onClick={onApply}
         >
-          Apply
+          Save
         </Button>,
       ]}
     >

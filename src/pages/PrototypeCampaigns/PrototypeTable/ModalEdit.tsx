@@ -74,7 +74,7 @@ function ModalEdit(props) {
           Cancel
         </Button>,
         <Button key="submit" type="primary" htmlType="submit" form={formId}>
-          Edit
+          Save
         </Button>,
       ]}
     >

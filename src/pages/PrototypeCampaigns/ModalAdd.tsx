@@ -5,7 +5,7 @@ import Modal from "antd/lib/modal/Modal";
 import AppVariants, { FORM_LISTING } from "../App/Variants/AppVariants";
 
 function ModalAdd(props) {
-  const { isOpen, onClose, submitCb } = props;
+  const { isOpen, onClose, submitCb, store } = props;
 
   const onCloseModal = () => {
     onClose();
@@ -33,11 +33,11 @@ function ModalAdd(props) {
           htmlType="submit"
           form={FORM_LISTING}
         >
-          Add
+          Save
         </Button>,
       ]}
     >
-      <AppVariants submitCb={onSubmit} />
+      <AppVariants submitCb={onSubmit} store={store} />
     </Modal>
   );
 }
@@ -46,6 +46,7 @@ ModalAdd.propTypes = {
   isOpen: PropTypes.bool,
   onClose: PropTypes.func,
   submitCb: PropTypes.func,
+  store: PropTypes.string,
 };
 
 export default ModalAdd;

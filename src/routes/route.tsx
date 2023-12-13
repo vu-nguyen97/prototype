@@ -116,7 +116,7 @@ const AppRoutes = () => (
         */}
         <Route path="apps/:appId/">
           <Route index element={getAppPage(<Overview />)} />
-          <Route path="overview" element={getAppPage(<Overview />)} />
+          <Route path="perfomance" element={getAppPage(<Overview />)} />
           <Route
             path="main-store-listing"
             element={getStoreAppPage(<MainStoreListing />)}

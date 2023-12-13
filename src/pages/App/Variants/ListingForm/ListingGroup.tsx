@@ -61,17 +61,17 @@ function ListingGroup(props) {
 
   const getGroupName = (group) => {
     const { id, listing, creatives } = group;
-    if (activeKey?.includes(id)) return "Group";
+    if (activeKey?.includes(id)) return " ";
 
     const totalCreative = creatives?.length;
     let text = totalCreative > 1 ? " creatives" : " creative";
 
     return (
       <div>
-        Group: (<span className="font-bold">{getListingName(listing)}</span>
+        <span className="font-bold">{getListingName(listing)}</span>
         {" - "}
         {totalCreative}
-        <span>{text}</span>)
+        <span>{text}</span>
       </div>
     );
   };
@@ -143,7 +143,7 @@ const validateGroup = (group, form) => {
 export const addBidGroupLink = (params: any = {}) => (
   <div className={bulkLink} onClick={() => onPlusGroup(params)}>
     {PlusIcon}
-    <span>Add new group</span>
+    <span>Add new</span>
   </div>
 );
 

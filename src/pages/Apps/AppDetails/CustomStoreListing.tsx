@@ -10,6 +10,7 @@ import CustomStoreListingTable from "./CustomStoreListingTable";
 import ModalAddCustomListing from "./ModalAddCustomListing";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
 import classNames from "classnames";
+import { getSyncNow } from "../../../utils/helper/UIHelper";
 
 const CustomStoreListing = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -67,6 +68,8 @@ const CustomStoreListing = () => {
       });
   };
 
+  const syncTime = task ? <TimeAgo date={task.createdAt || 0} /> : "None";
+
   return (
     <Page>
       <div>
@@ -97,24 +100,7 @@ const CustomStoreListing = () => {
               </span>
             </div>
           )}
-          <div className="ml-auto flex gap-4 items-center">
-            <div className="flex gap-1">
-              <div className="font-semibold">Last Sync:</div>
-              {task ? <TimeAgo date={task.createdAt || 0} /> : "None"}
-            </div>
-            <Button
-              type="primary"
-              onClick={sendUpdateListingRequest}
-              disabled={isDraft}
-              loading={
-                task
-                  ? task.state === "RUNNING" || task.state === "CREATED"
-                  : false
-              }
-            >
-              Sync Now
-            </Button>
-          </div>
+          {getSyncNow(task, syncTime, sendUpdateListingRequest, isDraft)}
         </div>
 
         <div className="mt-2">

@@ -107,7 +107,7 @@ function ModalEdit(props) {
             htmlType="submit"
             form="ModalEditConfig"
           >
-            Edit
+            Save
           </Button>,
         ]}
       >
