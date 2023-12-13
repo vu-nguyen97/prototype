@@ -26,6 +26,7 @@ export default function EditMainStoreListing({ isOpen, onClose, mainListing }) {
   const onCloseModal = () => {
     onClose();
     setTimeout(() => {
+      form.resetFields();
       setListFiles({});
     }, 300);
   };
@@ -57,8 +58,7 @@ export default function EditMainStoreListing({ isOpen, onClose, mainListing }) {
       (res: any) => {
         toast(res.message, { type: "success" });
         setIsLoading(false);
-        form.resetFields();
-        setListFiles({});
+        onCloseModal();
       },
       (err) => setIsLoading(false)
     );
