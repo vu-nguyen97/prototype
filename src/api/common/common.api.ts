@@ -51,6 +51,15 @@ export const getListStore: QueryFunc = async () => {
 };
 
 export const getUnityStore = async () => {
-  const allStore: ResponseAPI = await service.get("/store-app");
-  return allStore?.results?.filter((app: any) => app.unityGameId !== 0) || [];
+  const allApps: ResponseAPI = await service.get("/store-app");
+  return allApps?.results?.filter((app: any) => app.unityGameId !== 0) || [];
+};
+
+export const getAppsByStore = async ({ queryKey }) => {
+  const storeId = queryKey[1];
+  const allApps: ResponseAPI = await service.get("/store-app", {
+    params: { storeId },
+  });
+
+  return allApps?.results?.filter((app: any) => app.unityGameId !== 0) || [];
 };

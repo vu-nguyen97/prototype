@@ -1,13 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AntInput from "antd/lib/input/Input";
 import SelectStoreApp from "../../../../partials/common/Forms/SelectStoreApp";
 import Form from "antd/lib/form";
+import Select from "antd/lib/select";
+import { useQuery } from "@tanstack/react-query";
+import { GET_APPS_BY_STORE } from "../../../../api/constants.api";
+import { getAppsByStore } from "../../../../api/common/common.api";
 
 export default function DynamicCampName(props) {
-  const { listStoreApps, form } = props;
+  const { form, listStores } = props;
+  const [listStoreApps, setListStoreApps] = useState<any>([]);
+
+  const formStoreId = Form.useWatch("store", form);
+
+  const { data: appsRes } = useQuery(
+    [GET_APPS_BY_STORE, formStoreId],
+    getAppsByStore,
+    {
+      staleTime: 3 * 60000,
+      enabled: !!listStores?.length && !!formStoreId,
+    }
+  );
+
+  useEffect(() => {
+    setListStoreApps(appsRes);
+  }, [appsRes]);
 
   return (
     <div className="">
+      <Form.Item
+        name="store"
+        label="Store"
+        rules={[{ required: true, message: "Please select an app" }]}
+      >
+        <Select
+          allowClear
+          placeholder="Store"
+          onChange={(value) => {
+            form.setFields([{ name: "app", value: undefined, errors: [] }]);
+          }}
+        >
+          {listStores?.map((item) => (
+            <Select.Option key={item.id} value={item.id}>
+              {item.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+
       <Form.Item
         name="app"
         label="App"

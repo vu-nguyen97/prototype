@@ -13,6 +13,7 @@ export const LIST_STORE = "listStore";
 export const GET_UNITY_STORE = "getUnityStore";
 export const GET_STORE_APP_BY_ID = "getStoreAppById";
 export const GET_APP_BY_ID = "getAppById";
+export const GET_APPS_BY_STORE = "getAppByStore";
 
 // Asset
 export const LIST_ASSETS_BY_FOLDER = "listAssetsByFolder";

@@ -13,6 +13,7 @@ import {
 } from "../../../utils/Helpers";
 import Modal from "antd/lib/modal";
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
+import classNames from "classnames";
 
 export const getUploadRule = (listFiles, message = "Please select file") => ({
   required: true,
@@ -191,7 +192,14 @@ function DynamicUpload(props) {
         {listFiles.length > 0 && (
           <>
             {multiple ? (
-              <div className="grid grid-col-1 md:grid-cols-2 gap-y-1 gap-x-2 mt-1 max-h-[400px] overflow-y-auto">
+              <div
+                className={classNames(
+                  "grid gap-y-1 gap-x-2 mt-1 max-h-[300px] overflow-y-auto",
+                  listFiles.length < 5
+                    ? "grid-col-1"
+                    : "grid-col-1 md:grid-cols-2"
+                )}
+              >
                 {listFiles.map((file, idx) => {
                   const assetUrl = URL.createObjectURL(file);
                   const assetClass =
@@ -214,7 +222,7 @@ function DynamicUpload(props) {
                         />
                       )}
                       <div
-                        className="grow flex itens-center justify-between truncate ml-2 cursor-pointer"
+                        className="grow truncate ml-2 cursor-pointer max-w-[320px] xs:max-w-[450px] md:max-w-none mr-auto"
                         onClick={() => openMultiplePreview(file)}
                       >
                         {file.name}

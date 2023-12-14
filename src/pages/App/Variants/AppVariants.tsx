@@ -7,15 +7,11 @@ import {
   onClickRangePickerFooter,
 } from "../../../partials/common/Forms/RangePicker";
 import DatePicker from "antd/lib/date-picker";
-import { disabledDate } from "../../../utils/Helpers";
 import { EXTRA_FOOTER } from "../../../constants/constants";
 import Tag from "antd/lib/tag";
 import Button from "antd/lib/button/button";
 import Loading from "../../../utils/Loading";
 import DynamicCampName from "./DynamicCampName/DynamicCampName";
-import { useQuery } from "@tanstack/react-query";
-import { GET_UNITY_STORE } from "../../../api/constants.api";
-import { getUnityStore } from "../../../api/common/common.api";
 import { getActivedApp } from "../../../partials/common/Forms/SelectStoreApp";
 import Form from "antd/lib/form";
 import { Group } from "./ListingForm/interface";
@@ -27,18 +23,21 @@ import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import message from "antd/lib/message";
+import Modal from "antd/lib/modal";
 
 export const FORM_LISTING = "FormListing";
 
 export default function AppVariants(props) {
   const [form] = Form.useForm();
-  const { submitCb } = props;
+  const { submitCb, store, isOpen, onClose } = props;
 
+  const [inited, setInited] = useState(false);
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const [listStoreApps, setListStoreApps] = useState<any>([]);
   const [listCustomListing, setListCustomListing] = useState<any>([]);
+  const [listStores, setListStores] = useState<any>([]);
 
   const [activeKey, setActiveKey] = useState<any>([defaultGroups[0].id]);
   const [groups, setGroups] = useState<Group[]>(defaultGroups);
@@ -48,14 +47,33 @@ export default function AppVariants(props) {
   };
   const formApp = Form.useWatch("app", form);
 
-  const { data: unityStoreRes } = useQuery([GET_UNITY_STORE], getUnityStore, {
-    staleTime: 30 * 60000,
-  });
+  useEffect(() => {
+    if (inited) return;
+    if (!isOpen && isOpen !== undefined) return;
+
+    setIsLoading(true);
+    const getUnityApps = service.get("/store-app");
+    const getStores = service.get("/google-play-stores");
+
+    Promise.all([getUnityApps, getStores]).then(
+      (res: any) => {
+        const newStores = res[1].results || [];
+        setListStores(newStores);
+        form.setFieldValue("store", store || newStores[0]?.id);
+
+        setListStoreApps(
+          res[0].results?.filter((app: any) => app.unityGameId !== 0) || []
+        );
+        setIsLoading(false);
+        setInited(true);
+      },
+      () => setIsLoading(false)
+    );
+  }, [isOpen]);
 
   useEffect(() => {
-    if (!unityStoreRes) return;
-    setListStoreApps(unityStoreRes);
-  }, [unityStoreRes]);
+    form.setFieldValue("store", store || listStores[0]?.id);
+  }, [submitCb]);
 
   useEffect(() => {
     if (!formApp) return;
@@ -77,8 +95,15 @@ export default function AppVariants(props) {
     );
   }, [formApp]);
 
+  const onCloseModal = () => {
+    onClose();
+    form.resetFields();
+    setActiveKey([defaultGroups[0].id]);
+    setGroups(defaultGroups);
+  };
+
   const onFinish = (values) => {
-    const { app, campaignName, time } = values;
+    const { app, campaignName, time, store } = values;
     const id = getActivedApp(listStoreApps, app)?.id;
 
     if (groups?.length === 1) {
@@ -133,6 +158,7 @@ export default function AppVariants(props) {
             submitCb();
             setGroups(defaultGroups);
             setActiveKey([defaultGroups[0].id]);
+            onCloseModal();
           }
         }
       } catch (error) {
@@ -216,7 +242,7 @@ export default function AppVariants(props) {
 
             <div className={`${sessionTitle} mt-6`}>Campaign information</div>
             <div className="md:ml-4">
-              <DynamicCampName form={form} listStoreApps={listStoreApps} />
+              <DynamicCampName form={form} listStores={listStores} />
             </div>
 
             <div className={`${sessionTitle} mt-6`}>Comparing listings</div>
@@ -247,11 +273,38 @@ export default function AppVariants(props) {
     </>
   );
 
-  if (submitCb) return contentComp;
+  if (submitCb)
+    return (
+      <Modal
+        title="Add new campaign"
+        width={900}
+        open={isOpen}
+        maskClosable={false}
+        onCancel={onCloseModal}
+        footer={[
+          <Button key="back" htmlType="button" onClick={onCloseModal}>
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            htmlType="submit"
+            form={FORM_LISTING}
+          >
+            Save
+          </Button>,
+        ]}
+      >
+        {contentComp}
+      </Modal>
+    );
 
   return <Page>{contentComp}</Page>;
 }
 
 AppVariants.propTypes = {
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func,
   submitCb: PropTypes.func,
+  store: PropTypes.string,
 };
