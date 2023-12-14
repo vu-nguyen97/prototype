@@ -37,7 +37,7 @@ function Apps(props) {
           const jsonBody = JSON.parse(msg.body);
           if (!jsonBody) return;
           console.log('/topic/selenium-clients', jsonBody);
-          if(jsonBody.id === selectedDeveloperId && jsonBody.type && jsonBody.type === SYNC_APPS){            
+          if(jsonBody.id === selectedDeveloperId && jsonBody.type && jsonBody.type === 'SYNC_APPS'){            
             setSyncing(true);
           }else{
             setSyncing(false);
@@ -125,7 +125,9 @@ function Apps(props) {
               "Apps will be synced in the background. You will be notified when it's done!",
             { type: "success" }
           );
+
           setIsLoading(false);                    
+          setSyncing(true);
         },
         () => setIsLoading(false)
       );
