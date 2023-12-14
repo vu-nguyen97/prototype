@@ -12,7 +12,7 @@ import DynamicUpload, {
   getUploadRule,
 } from "../../../partials/common/Forms/DynamicUpload";
 import service from "../../../partials/services/axios.config";
-import { matchYoutubeUrl } from "../../../utils/Helpers";
+import { getYtbUrlRule } from "../../../utils/Helpers";
 import Loading from "../../../utils/Loading";
 import {
   AssetNotes,
@@ -146,7 +146,7 @@ function ModalAddRelease(props) {
             htmlType="submit"
             form="FormAddNewRelease"
           >
-            Add
+            Save
           </Button>,
         ]}
       >
@@ -240,23 +240,7 @@ function ModalAddRelease(props) {
             allowClear
           />
         </Form.Item>
-        <Form.Item
-          name="url"
-          label="Youtube video URL"
-          rules={[
-            {
-              message: "Please enter a correct youtube link.",
-              validator: (rule, value, callback) => {
-                return new Promise((resolve, reject) => {
-                  if (value && !matchYoutubeUrl(value)) {
-                    reject();
-                  }
-                  resolve("");
-                });
-              },
-            },
-          ]}
-        >
+        <Form.Item name="url" label="Youtube video URL" rules={getYtbUrlRule}>
           <AntInput
             allowClear
             placeholder="Enter an URL (max 50 characters)"

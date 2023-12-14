@@ -42,6 +42,9 @@ button span.anticon {
 .ant-table-summary {
   @apply !font-bold;
 }
+.ant-collapse-header .ant-collapse-expand-icon {
+  @apply leading-[1.2];
+}
 
 .ant-table-column-sorter-up,
 .ant-table-column-sorter-down {

@@ -75,6 +75,9 @@ const CampaignDetail = React.lazy(
 const AppVariants = React.lazy(
   () => import("../pages/App/Variants/AppVariants")
 );
+const ComparingListing = React.lazy(
+  () => import("../pages/App/ComparingListing/ComparingListing")
+);
 const Settings = React.lazy(() => import("../pages/App/setting/Settings"));
 const Overview = React.lazy(() => import("../pages/App/overview/Overview"));
 const Notifications = React.lazy(
@@ -116,7 +119,7 @@ const AppRoutes = () => (
         */}
         <Route path="apps/:appId/">
           <Route index element={getAppPage(<Overview />)} />
-          <Route path="overview" element={getAppPage(<Overview />)} />
+          <Route path="perfomance" element={getAppPage(<Overview />)} />
           <Route
             path="main-store-listing"
             element={getStoreAppPage(<MainStoreListing />)}
@@ -130,7 +133,7 @@ const AppRoutes = () => (
             path="campaigns/:campId"
             element={getAppPage(<CampaignDetail />, false)}
           />
-          <Route path="themes" element={getAppPage(<AppVariants />)} />
+          <Route path="themes" element={getAppPage(<ComparingListing />)} />
           {/* <Route path="settings" element={getAppPage(<Settings />)} /> */}
         </Route>
 

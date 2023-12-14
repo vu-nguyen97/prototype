@@ -24,6 +24,13 @@ export const SidebarConfigs = [
   //   preload: () => import("../../pages/Dashboard/Dashboard"),
   // },
   {
+    id: 5,
+    url: "/release",
+    label: "Releases",
+    iconEl: <MdNewReleases size={20} />,
+    preload: () => import("../../pages/Releases/Releases"),
+  },
+  {
     id: 1,
     url: "/apps",
     label: "Apps",
@@ -36,13 +43,6 @@ export const SidebarConfigs = [
     label: "CPI Campaigns",
     iconEl: <FaGooglePlay size={16} />,
     preload: () => import("../../pages/PrototypeCampaigns/CPICampaigns"),
-  },
-  {
-    id: 5,
-    url: "/release",
-    label: "Releases",
-    iconEl: <MdNewReleases size={20} />,
-    preload: () => import("../../pages/Releases/Releases"),
   },
   {
     id: 8,
@@ -95,15 +95,15 @@ export const SidebarConfigs = [
 export const SidebarAppConfigs = [
   {
     id: 0,
-    url: "/overview",
-    label: "Overview",
+    url: "/perfomance",
+    label: "Perfomance",
     iconEl: <AiOutlineDashboard size={20} />,
     preload: () => import("../../pages/App/overview/Overview"),
   },
   {
     id: 1,
     url: "/themes",
-    label: "Comparing Themes",
+    label: "Comparing Listing",
     iconEl: <BiPalette size={20} />,
     preload: () => import("../../pages/App/Variants/AppVariants"),
   },

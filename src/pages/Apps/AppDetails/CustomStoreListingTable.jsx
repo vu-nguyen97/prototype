@@ -5,6 +5,8 @@ import Tooltip from "antd/lib/tooltip";
 import { AiOutlineEdit } from "@react-icons/all-files/ai/AiOutlineEdit";
 import { capitalizeWord, sortByString } from "../../../utils/Helpers";
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
+import Popconfirm from "antd/lib/popconfirm";
+import ListImages from "../../../partials/common/ListImages";
 
 function CustomStoreListingTable(props) {
   const defaultPageSize = 10;
@@ -27,10 +29,12 @@ function CustomStoreListingTable(props) {
       title: "Type",
       render: (record) => <div>{capitalizeWord(record.type)}</div>,
     },
-    {
-      title: "Group",
-      render: (record) => <div>{record.group}</div>,
-    },
+    // {
+    //   title: "Images",
+    //   render: (record) => (
+    //     <ListImages onClick={(v) => console.log("v :>> ", v)} />
+    //   ),
+    // },
     {
       title: "Custom URL",
       render: (record) => (
@@ -41,42 +45,34 @@ function CustomStoreListingTable(props) {
         </div>
       ),
     },
-    {
-      title: "Status",
-      render: (record) => {
-        return <div>{record.status}</div>;
-      },
-    },
-    {
-      title: "Experiment type",
-      render: (record) => <div>{record.extype}</div>,
-    },
-    {
-      title: "Action",
-      width: 140,
-      render: (text, record) => {
-        return (
-          <div className="flex space-x-2 ml-2">
-            {/* <>
-              <Tooltip title="Edit store listing">
-                <AiOutlineEdit
-                  size={20}
-                  className="text-slate-600 hover:text-antPrimary cursor-pointer"
-                  onClick={() => onEdit(record)}
-                />
-              </Tooltip>
-
-              <Tooltip title="Delete store listing">
-                <DeleteOutlined
-                  className="icon-danger text-xl cursor-pointer"
-                  onClick={() => onDelete(record)}
-                />
-              </Tooltip>
-            </> */}
-          </div>
-        );
-      },
-    },
+    // {
+    //   title: "Action",
+    //   width: 140,
+    //   render: (text, record) => {
+    //     return (
+    //       <div className="flex space-x-2 ml-2">
+    //         {/* <>
+    //           <Tooltip title="Edit store listing">
+    //             <AiOutlineEdit
+    //               size={20}
+    //               className="text-slate-600 hover:text-antPrimary cursor-pointer"
+    //               onClick={() => onEdit(record)}
+    //             />
+    //           </Tooltip>
+    //         </> */}
+    //         <Popconfirm
+    //           placement="left"
+    //           title="Remove this listing?"
+    //           onConfirm={() => onDelete(record)}
+    //           okText="Yes"
+    //           cancelText="No"
+    //         >
+    //           <DeleteOutlined className="icon-danger text-xl cursor-pointer" />
+    //         </Popconfirm>
+    //       </div>
+    //     );
+    //   },
+    // },
   ];
 
   const pagination = {

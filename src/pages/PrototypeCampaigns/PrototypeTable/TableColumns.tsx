@@ -25,7 +25,10 @@ export default function getColumns(props) {
     {
       title: "Name",
       render: (rd) => {
-        const appUrl = "/apps/" + rd.id + "/overview";
+        const listStatus = [CAMPAIGN_STATUS.draft, CAMPAIGN_STATUS.failed];
+        const pageUrl =
+          rd.state && listStatus.includes(rd.state) ? "/themes" : "/perfomance";
+        const appUrl = "/apps/" + rd.id + pageUrl;
 
         return (
           <Link to={appUrl} className="flex items-center">
@@ -45,14 +48,14 @@ export default function getColumns(props) {
       // sorter: sortByString("name"),
     },
     {
-      title: "Create date",
-      render: getDateCol,
-      // sorter: sortByDate("createdDate"), // sort be
-    },
-    {
       title: "Created by",
       render: (rd) => rd.createdBy,
       // sorter: sortByString("createdBy"),
+    },
+    {
+      title: "Create date",
+      render: getDateCol,
+      // sorter: sortByDate("createdDate"), // sort be
     },
     {
       title: "Start date",
@@ -105,10 +108,14 @@ export default function getColumns(props) {
               </Tooltip> */}
 
               {state !== CAMPAIGN_STATUS.failed && (
-                <Tooltip title={checked ? "Pause" : "Run"}>
+                <Tooltip title={checked ? "Pause" : "Submit"}>
                   <Popconfirm
                     placement="left"
-                    title={`${checked ? "Pause" : "Run"} this campaign?`}
+                    title={
+                      checked
+                        ? "Pause this campaign?"
+                        : "Submit this campaign to Unity?"
+                    }
                     onConfirm={() => onChangeStatus(record, !checked)}
                     okText="Yes"
                     cancelText="No"

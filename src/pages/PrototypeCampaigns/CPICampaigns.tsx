@@ -16,13 +16,13 @@ import Button from "antd/lib/button/button";
 import moment from "moment";
 import Select from "antd/lib/select";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
-import ModalAdd from "./ModalAdd";
 import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
 import SelectStoreApp, {
   getActivedApp,
 } from "../../partials/common/Forms/SelectStoreApp";
 import { getLabelFromStr } from "../../utils/Helpers";
+import AppVariants from "../App/Variants/AppVariants";
 
 function Apps() {
   const [initedPage, setInitedPage] = useState(false);
@@ -55,9 +55,10 @@ function Apps() {
     service.get("/google-play-stores").then(
       (res: any) => {
         setListDeveloper(res.results);
-        const initedStore = res.results[0]?.id;
-        setSelectedValue(initedStore);
-        onSearchData(initedStore);
+        // const initedStore = res.results[0]?.id;
+        // setSelectedValue(initedStore);
+        // onSearchData(initedStore);
+        onSearchData();
       },
       () => {}
     );
@@ -228,10 +229,11 @@ function Apps() {
         setTableFilters={setTableFilters}
         updateCb={updateCb}
       />
-      <ModalAdd
+      <AppVariants
         isOpen={isOpenModalAddApp}
         onClose={() => setIsOpenModalAddApp(false)}
         submitCb={(newCamp) => updateCb()}
+        store={selectedValue}
       />
     </Page>
   );

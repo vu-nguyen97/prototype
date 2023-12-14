@@ -532,3 +532,17 @@ export function matchYoutubeUrl(url) {
   }
   return false;
 }
+
+export const getYtbUrlRule = [
+  {
+    message: "Please enter a correct youtube link.",
+    validator: (rule, value, callback) => {
+      return new Promise((resolve, reject) => {
+        if (value && !matchYoutubeUrl(value)) {
+          reject();
+        }
+        resolve("");
+      });
+    },
+  },
+];

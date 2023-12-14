@@ -8,6 +8,7 @@ import DynamicUpload from "../../../partials/common/Forms/DynamicUpload";
 import service from "../../../partials/services/axios.config";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
+import { getYtbUrlRule } from "../../../utils/Helpers";
 
 function ModalAddCustomListing(props) {
   const [listFiles, setListFiles] = useState<any>({});
@@ -173,11 +174,7 @@ function ModalAddCustomListing(props) {
             maxLength={30}
           />
         </Form.Item>
-        <Form.Item
-          name="url"
-          label="Youtube video URL"
-          rules={[{ required: false, message: "Please enter URL" }]}
-        >
+        <Form.Item name="url" label="Youtube video URL" rules={getYtbUrlRule}>
           <AntInput
             allowClear
             placeholder="Enter an URL (max 50 characters)"

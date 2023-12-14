@@ -22,7 +22,6 @@ export const getStoreAppById: QueryFunc = async ({ queryKey }) => {
   return await service.get(`/prototype-campaigns/${appId}`);
 };
 
-// Hiện chưa có chỗ dùng
 export const getCpiCampaignById: QueryFunc = async ({ queryKey }) => {
   const appId = queryKey[1];
 
@@ -51,6 +50,15 @@ export const getListStore: QueryFunc = async () => {
 };
 
 export const getUnityStore = async () => {
-  const allStore: ResponseAPI = await service.get("/store-app");
-  return allStore?.results?.filter((app: any) => app.unityGameId !== 0) || [];
+  const allApps: ResponseAPI = await service.get("/store-app");
+  return allApps?.results?.filter((app: any) => app.unityGameId !== 0) || [];
+};
+
+export const getAppsByStore = async ({ queryKey }) => {
+  const storeId = queryKey[1];
+  const allApps: ResponseAPI = await service.get("/store-app", {
+    params: { storeId },
+  });
+
+  return allApps?.results?.filter((app: any) => app.unityGameId !== 0) || [];
 };

@@ -238,7 +238,7 @@ function NewVariant(props) {
             />
           </Form.Item>
           <Button type="primary" key="submit" htmlType="submit" form={id}>
-            Add
+            Save
           </Button>
         </>
       )}

@@ -16,6 +16,7 @@ import EditMainStoreListing from "./EditMainStoreListing";
 import { useQuery } from "@tanstack/react-query";
 import { GET_APP_BY_ID } from "../../../api/constants.api";
 import { getAppById } from "../../../api/common/common.api";
+import { getSyncNow } from "../../../utils/helper/UIHelper";
 
 const MainStoreListing = () => {
   const urlParams = useParams();
@@ -52,7 +53,7 @@ const MainStoreListing = () => {
         src={url}
         title="Click to view this image"
         alt={mainListing.appName}
-        className={`cursor-pointer ${classNames}`}
+        className={`cursor-pointer object-cover ${classNames}`}
         onClick={() => setImgPreview({ url })}
       />
     );
@@ -146,17 +147,14 @@ const MainStoreListing = () => {
         label: "App Icon",
         children: getViewableImg(
           mainListing?.appIconUrl,
-          "w-32 h-32 xs:w-[200px] xs:h-[200px] object-cover"
+          "w-32 h-32 xs:w-[200px] xs:h-[200px]"
         ),
         span: customSpan,
       },
       {
         key: "5",
         label: "Feature Graphic",
-        children: getViewableImg(
-          mainListing?.featureGraphicUrl,
-          "object-cover"
-        ),
+        children: getViewableImg(mainListing?.featureGraphicUrl),
         span: customSpan,
       },
       {
@@ -227,12 +225,23 @@ const MainStoreListing = () => {
     setIsEdit(true);
   };
 
+  const syncTime = task ? (
+    task.state === "FAILED" ? (
+      "Last sync failed"
+    ) : (
+      <TimeAgo date={task ? task.createdAt : 0} />
+    )
+  ) : (
+    "None"
+  );
+
   return (
     <Page>
       {loading && <Loading />}
       <div className="flex justify-between flex-col xs:flex-row">
         <div className="page-title">Main store listing</div>
-        <div className="mt-1 sm:mt-0">
+        <div className="mt-1 sm:mt-0 flex space-x-2">
+          {getSyncNow(task, syncTime, fetchMainStoreListing)}
           <Button icon={<EditOutlined />} onClick={onEdit}>
             Edit
           </Button>
@@ -240,38 +249,12 @@ const MainStoreListing = () => {
       </div>
 
       <div className="bg-white p-4 mt-2">
-        <div className="flex flex-col xs:flex-row items-start xs:items-center gap-4">
-          <Button
-            type="primary"
-            onClick={() => fetchMainStoreListing()}
-            loading={
-              task
-                ? task.state === "RUNNING" || task.state === "CREATED"
-                : false
-            }
-          >
-            Fetch main store listing
-          </Button>
-          <div className="text-md font-medium flex gap-1">
-            <span>Last Sync: </span>
-            {task ? (
-              task.state === "FAILED" ? (
-                "Last sync failed"
-              ) : (
-                <TimeAgo date={task ? task.createdAt : 0} />
-              )
-            ) : (
-              "None"
-            )}
-          </div>
-        </div>
         {mainListing && (
           <Descriptions
             size={window.innerWidth < 800 ? "small" : undefined}
             bordered
             column={4}
             labelStyle={{ fontWeight: "bold" }}
-            className="mt-4"
           >
             {items.map((el, idx) => (
               <Descriptions.Item key={el.key} label={el.label} span={el.span}>

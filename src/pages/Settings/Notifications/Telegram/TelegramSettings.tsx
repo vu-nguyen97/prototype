@@ -249,7 +249,7 @@ function TelegramSettings(props) {
               htmlType="submit"
               form="FormAddTeleGroup"
             >
-              Add
+              Save
             </Button>,
           ]}
         >
