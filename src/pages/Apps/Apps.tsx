@@ -10,6 +10,7 @@ import Page from "../../utils/composables/Page";
 import AppTable from "./AppTable";
 import Loading from "../../utils/Loading";
 import { Client } from "@stomp/stompjs";
+import { FaSpinner } from "@react-icons/all-files/fa/FaSpinner";
 
 
 // @ts-ignore
@@ -187,15 +188,25 @@ function Apps(props) {
             <div className="font-semibold mr-1">Last sync:</div>
             <TimeAgo date={lastSyncAppsAt} />
           </span>
-          <Button
+          {!syncing ? <Button
             type="primary"
             onClick={() => handleSyncApps()}
             size="small"
             className="!text-xs2"
-            disabled={syncing}
           >
             Sync now
-          </Button>
+          </Button> :
+                  <div className="bold flex">
+          <FaSpinner className="spin text-green-600" fontSize="1.5rem" />
+          <span className="font-semibold text-green-600 ml-5 mt-1">
+            Syncing
+          </span>
+        </div>
+
+
+        }
+
+
         </div>
         <AppTable
           listData={listAppRender}
