@@ -25,7 +25,10 @@ export default function getColumns(props) {
     {
       title: "Name",
       render: (rd) => {
-        const appUrl = "/apps/" + rd.id + "/perfomance";
+        const listStatus = [CAMPAIGN_STATUS.draft, CAMPAIGN_STATUS.failed];
+        const pageUrl =
+          rd.state && listStatus.includes(rd.state) ? "/themes" : "/perfomance";
+        const appUrl = "/apps/" + rd.id + pageUrl;
 
         return (
           <Link to={appUrl} className="flex items-center">
@@ -45,14 +48,14 @@ export default function getColumns(props) {
       // sorter: sortByString("name"),
     },
     {
-      title: "Create date",
-      render: getDateCol,
-      // sorter: sortByDate("createdDate"), // sort be
-    },
-    {
       title: "Created by",
       render: (rd) => rd.createdBy,
       // sorter: sortByString("createdBy"),
+    },
+    {
+      title: "Create date",
+      render: getDateCol,
+      // sorter: sortByDate("createdDate"), // sort be
     },
     {
       title: "Start date",

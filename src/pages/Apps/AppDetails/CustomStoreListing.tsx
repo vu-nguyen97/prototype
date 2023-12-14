@@ -22,7 +22,10 @@ const CustomStoreListing = () => {
   const urlParams = useParams();
 
   const onEditData = (record) => {};
-  const onDelete = (record) => {};
+
+  const onDelete = (record) => {
+    console.log("record :>> ", record);
+  };
 
   useEffect(() => {
     reloadCustomListings();

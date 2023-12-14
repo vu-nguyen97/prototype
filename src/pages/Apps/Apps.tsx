@@ -47,8 +47,8 @@ function Apps(props) {
     setIsLoading(true);
     service.get("/store-app/devId?devId=" + value).then(
       (res: any) => {
-        setListApp(res.results);
-        setListAppRender(res.results);
+        setListApp(res.results || []);
+        setListAppRender(res.results || []);
         setIsLoading(false);
       },
       () => setIsLoading(false)

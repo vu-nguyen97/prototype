@@ -22,7 +22,6 @@ export const getStoreAppById: QueryFunc = async ({ queryKey }) => {
   return await service.get(`/prototype-campaigns/${appId}`);
 };
 
-// Hiện chưa có chỗ dùng
 export const getCpiCampaignById: QueryFunc = async ({ queryKey }) => {
   const appId = queryKey[1];
 
