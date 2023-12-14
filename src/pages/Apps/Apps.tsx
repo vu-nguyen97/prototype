@@ -9,6 +9,12 @@ import service from "../../partials/services/axios.config";
 import Page from "../../utils/composables/Page";
 import AppTable from "./AppTable";
 import Loading from "../../utils/Loading";
+import { Client } from "@stomp/stompjs";
+
+
+// @ts-ignore
+const SOCKET_URL = `${import.meta.env.VITE_WS_HOST}/ws-falcon-bss-prtt`;
+
 
 function Apps(props) {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +27,41 @@ function Apps(props) {
 
   const [selectedDeveloperId, setSelectedDeveloperId] = useState<string>();
   const [lastSyncAppsAt, setLastSyncAppsAt] = useState<number>();
+  const [syncing, setSyncing] = useState(false);
+
+  useEffect(() => {
+    const onConnected = () => {
+      setIsLoading(true);
+      client.subscribe(`/topic/selenium-clients`, function (msg) {
+        if (msg.body) {
+          const jsonBody = JSON.parse(msg.body);
+          if (!jsonBody) return;
+          console.log('/topic/selenium-clients', jsonBody);
+          if(jsonBody.id === selectedDeveloperId && jsonBody.type && jsonBody.type === SYNC_APPS){            
+            setSyncing(true);
+          }else{
+            setSyncing(false);
+          }
+        }
+      });
+    };
+    const onDisconnected = () => {};
+
+    const client = new Client({
+      brokerURL: SOCKET_URL,
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+      onConnect: onConnected,
+      onDisconnect: onDisconnected,
+    });
+
+    client.activate();
+
+    return () => {
+      client.deactivate();
+    };
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -39,6 +80,7 @@ function Apps(props) {
     setListDeveloper(listData);
     setSelectedDeveloperId(listData[0].id);
     setLastSyncAppsAt(Number(listData[0].lastSyncAppsAt));
+    // setSyncing(listData[0].is)
 
     return getApp(listData[0].id);
   };
@@ -83,7 +125,7 @@ function Apps(props) {
               "Apps will be synced in the background. You will be notified when it's done!",
             { type: "success" }
           );
-          setIsLoading(false);
+          setIsLoading(false);                    
         },
         () => setIsLoading(false)
       );
@@ -145,6 +187,7 @@ function Apps(props) {
             onClick={() => handleSyncApps()}
             size="small"
             className="!text-xs2"
+            disabled={syncing}
           >
             Sync now
           </Button>
