@@ -59,6 +59,12 @@ export const SidebarConfigs = [
     iconEl: <AiOutlineTool size={20} />,
     children: [
       {
+        url: "/settings/notifications",
+        label: "Notifications",
+        preload: () =>
+          import("../../pages/Settings/Notifications/Notifications"),
+      },
+      {
         url: "/settings/connectors",
         label: "Data Connectors",
         iconEl: <AiOutlineNodeIndex size={20} />,

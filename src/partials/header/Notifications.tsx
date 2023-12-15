@@ -58,8 +58,7 @@ function Notifications() {
     (state: RootState) => state.notification.totalNotifications
   );
 
-  const notificationUrl =
-    ORGANIZATION_PATH + "/" + organizationCode + "/settings/notifications";
+  const notificationUrl = "/settings/notifications";
   const maxNotifications = 20;
   const getMutedStatus = () => {
     return localStorage.getItem(NOTICATION_MUTED) === "true" ? true : false;
@@ -307,10 +306,7 @@ function Notifications() {
                           <div className="text-sm mb-0.5 line-clamp-4">
                             <Link
                               className="block truncate"
-                              to={getExternalUrl(
-                                data.externalLink,
-                                organizationCode
-                              )}
+                              to={getExternalUrl(data.externalLink)}
                               // to={"/external-url/" + data.externalLink}
                               onClick={onClose}
                             >
@@ -332,10 +328,7 @@ function Notifications() {
 
                           <Link
                             className="block !text-xs !text-slate-400"
-                            to={getExternalUrl(
-                              data.externalLink,
-                              organizationCode
-                            )}
+                            to={getExternalUrl(data.externalLink)}
                             onClick={onClose}
                           >
                             {getBeforeTime(data.createdDate)}

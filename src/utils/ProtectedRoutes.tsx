@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
-import { APP_PATH, ORGANIZATION_PATH } from "../constants/constants";
+import { APP_PATH } from "../constants/constants";
 import { RootState } from "../redux/store";
 
 // Restrict import to this file
@@ -75,13 +75,13 @@ export const ExternalUrlRoutes = () => {
   return redirectedPage;
 };
 
-export const getExternalUrl = (str, orgCode, getApp = true) => {
+export const getExternalUrl = (str, getApp = true) => {
   if (!str || typeof str !== "string") {
     return "/";
   }
 
   const listSlug = str.split("/");
-  const orgUrl = ORGANIZATION_PATH + "/" + orgCode;
+  const orgUrl = "";
 
   let url = "/";
   if (getApp && listSlug.length >= 1) {
