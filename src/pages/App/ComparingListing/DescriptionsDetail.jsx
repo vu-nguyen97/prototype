@@ -8,7 +8,7 @@ import {
   getCountryNameFromCode,
   getLabelFromStr,
 } from "../../../utils/Helpers";
-import Descriptions from "antd/lib/descriptions";
+import { Descriptions } from "antd";
 
 export default function DescriptionsDetail(props) {
   const {
@@ -29,6 +29,7 @@ export default function DescriptionsDetail(props) {
         fontSize: 22,
         marginTop: 32,
         marginBottom: 10,
+        width: undefined,
       }}
     >
       <></>
