@@ -5,6 +5,7 @@ import store from "../../redux/store";
 
 // @ts-ignore
 export const baseURL = import.meta.env.VITE_HOST + "/api/v1";
+export const SOCKET_URL = import.meta.env.VITE_WS_HOST + "/ws-falcon-bss-prtt";
 
 export const OG_CODE_HEADER = "X-Tenant-ID";
 // 408: Lỗi "X-Tenant-ID" không tồn tại

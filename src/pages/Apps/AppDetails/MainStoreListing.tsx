@@ -1,10 +1,10 @@
-import { Badge, Button, Descriptions, Typography } from "antd";
+import { Badge, Button, Descriptions } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import TimeAgo from "react-timeago";
 import { toast } from "react-toastify";
-import service from "../../../partials/services/axios.config";
+import service, { SOCKET_URL } from "../../../partials/services/axios.config";
 import Loading from "../../../utils/Loading";
 import Page from "../../../utils/composables/Page";
 import AntInput from "antd/lib/input";
@@ -16,7 +16,9 @@ import EditMainStoreListing from "./EditMainStoreListing";
 import { useQuery } from "@tanstack/react-query";
 import { GET_APP_BY_ID } from "../../../api/constants.api";
 import { getAppById } from "../../../api/common/common.api";
-import { getSyncNow } from "../../../utils/helper/UIHelper";
+import { SOCKET_TYPES } from "../../../constants/constants";
+import { Client } from "@stomp/stompjs";
+import SyncNow from "../../../partials/common/SyncNow";
 
 const MainStoreListing = () => {
   const urlParams = useParams();
@@ -29,6 +31,8 @@ const MainStoreListing = () => {
   const [items, setItems] = useState<any>([]);
 
   const [task, setTask] = useState<any>();
+  const [syncing, setSyncing] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   const { data: storeListingRes } = useQuery(
     [GET_APP_BY_ID, urlParams.appId],
@@ -38,6 +42,38 @@ const MainStoreListing = () => {
       enabled: !!urlParams.appId,
     }
   );
+
+  useEffect(() => {
+    const onConnected = () => {
+      client.subscribe(`/topic/selenium-clients`, function (msg) {
+        if (msg.body) {
+          const jsonBody = JSON.parse(msg.body);
+          if (!jsonBody) return;
+
+          console.log("getMainListing", jsonBody);
+          if (jsonBody.type === SOCKET_TYPES.getMainListing) {
+            // setSyncing(false);
+          }
+        }
+      });
+    };
+    const onDisconnected = () => {};
+
+    const client = new Client({
+      brokerURL: SOCKET_URL,
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+      onConnect: onConnected,
+      onDisconnect: onDisconnected,
+    });
+
+    client.activate();
+
+    return () => {
+      client.deactivate();
+    };
+  }, []);
 
   useEffect(() => {
     const data = storeListingRes?.results || {};
@@ -201,24 +237,18 @@ const MainStoreListing = () => {
   }, []);
 
   const fetchMainStoreListing = () => {
+    setSyncing(true);
     setIsLoading(true);
-    service
-      .get("/fetch_main_listing?appId=" + urlParams.appId)
-      .then(
-        (res: any) => {
-          toast(res.message, { type: "success" });
-          setIsLoading(false);
-        },
-        () => {
-          setIsLoading(false);
-          toast("Something went wrong", { type: "error" });
-        }
-      )
-      .catch((error) => {
-        console.log(error);
-        toast(error.message, { type: "error" });
+    service.get("/fetch_main_listing?appId=" + urlParams.appId).then(
+      (res: any) => {
+        toast(res.message, { type: "success" });
         setIsLoading(false);
-      });
+      },
+      () => {
+        setIsLoading(false);
+        setSyncing(false);
+      }
+    );
   };
 
   const onEdit = () => {
@@ -240,8 +270,12 @@ const MainStoreListing = () => {
       {loading && <Loading />}
       <div className="flex justify-between flex-col xs:flex-row">
         <div className="page-title">Main store listing</div>
-        <div className="mt-1 sm:mt-0 flex space-x-2">
-          {getSyncNow(task, syncTime, fetchMainStoreListing)}
+        <div className="mt-1 sm:mt-0 flex items-center space-x-2">
+          <SyncNow
+            syncTime={syncTime}
+            onClick={fetchMainStoreListing}
+            syncing={syncing}
+          />
           <Button icon={<EditOutlined />} onClick={onEdit}>
             Edit
           </Button>

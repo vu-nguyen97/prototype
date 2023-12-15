@@ -25,7 +25,6 @@ import searchMaxMinValue from "../../partials/common/Table/SearchMaxMinValue";
 import Tag from "antd/lib/tag";
 import Badge from "antd/lib/badge";
 import Button from "antd/lib/button";
-import SyncOutlined from "@ant-design/icons/lib/icons/SyncOutlined";
 
 export const RequiredMark = <span className="text-red-500">*</span>;
 
@@ -44,31 +43,6 @@ export const PageBg = () => {
     </div>
   );
 };
-
-export const getSyncNow = (
-  task,
-  syncTime,
-  onClick,
-  disabled: any = undefined
-) => (
-  <div className="ml-auto flex gap-4 items-center">
-    <div className="flex gap-1">
-      <div className="font-semibold">Last Sync:</div>
-      {syncTime}
-    </div>
-    <Button
-      type="primary"
-      // icon={<SyncOutlined />}
-      onClick={onClick}
-      disabled={disabled}
-      loading={
-        task ? task.state === "RUNNING" || task.state === "CREATED" : false
-      }
-    >
-      Sync now
-    </Button>
-  </div>
-);
 
 export const getTotalSelected = (selectedRecords) => (
   <div className="font-semibold text-sm2">

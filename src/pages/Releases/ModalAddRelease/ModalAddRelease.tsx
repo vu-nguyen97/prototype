@@ -11,7 +11,7 @@ import { FIELD_REQUIRED } from "../../../constants/formMessage";
 import DynamicUpload, {
   getUploadRule,
 } from "../../../partials/common/Forms/DynamicUpload";
-import service from "../../../partials/services/axios.config";
+import service, { SOCKET_URL } from "../../../partials/services/axios.config";
 import { getYtbUrlRule } from "../../../utils/Helpers";
 import Loading from "../../../utils/Loading";
 import {
@@ -20,6 +20,7 @@ import {
   getFullDescription,
   getShortDescription,
 } from "./Helpers";
+import { Client } from "@stomp/stompjs";
 
 function ModalAddRelease(props) {
   const [form] = Form.useForm();
@@ -27,6 +28,7 @@ function ModalAddRelease(props) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [listFiles, setListFiles] = useState<any>({});
+  const [addingRelease, setAddingRelease] = useState(false);
 
   const initialValues = {};
 
@@ -34,6 +36,38 @@ function ModalAddRelease(props) {
     if (!isOpen || !listStores?.length) return;
     form.setFieldValue("developerId", listStores[0].id);
   }, [isOpen, listStores]);
+
+  useEffect(() => {
+    const onConnected = () => {
+      client.subscribe(`/topic/selenium-clients`, function (msg) {
+        if (msg.body) {
+          const jsonBody = JSON.parse(msg.body);
+          if (!jsonBody) return;
+
+          console.log("createRelease", jsonBody);
+          // if (jsonBody.type === SOCKET_TYPES.createRelease) {
+          //   setSyncing(true);
+          // }
+        }
+      });
+    };
+    const onDisconnected = () => {};
+
+    const client = new Client({
+      brokerURL: SOCKET_URL,
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+      onConnect: onConnected,
+      onDisconnect: onDisconnected,
+    });
+
+    client.activate();
+
+    return () => {
+      client.deactivate();
+    };
+  }, []);
 
   const onCloseModal = () => {
     onClose();
@@ -109,6 +143,7 @@ function ModalAddRelease(props) {
       formData.append("assets", el);
     });
 
+    // setAddingRelease(true)
     setIsLoading(true);
     service.post("/release", formData).then(
       (res: any) => {
