@@ -46,8 +46,6 @@ export const getNotificationTypeIcon = (data) => {
   );
 };
 
-// @ts-ignore
-const SOCKET_URL = `${import.meta.env.VITE_WS_HOST}/ws-falcon-ua-api`;
 const NOTICATION_MUTED = "notification-mute";
 
 function Notifications() {

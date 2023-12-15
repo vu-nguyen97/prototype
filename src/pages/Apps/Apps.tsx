@@ -1,21 +1,16 @@
 import SearchOutlined from "@ant-design/icons/lib/icons/SearchOutlined";
 import { Select } from "antd";
-import Button from "antd/lib/button/button";
 import AntInput from "antd/lib/input/Input";
 import React, { useEffect, useState } from "react";
 import TimeAgo from "react-timeago";
 import { toast } from "react-toastify";
-import service from "../../partials/services/axios.config";
+import service, { SOCKET_URL } from "../../partials/services/axios.config";
 import Page from "../../utils/composables/Page";
 import AppTable from "./AppTable";
 import Loading from "../../utils/Loading";
 import { Client } from "@stomp/stompjs";
-import { FaSpinner } from "@react-icons/all-files/fa/FaSpinner";
-
-
-// @ts-ignore
-const SOCKET_URL = `${import.meta.env.VITE_WS_HOST}/ws-falcon-bss-prtt`;
-
+import { SOCKET_TYPES } from "../../constants/constants";
+import SyncNow from "../../partials/common/SyncNow";
 
 function Apps(props) {
   const [isLoading, setIsLoading] = useState(false);
@@ -32,19 +27,17 @@ function Apps(props) {
 
   useEffect(() => {
     const onConnected = () => {
-      setIsLoading(true);
       client.subscribe(`/topic/selenium-clients`, function (msg) {
         if (msg.body) {
           const jsonBody = JSON.parse(msg.body);
           if (!jsonBody) return;
-          console.log('/topic/selenium-clients', jsonBody);
-          if(jsonBody.id === selectedDeveloperId && jsonBody.type){            
-            if(jsonBody.type === 'SYNC_APPS'){
-              setSyncing(true);  
-            }else{
+          console.log("/topic/selenium-clients", jsonBody);
+          if (jsonBody.id === selectedDeveloperId && jsonBody.type) {
+            if (jsonBody.type === SOCKET_TYPES.syncApps) {
+              setSyncing(true);
+            } else {
               setSyncing(false);
             }
-            
           }
         }
       });
@@ -120,6 +113,7 @@ function Apps(props) {
 
   const handleSyncApps = () => {
     setIsLoading(true);
+    setSyncing(true);
     service
       .post(`/google-play-stores/` + selectedDeveloperId + `/sync-apps`)
       .then(
@@ -129,11 +123,12 @@ function Apps(props) {
               "Apps will be synced in the background. You will be notified when it's done!",
             { type: "success" }
           );
-
-          setIsLoading(false);                    
-          setSyncing(true);
+          setIsLoading(false);
         },
-        () => setIsLoading(false)
+        () => {
+          setSyncing(false);
+          setIsLoading(false);
+        }
       );
   };
 
@@ -183,30 +178,14 @@ function Apps(props) {
           </div>
         </div>
 
-        <div className="flex justify-start items-center my-3 min-h-[24px]">
-          <span className="flex mr-2">
-            <div className="font-semibold mr-1">Last sync:</div>
-            <TimeAgo date={lastSyncAppsAt} />
-          </span>
-          {!syncing ? <Button
-            type="primary"
-            onClick={() => handleSyncApps()}
-            size="small"
-            className="!text-xs2"
-          >
-            Sync now
-          </Button> :
-                  <div className="bold flex">
-          <FaSpinner className="spin text-green-600" fontSize="1.5rem" />
-          <span className="font-semibold text-green-600 ml-5 mt-1">
-            Syncing
-          </span>
-        </div>
-
-
-        }
-
-
+        <div className="my-3 min-h-[26px] flex items-center">
+          <SyncNow
+            syncTime={<TimeAgo date={lastSyncAppsAt} />}
+            onClick={handleSyncApps}
+            right={false}
+            syncing={syncing}
+            small
+          />
         </div>
         <AppTable
           listData={listAppRender}

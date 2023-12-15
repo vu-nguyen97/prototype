@@ -4,13 +4,15 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import TimeAgo from "react-timeago";
 import { toast } from "react-toastify";
-import service from "../../../partials/services/axios.config";
+import service, { SOCKET_URL } from "../../../partials/services/axios.config";
 import Page from "../../../utils/composables/Page";
 import CustomStoreListingTable from "./CustomStoreListingTable";
 import ModalAddCustomListing from "./ModalAddCustomListing";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
 import classNames from "classnames";
-import { getSyncNow } from "../../../utils/helper/UIHelper";
+import SyncNow from "../../../partials/common/SyncNow";
+import { SOCKET_TYPES } from "../../../constants/constants";
+import { Client } from "@stomp/stompjs";
 
 const CustomStoreListing = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -19,6 +21,8 @@ const CustomStoreListing = () => {
   const [mainListing, setMainListing] = useState<any>(null);
   const [isDraft, setIsDraft] = useState(false);
   const [task, setTask] = useState<any>();
+  const [syncing, setSyncing] = useState(false);
+
   const urlParams = useParams();
 
   const onEditData = (record) => {};
@@ -31,18 +35,52 @@ const CustomStoreListing = () => {
     reloadCustomListings();
   }, []);
 
+  useEffect(() => {
+    const onConnected = () => {
+      client.subscribe(`/topic/selenium-clients`, function (msg) {
+        if (msg.body) {
+          const jsonBody = JSON.parse(msg.body);
+          if (!jsonBody) return;
+
+          console.log("fetCustomListings", jsonBody);
+          // if (jsonBody.type === SOCKET_TYPES.fetCustomListings) {
+          //   setSyncing(false);
+          // }
+        }
+      });
+    };
+    const onDisconnected = () => {};
+
+    const client = new Client({
+      brokerURL: SOCKET_URL,
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+      onConnect: onConnected,
+      onDisconnect: onDisconnected,
+    });
+
+    client.activate();
+
+    return () => {
+      client.deactivate();
+    };
+  }, []);
+
   const sendUpdateListingRequest = () => {
+    setSyncing(true);
     setIsLoading(true);
-    service
-      .post("/" + urlParams.appId + "/custom_listings")
-      .then((res: any) => {
+
+    service.post("/" + urlParams.appId + "/custom_listings").then(
+      (res: any) => {
         toast(res.message, { type: "success" });
         setIsLoading(false);
-      })
-      .catch((error) => {
-        toast(error.message, { type: "error" });
+      },
+      () => {
         setIsLoading(false);
-      });
+        setSyncing(false);
+      }
+    );
   };
 
   const reloadCustomListings = () => {
@@ -103,7 +141,12 @@ const CustomStoreListing = () => {
               </span>
             </div>
           )}
-          {getSyncNow(task, syncTime, sendUpdateListingRequest, isDraft)}
+          <SyncNow
+            syncTime={syncTime}
+            onClick={sendUpdateListingRequest}
+            syncing={syncing}
+            disabled={isDraft}
+          />
         </div>
 
         <div className="mt-2">

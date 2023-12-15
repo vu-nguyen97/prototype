@@ -67,6 +67,16 @@ export const CAMPAIGN_STATUS = {
   failed: "FAILED",
 };
 
+export const SOCKET_TYPES = {
+  syncApps: "SYNC_APPS",
+  getMainListing: "GET_MAIN_LISTING",
+  fetCustomListings: "FETCH_CUSTOM_LISTINGS",
+  createRelease: "CREATE_RELEASE",
+  editMainListing: "EDIT_MAIN_LISTING",
+  checkLoginStatus: "CHECK_LOGIN_STATUS",
+  createCustomListing: "CREATE_CUSTOM_LISTING",
+};
+
 export const EDITABLE_STATS = [
   {
     name: "Bid",

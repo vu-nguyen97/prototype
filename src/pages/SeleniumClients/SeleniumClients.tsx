@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import Page from "../../utils/composables/Page";
 import SeleniumClientsTable from "./SeleniumClientsTables";
 import { Client } from "@stomp/stompjs";
-
-// @ts-ignore
-const SOCKET_URL = `${import.meta.env.VITE_WS_HOST}/ws-falcon-bss-prtt`;
+import { SOCKET_URL } from "../../partials/services/axios.config";
 
 const SeleniumClients = () => {
   const [isLoading, setIsLoading] = useState(true);
