@@ -9,11 +9,8 @@ import CloseCircleOutlined from "@ant-design/icons/lib/icons/CloseCircleOutlined
 import Badge from "antd/lib/badge";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import {
-  NOTIFICATION_TYPES,
-  ORGANIZATION_PATH,
-} from "../../constants/constants";
-import service, { OG_CODE_HEADER } from "../services/axios.config";
+import { NOTIFICATION_TYPES } from "../../constants/constants";
+import service, { SOCKET_URL } from "../services/axios.config";
 import { getExternalUrl } from "../../utils/ProtectedRoutes";
 import classNames from "classnames";
 import { Client } from "@stomp/stompjs";
@@ -51,15 +48,11 @@ const NOTICATION_MUTED = "notification-mute";
 function Notifications() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const organizationCode = useSelector(
-    (state: RootState) => state.account.userData.organization.code
-  );
   const totalNotification = useSelector(
     (state: RootState) => state.notification.totalNotifications
   );
 
-  const notificationUrl =
-    ORGANIZATION_PATH + "/" + organizationCode + "/settings/notifications";
+  const notificationUrl = "/settings/notifications";
   const maxNotifications = 20;
   const getMutedStatus = () => {
     return localStorage.getItem(NOTICATION_MUTED) === "true" ? true : false;
@@ -76,58 +69,59 @@ function Notifications() {
   const dropdown = useRef(null);
 
   useEffect(() => {
-    // service.get("/notification/count").then(
-    //   (res: any) => {
-    //     if (res.results) {
-    //       dispatch(updateNotification({ newValue: res.results }));
-    //     }
-    //   },
-    //   () => {}
-    // );
+    service.get("/notification/count").then(
+      (res: any) => {
+        if (res.results) {
+          dispatch(updateNotification({ newValue: res.results }));
+        }
+      },
+      () => {}
+    );
   }, []);
 
   useEffect(() => {
-    // const onConnected = () => {
-    //   const headers = { [OG_CODE_HEADER]: organizationCode };
-    //   client.subscribe(
-    //     `/topic/${organizationCode}/notification`,
-    //     function (msg) {
-    //       if (msg.body) {
-    //         const jsonBody = JSON.parse(msg.body);
-    //         if (!jsonBody) return;
-    //         const { data } = jsonBody;
-    //         if (data) {
-    //           dispatch(updateNotification({}));
-    //           if (data.popUp && !getMutedStatus()) {
-    //             const messageText = data.createdBy + ": " + data.title;
-    //             switch (data.type) {
-    //               case NOTIFICATION_TYPES.error:
-    //                 return message.error(messageText);
-    //               case NOTIFICATION_TYPES.warning:
-    //                 return message.warning(messageText);
-    //               default:
-    //                 return message.success(messageText);
-    //             }
-    //           }
-    //         }
-    //       }
-    //     },
-    //     headers
-    //   );
-    // };
-    // const onDisconnected = () => {};
-    // const client = new Client({
-    //   brokerURL: SOCKET_URL,
-    //   reconnectDelay: 5000,
-    //   heartbeatIncoming: 4000,
-    //   heartbeatOutgoing: 4000,
-    //   onConnect: onConnected,
-    //   onDisconnect: onDisconnected,
-    // });
-    // client.activate();
-    // return () => {
-    //   client.deactivate();
-    // };
+    const onConnected = () => {
+      client.subscribe(`/topic/notification`, function (msg) {
+        if (msg.body) {
+          const jsonBody = JSON.parse(msg.body);
+          if (!jsonBody) return;
+
+          const { data } = jsonBody;
+          console.log("updateNotification :>> ", data);
+          if (data) {
+            dispatch(updateNotification({}));
+
+            if (data.popUp && !getMutedStatus()) {
+              const messageText = data.createdBy + ": " + data.title;
+              switch (data.type) {
+                case NOTIFICATION_TYPES.error:
+                  return message.error(messageText);
+                case NOTIFICATION_TYPES.warning:
+                  return message.warning(messageText);
+                default:
+                  return message.success(messageText);
+              }
+            }
+          }
+        }
+      });
+    };
+
+    const onDisconnected = () => {};
+
+    const client = new Client({
+      brokerURL: SOCKET_URL,
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+      onConnect: onConnected,
+      onDisconnect: onDisconnected,
+    });
+
+    client.activate();
+    return () => {
+      client.deactivate();
+    };
   }, []);
 
   const getNoti = (page = 0) => {
@@ -307,10 +301,7 @@ function Notifications() {
                           <div className="text-sm mb-0.5 line-clamp-4">
                             <Link
                               className="block truncate"
-                              to={getExternalUrl(
-                                data.externalLink,
-                                organizationCode
-                              )}
+                              to={getExternalUrl(data.externalLink)}
                               // to={"/external-url/" + data.externalLink}
                               onClick={onClose}
                             >
@@ -324,18 +315,15 @@ function Notifications() {
                             </Link>
                             <div
                               className="text-slate-900 line-clamp-4 break-words"
-                              title={data.description}
-                            >
-                              {data.description}
-                            </div>
+                              dangerouslySetInnerHTML={{
+                                __html: data.description,
+                              }}
+                            ></div>
                           </div>
 
                           <Link
                             className="block !text-xs !text-slate-400"
-                            to={getExternalUrl(
-                              data.externalLink,
-                              organizationCode
-                            )}
+                            to={getExternalUrl(data.externalLink)}
                             onClick={onClose}
                           >
                             {getBeforeTime(data.createdDate)}

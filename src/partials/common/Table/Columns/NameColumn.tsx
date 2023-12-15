@@ -139,7 +139,7 @@ export const NameColumn = (record, setPreviewData, setImgPreview) => {
   );
 };
 
-const checkVideo = (url) => {
+export const checkVideo = (url) => {
   // https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Containers
   const VIDEOS = [
     ".mp4",

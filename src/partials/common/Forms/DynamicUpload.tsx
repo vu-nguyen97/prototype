@@ -11,9 +11,10 @@ import {
   getLabelFromCamelCaseStr,
   handleErrorImage,
 } from "../../../utils/Helpers";
-import Modal from "antd/lib/modal";
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import classNames from "classnames";
+import ImagePreview, { ImgFile } from "../Modal/ImagePreview";
+import VideoPopup from "../Modal/VideoPopup";
 
 export const getUploadRule = (listFiles, message = "Please select file") => ({
   required: true,
@@ -44,10 +45,8 @@ function DynamicUpload(props) {
     accept,
   } = props;
 
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
-  const [previewTitle, setPreviewTitle] = useState("");
-
+  const [previewImage, setPreviewImage] = useState<ImgFile>({});
+  const [previewVideo, setPreviewVideo] = useState({});
   const [listSizes, setListSizes] = useState<string[]>([]);
 
   const getSizeOfImg = (file, fileIdx) => {
@@ -101,9 +100,6 @@ function DynamicUpload(props) {
     if (multiple) {
       setListFiles([...listFiles, ...fileList]);
     } else {
-      const fileSrc = URL.createObjectURL(file);
-      setPreviewImage(fileSrc);
-      setPreviewTitle(file.name);
       setListFiles(fileList);
     }
     fileList.forEach((el, idx) => getSizeOfImg(el, listFiles.length + idx));
@@ -127,27 +123,16 @@ function DynamicUpload(props) {
     return <></>;
   };
 
-  const handleCancel = () => {
-    setPreviewOpen(false);
-  };
+  const onSetPreview = (file) => {
+    if (!file) return;
+    const data = { url: URL.createObjectURL(file), name: file.name };
 
-  const openMultiplePreview = (file) => {
-    setPreviewImage(URL.createObjectURL(file));
-    setPreviewTitle(file.name);
-    setPreviewOpen(true);
-  };
-
-  const getModalSize = () => {
-    let width = 520;
-    if (typeof listSizes?.[0] === "string") {
-      const newWidth = Number(listSizes?.[0]?.split("x")?.[0]);
-
-      if (newWidth > 520 && newWidth <= window.innerWidth) {
-        width = newWidth;
-      }
+    if (file.type?.includes("image")) {
+      setPreviewImage(data);
     }
-
-    return width;
+    if (file.type?.includes("video") || file.type?.includes("html")) {
+      setPreviewVideo(data);
+    }
   };
 
   return (
@@ -217,13 +202,13 @@ function DynamicUpload(props) {
                           alt=" "
                           referrerPolicy="no-referrer"
                           onError={handleErrorImage}
-                          onClick={() => openMultiplePreview(file)}
+                          onClick={() => onSetPreview(file)}
                           title="Click to view the image"
                         />
                       )}
                       <div
                         className="grow truncate ml-2 cursor-pointer max-w-[320px] xs:max-w-[450px] md:max-w-none mr-auto"
-                        onClick={() => openMultiplePreview(file)}
+                        onClick={() => onSetPreview(file)}
                       >
                         {file.name}
                       </div>
@@ -239,18 +224,24 @@ function DynamicUpload(props) {
             ) : (
               <div className="mt-2 px-2.5 py-2 rounded-sm border flex items-center justify-between">
                 <div className="grow flex items-center truncate">
-                  <img
-                    alt=" "
-                    className="h-12 w-12 object-cover rounded-sm cursor-pointer"
-                    src={previewImage}
-                    onError={handleErrorImage}
-                    onClick={() => setPreviewOpen(true)}
-                  />
+                  {listFiles?.[0]?.type?.includes("image") && (
+                    <img
+                      alt=" "
+                      className="h-12 w-12 object-cover rounded-sm cursor-pointer mr-2"
+                      src={previewImage.url}
+                      onError={handleErrorImage}
+                      onClick={() => onSetPreview(listFiles[0])}
+                    />
+                  )}
                   <div
-                    className="ml-2 cursor-pointer truncate"
-                    onClick={() => setPreviewOpen(true)}
+                    className={classNames(
+                      "truncate",
+                      listFiles?.[0]?.type?.includes("image") &&
+                        "cursor-pointer"
+                    )}
+                    onClick={() => onSetPreview(listFiles[0])}
                   >
-                    {previewTitle}
+                    {listFiles?.[0]?.name}
                   </div>
                 </div>
 
@@ -264,16 +255,14 @@ function DynamicUpload(props) {
           </>
         )}
 
-        <Modal
-          open={previewOpen}
-          title={previewTitle}
-          centered
-          footer={null}
-          width={getModalSize()}
-          onCancel={handleCancel}
-        >
-          <img alt=" " className="w-full" src={previewImage} />
-        </Modal>
+        <ImagePreview
+          imgPreview={previewImage}
+          setImgPreview={setPreviewImage}
+        />
+        <VideoPopup
+          previewData={previewVideo}
+          onClose={() => setPreviewVideo({})}
+        />
       </div>
     </div>
   );

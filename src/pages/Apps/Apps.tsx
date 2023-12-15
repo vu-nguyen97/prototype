@@ -38,7 +38,7 @@ function Apps(props) {
             } else {
               setSyncing(false);
             }
-          }else{
+          } else {
             setSyncing(false);
           }
         }
@@ -158,7 +158,7 @@ function Apps(props) {
               placeholder="Store name"
               value={selectedDeveloperId}
               onChange={handleSelectChange}
-              className="w-full xs:!w-[280px] !mx-1 2xl:!mx-2 !mt-3 w"
+              className="w-full xs:!w-[280px] !mx-1 2xl:!mx-2 !mt-3"
             >
               {listDeveloper.map((item) => (
                 <Select.Option key={item.id} value={item.id}>

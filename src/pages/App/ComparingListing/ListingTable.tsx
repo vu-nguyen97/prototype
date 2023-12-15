@@ -1,15 +1,26 @@
 import { BiLinkExternal } from "@react-icons/all-files/bi/BiLinkExternal";
+import { AiOutlinePlayCircle } from "@react-icons/all-files/ai/AiOutlinePlayCircle";
 import Table from "antd/lib/table";
 import React, { useState } from "react";
 import { getLabelFromStr } from "../../../utils/Helpers";
 import ListImages from "../../../partials/common/ListImages";
 import { baseURL } from "../../../partials/services/axios.config";
+import { checkVideo } from "../../../partials/common/Table/Columns/NameColumn";
+import VideoPopup from "../../../partials/common/Modal/VideoPopup";
 
 export default function ListingTable(props) {
   const { appState } = props;
 
   const defaultPageSize = 20;
   const [pageSize, setPageSize] = useState(defaultPageSize);
+  const [previewVideo, setPreviewVideo] = useState({});
+
+  const getAssetUrl = (url) => baseURL + "/media/" + url;
+
+  const onClickVideo = (el, name) => {
+    console.log("url", getAssetUrl(el.id));
+    setPreviewVideo({ url: getAssetUrl(el.id), name });
+  };
 
   const columns = [
     {
@@ -42,12 +53,57 @@ export default function ListingTable(props) {
     {
       title: "Creatives",
       render: (rd) => {
-        const imgs = rd.unityAds?.localCreatives?.map((el) => ({
+        if (!rd.unityAds?.localCreatives?.length) return <></>;
+        const localCreatives = rd.unityAds.localCreatives;
+        const imgs = localCreatives?.map((el) => ({
           ...el,
-          src: baseURL + "/media/" + el.id,
+          src: getAssetUrl(el.id),
         }));
 
-        return <ListImages imgs={imgs} />;
+        const listImgs: any = [];
+        const listVideos: any = [];
+        imgs.forEach((el) => {
+          if (checkVideo(el.localPath)) {
+            listVideos.push(el);
+          } else {
+            listImgs.push(el);
+          }
+        });
+
+        if (!listVideos?.length) {
+          return <ListImages imgs={listImgs} />;
+        }
+
+        return (
+          <div>
+            <ListImages imgs={listImgs} />
+            <div className="mt-2">
+              {listVideos.map((el, idx) => {
+                const name = el.localPath.replace(/^.*[\\/]/, "");
+                return (
+                  <div
+                    className="flex items-center truncate mt-1 cursor-pointer group"
+                    key={idx}
+                    onClick={() => onClickVideo(el, name)}
+                  >
+                    <div
+                      className="shrink-0 w-8 h-8 rounded-md bg-antPrimary/10 group-hover:bg-antPrimary/20 flex justify-center items-center"
+                      title="Click to play"
+                    >
+                      <AiOutlinePlayCircle
+                        size={20}
+                        className="text-antPrimary"
+                      />
+                    </div>
+                    <span className="ml-2 group-hover:text-blue-600">
+                      {name}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
       },
     },
     {
@@ -88,6 +144,11 @@ export default function ListingTable(props) {
         onChange={(pagination) => {
           pagination?.pageSize && setPageSize(pagination?.pageSize);
         }}
+      />
+
+      <VideoPopup
+        previewData={previewVideo}
+        onClose={() => setPreviewVideo({})}
       />
     </>
   );

@@ -70,7 +70,9 @@ function Notifications() {
 
   return (
     <Page>
-      <Tabs type="card" items={items} activeKey={tab} onChange={onChangeTab} />
+      {/* <Tabs type="card" items={items} activeKey={tab} onChange={onChangeTab} /> */}
+      <div className="page-title">Notifications</div>
+      <DetailNotifications />
     </Page>
   );
 }
