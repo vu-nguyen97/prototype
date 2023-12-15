@@ -167,8 +167,11 @@ function DetailNotifications(props) {
                         </div>
 
                         <div className="mt-2 px-2 lg:px-3">
-                          {data.description}
-
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: data.description,
+                            }}
+                          />
                           <div className="text-xs2 font-medium text-slate-400 mt-1.5">
                             {getBeforeTime(data.createdDate)}
                           </div>
