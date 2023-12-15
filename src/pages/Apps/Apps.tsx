@@ -38,6 +38,8 @@ function Apps(props) {
             } else {
               setSyncing(false);
             }
+          }else{
+            setSyncing(false);
           }
         }
       });
