@@ -35,6 +35,14 @@ export default function DescriptionsDetail(props) {
     </Descriptions.Item>
   );
 
+  const screenBp = 500;
+  const pageWidth = window.innerWidth;
+  const mobileScreen = pageWidth < screenBp;
+  const desktopScreen = pageWidth > 1400;
+
+  const span1 = desktopScreen ? 1 : pageWidth < 768 ? 3 : 2;
+  const span2 = desktopScreen ? 2 : pageWidth < 768 ? 3 : 1;
+
   const storeApp = appState?.storeApp || {};
   const storeName =
     listStores?.find((el) => el.id === storeApp?.consoleDeveloperId)?.name ||
@@ -47,26 +55,29 @@ export default function DescriptionsDetail(props) {
       className=""
       size="small"
       colon={false}
-      labelStyle={{ fontWeight: 600, minWidth: 140 }}
+      labelStyle={{
+        fontWeight: 600,
+        width: mobileScreen ? 90 : 160,
+      }}
     >
       <Descriptions.Item label="Store name" span={3}>
-        <div className="text-base font-semibold">{storeName}</div>
+        <div className="xs:text-base font-semibold">{storeName}</div>
       </Descriptions.Item>
       <Descriptions.Item
         label="App"
         span={3}
         labelStyle={{ lineHeight: "24px" }}
       >
-        <div className="flex items-center space-x-2.5">
+        <div className="flex xs:items-center space-x-1 xs:space-x-2.5">
           {storeApp?.icon && (
             <img
               src={storeApp?.icon}
               alt=" "
-              className="w-10 h-10 rounded img-cover"
+              className="w-7 h-7 xs:w-10 xs:h-10 rounded img-cover"
             />
           )}
           <div>
-            <div className="text-lg font-bold">{storeApp?.name}</div>
+            <div className="xs:text-lg font-bold">{storeApp?.name}</div>
             <div className="text-xs2">{storeApp?.packageId}</div>
           </div>
         </div>
@@ -74,13 +85,13 @@ export default function DescriptionsDetail(props) {
       <Descriptions.Item label="Campaign name" span={3}>
         <div className="font-semibold">{appState?.name}</div>
       </Descriptions.Item>
-      <Descriptions.Item label="Created by" span={1}>
+      <Descriptions.Item label="Created by" span={span1}>
         <div>{appState?.createdBy}</div>
       </Descriptions.Item>
       <Descriptions.Item
         label="Created date"
-        span={2}
-        labelStyle={{ minWidth: undefined }}
+        span={span2}
+        labelStyle={pageWidth < 768 ? undefined : { width: undefined }}
       >
         <div className="">
           {appState?.createdDate &&
@@ -104,7 +115,7 @@ export default function DescriptionsDetail(props) {
       <Descriptions.Item label="Campaign goal" span={3}>
         {getLabelFromStr(unityAds?.goal)}
       </Descriptions.Item>
-      <Descriptions.Item label="Country bid" span={1}>
+      <Descriptions.Item label="Country bid" span={span1}>
         {countryBids?.length > 0 && (
           // flex flex-wrap items-center space-x-2 line-clamp-6
           <div className="flex flex-col space-y-1">
@@ -124,19 +135,29 @@ export default function DescriptionsDetail(props) {
           </div>
         )}
       </Descriptions.Item>
-      <Descriptions.Item span={2}>
-        <div>
-          <div className="flex items-center">
-            <div className="font-semibold mr-3">Daily budget</div>
+      {pageWidth > 768 ? (
+        <Descriptions.Item span={span2}>
+          <div>
+            <div className="flex items-center">
+              <div className="font-semibold mr-3">Total budget</div>
+              {unityAds?.totalBudget && `$${unityAds?.totalBudget}`}
+            </div>
+            <div className="flex items-center">
+              <div className="font-semibold mr-3">Daily budget</div>
+              {unityAds?.dailyBudget && `$${unityAds?.dailyBudget}`}
+            </div>
+          </div>
+        </Descriptions.Item>
+      ) : (
+        <>
+          <Descriptions.Item span={3} label="Total budget">
             {unityAds?.totalBudget && `$${unityAds?.totalBudget}`}
-          </div>
-          <div className="flex items-center">
-            {/* <div>Total budget</div> */}
-            <div className="font-semibold mr-3">Daily budget</div>
+          </Descriptions.Item>
+          <Descriptions.Item span={3} label="Daily budget">
             {unityAds?.dailyBudget && `$${unityAds?.dailyBudget}`}
-          </div>
-        </div>
-      </Descriptions.Item>
+          </Descriptions.Item>
+        </>
+      )}
       <Descriptions.Item
         label="Ads Interval"
         labelStyle={{ lineHeight: "32px" }}

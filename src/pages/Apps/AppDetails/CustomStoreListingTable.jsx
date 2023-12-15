@@ -32,7 +32,7 @@ function CustomStoreListingTable(props) {
     // {
     //   title: "Images",
     //   render: (record) => (
-    //     <ListImages onClick={(v) => console.log("v :>> ", v)} />
+    //     <ListImages />
     //   ),
     // },
     {

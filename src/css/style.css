@@ -6,6 +6,7 @@
 
 @import "react-toastify/dist/ReactToastify.css";
 @import "flag-icons/css/flag-icons.min.css";
+@import "react-image-gallery/styles/css/image-gallery.css";
 
 /* https://github.com/tailwindlabs/discuss/issues/25 */
 /* https://github.com/ant-design/ant-design/issues/23371 */
@@ -23,7 +24,7 @@
 @import "additional-styles/override.css";
 @import "additional-styles/react-grid-layout.css";
 @import "additional-styles/custom.css";
-@import "additional-styles/fontawesome-anim.css"; 
+@import "additional-styles/fontawesome-anim.css";
 
 /*
 @import "react-grid-layout/css/styles.css";
