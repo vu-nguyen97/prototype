@@ -42,7 +42,7 @@ export default function ListingTable(props) {
       ),
     },
     {
-      title: "Unity Campaign name",
+      title: "Unity campaign name",
       render: (rd) => (
         <div className="break-all md:break-normal">
           {getLabelFromStr(rd.unityAds?.campaignName)}

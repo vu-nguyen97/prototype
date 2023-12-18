@@ -2,7 +2,7 @@ import SearchOutlined from "@ant-design/icons/lib/icons/SearchOutlined";
 import AntInput from "antd/lib/input/Input";
 import React, { useEffect, useState } from "react";
 import Page from "../../utils/composables/Page";
-import service from "../../partials/services/axios.config";
+import service, { SOCKET_URL } from "../../partials/services/axios.config";
 import PrototypeTable from "./PrototypeTable/PrototypeTable";
 import {
   DATE_RANGE_FORMAT,
@@ -23,6 +23,7 @@ import SelectStoreApp, {
 } from "../../partials/common/Forms/SelectStoreApp";
 import { getLabelFromStr } from "../../utils/Helpers";
 import AppVariants from "../App/Variants/AppVariants";
+import { Client } from "@stomp/stompjs";
 
 function Apps() {
   const [initedPage, setInitedPage] = useState(false);
@@ -51,6 +52,22 @@ function Apps() {
     size: defaultPageSize,
   });
 
+  const [realTimeData, setRealTimeData] = useState<any>([]);
+
+  useEffect(() => {
+    if (!realTimeData?.length || !listApp?.content?.length) return;
+
+    let newContent = [...listApp.content];
+    realTimeData.forEach((data) => {
+      newContent = newContent.map((el) =>
+        el.id === data.id
+          ? { ...el, ...data, state: data.state || el.state }
+          : el
+      );
+    });
+    setListApp({ ...listApp, content: newContent });
+  }, [realTimeData]);
+
   useEffect(() => {
     service.get("/google-play-stores").then(
       (res: any) => {
@@ -78,6 +95,39 @@ function Apps() {
     if (!initedPage) return setInitedPage(true);
     onSearchData();
   }, [tableFilters]);
+
+  useEffect(() => {
+    const onConnected = () => {
+      client.subscribe(`/topic/cpi-campaigns`, function (msg) {
+        if (msg.body) {
+          const jsonBody = JSON.parse(msg.body);
+          console.log("Update CPI campaign :>> ", jsonBody);
+          if (!jsonBody?.id || listApp?.empty) return;
+
+          const data = realTimeData?.length
+            ? [...realTimeData, jsonBody]
+            : [jsonBody];
+          setRealTimeData(data);
+        }
+      });
+    };
+
+    const onDisconnected = () => {};
+
+    const client = new Client({
+      brokerURL: SOCKET_URL,
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+      onConnect: onConnected,
+      onDisconnect: onDisconnected,
+    });
+
+    client.activate();
+    return () => {
+      client.deactivate();
+    };
+  }, []);
 
   const onSearchData = (store = selectedValue) => {
     const params = {
