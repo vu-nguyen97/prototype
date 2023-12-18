@@ -86,8 +86,8 @@ function Notifications() {
           const jsonBody = JSON.parse(msg.body);
           if (!jsonBody) return;
 
-          const { data } = jsonBody;
-          console.log("updateNotification :>> ", data);
+          const data = jsonBody;
+          console.log("updateNotification :>> ", jsonBody);
           if (data) {
             dispatch(updateNotification({}));
 
