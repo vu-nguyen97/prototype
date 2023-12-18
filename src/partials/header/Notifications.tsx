@@ -81,7 +81,7 @@ function Notifications() {
 
   useEffect(() => {
     const onConnected = () => {
-      client.subscribe(`/topic/notification`, function (msg) {
+      client.subscribe(`/topic/notifications`, function (msg) {
         if (msg.body) {
           const jsonBody = JSON.parse(msg.body);
           if (!jsonBody) return;
