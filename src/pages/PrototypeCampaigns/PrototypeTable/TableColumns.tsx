@@ -17,6 +17,7 @@ import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import Popconfirm from "antd/lib/popconfirm";
 import Switch from "antd/lib/switch";
 import { CAMPAIGN_STATUS } from "../../../constants/constants";
+import { FaSpinner } from "@react-icons/all-files/fa/FaSpinner";
 
 export default function getColumns(props) {
   const { data, onEdit, onDelete, onChangeStatus } = props;
@@ -37,7 +38,8 @@ export default function getColumns(props) {
             ) : (
               <DefaultAppImg
                 classNames="w-8 h-8"
-                dot={rd.active}
+                dot={false}
+                // dot={!!rd.active}
                 dotClass="!h-1.5 !w-1.5 !right-[3px]"
               />
             )}
@@ -73,13 +75,39 @@ export default function getColumns(props) {
         return moment(record.endDate)?.format("DD-MM-YYYY");
       },
     },
-    { title: "Status", render: (rd) => getLabelFromStr(rd.state) },
+    {
+      title: "Status",
+      render: (rd) => {
+        let content = rd.detail;
+        if (rd.state === CAMPAIGN_STATUS.failed && rd.failReason) {
+          content = rd.failReason;
+        }
+
+        return (
+          <>
+            <div>{getLabelFromStr(rd.state)}</div>
+            <div className="flex items-center space-x-1.5">
+              {rd.processing && <FaSpinner className="spin text-green-600" />}
+              {content && (
+                <div
+                  className="text-xs text-gray-600"
+                  dangerouslySetInnerHTML={{
+                    __html: content,
+                  }}
+                ></div>
+              )}
+            </div>
+          </>
+        );
+      },
+    },
     {
       title: "Action",
       align: "center",
       render: (record) => {
         const { state } = record;
         let checked = false;
+        let enableText;
 
         // draft: cho edit, cho del, cho run. -> checked false
         // submitted: ko show action.
@@ -89,6 +117,9 @@ export default function getColumns(props) {
         if (state === CAMPAIGN_STATUS.submitted) return <></>;
         if (state === CAMPAIGN_STATUS.running) {
           checked = true;
+        } else {
+          // checked = false
+          enableText = state === CAMPAIGN_STATUS.paused ? "Run" : "Submit";
         }
 
         return (
@@ -108,13 +139,15 @@ export default function getColumns(props) {
               </Tooltip> */}
 
               {state !== CAMPAIGN_STATUS.failed && (
-                <Tooltip title={checked ? "Pause" : "Submit"}>
+                <Tooltip
+                  title={checked ? "Pause campaign" : enableText + " campaign"}
+                >
                   <Popconfirm
                     placement="left"
                     title={
                       checked
                         ? "Pause this campaign?"
-                        : "Submit this campaign to Unity?"
+                        : enableText + " this campaign to Unity?"
                     }
                     onConfirm={() => onChangeStatus(record, !checked)}
                     okText="Yes"

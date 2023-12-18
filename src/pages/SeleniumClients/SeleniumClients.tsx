@@ -21,13 +21,12 @@ const SeleniumClients = () => {
 
   useEffect(() => {
     const onConnected = () => {
-      setIsLoading(true);
       client.subscribe(`/topic/selenium-clients`, function (msg) {
+        setIsLoading(false);
         if (msg.body) {
           const jsonBody = JSON.parse(msg.body);
           if (!jsonBody) return;
           setListSeleniumClients(jsonBody.clients);
-          isLoading && setIsLoading(false);
         }
       });
     };
