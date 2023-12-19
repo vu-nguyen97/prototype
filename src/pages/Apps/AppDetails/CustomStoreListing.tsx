@@ -1,18 +1,17 @@
+import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
+import { Client } from "@stomp/stompjs";
 import Button from "antd/lib/button";
 import axios from "axios";
+import classNames from "classnames";
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import TimeAgo from "react-timeago";
 import { toast } from "react-toastify";
+import SyncNow from "../../../partials/common/SyncNow";
 import service, { SOCKET_URL } from "../../../partials/services/axios.config";
 import Page from "../../../utils/composables/Page";
 import CustomStoreListingTable from "./CustomStoreListingTable";
 import ModalAddCustomListing from "./ModalAddCustomListing";
-import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
-import classNames from "classnames";
-import SyncNow from "../../../partials/common/SyncNow";
-import { SOCKET_TYPES } from "../../../constants/constants";
-import { Client } from "@stomp/stompjs";
 
 const CustomStoreListing = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,11 +30,8 @@ const CustomStoreListing = () => {
     console.log("record :>> ", record);
   };
 
-  const location = useLocation();
-
   useEffect(() => {
     reloadCustomListings();
-    console.log(location.pathname)
   }, []);
 
   useEffect(() => {

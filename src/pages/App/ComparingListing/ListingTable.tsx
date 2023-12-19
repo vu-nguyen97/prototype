@@ -1,12 +1,12 @@
-import { BiLinkExternal } from "@react-icons/all-files/bi/BiLinkExternal";
 import { AiOutlinePlayCircle } from "@react-icons/all-files/ai/AiOutlinePlayCircle";
+import { BiLinkExternal } from "@react-icons/all-files/bi/BiLinkExternal";
 import Table from "antd/lib/table";
 import React, { useState } from "react";
-import { getLabelFromStr } from "../../../utils/Helpers";
 import ListImages from "../../../partials/common/ListImages";
-import { baseURL } from "../../../partials/services/axios.config";
-import { checkVideo } from "../../../partials/common/Table/Columns/NameColumn";
 import VideoPopup from "../../../partials/common/Modal/VideoPopup";
+import { checkVideo } from "../../../partials/common/Table/Columns/NameColumn";
+import { baseURL } from "../../../partials/services/axios.config";
+import { getLabelFromStr } from "../../../utils/Helpers";
 
 export default function ListingTable(props) {
   const { appState } = props;

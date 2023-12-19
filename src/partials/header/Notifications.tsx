@@ -1,27 +1,28 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import Transition from "../../utils/Transition";
+import CheckCircleOutlined from "@ant-design/icons/lib/icons/CheckCircleOutlined";
+import CloseCircleOutlined from "@ant-design/icons/lib/icons/CloseCircleOutlined";
+import ExclamationCircleOutlined from "@ant-design/icons/lib/icons/ExclamationCircleOutlined";
 import { FaRegBell } from "@react-icons/all-files/fa/FaRegBell";
 import { FaRegBellSlash } from "@react-icons/all-files/fa/FaRegBellSlash";
-import CheckCircleOutlined from "@ant-design/icons/lib/icons/CheckCircleOutlined";
-import ExclamationCircleOutlined from "@ant-design/icons/lib/icons/ExclamationCircleOutlined";
-import CloseCircleOutlined from "@ant-design/icons/lib/icons/CloseCircleOutlined";
-import Badge from "antd/lib/badge";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
-import { NOTIFICATION_TYPES } from "../../constants/constants";
-import service, { SOCKET_URL } from "../services/axios.config";
-import { getExternalUrl } from "../../utils/ProtectedRoutes";
-import classNames from "classnames";
 import { Client } from "@stomp/stompjs";
-import { updateNotification } from "../../redux/socket/notificationSlice";
+import { Tooltip } from "antd";
+import Badge from "antd/lib/badge";
 import Divider from "antd/lib/divider";
-import { getBeforeTime } from "../../utils/Helpers";
-import Switch from "antd/lib/switch";
-import InfiniteScroll from "react-infinite-scroll-component";
-import message from "antd/lib/message";
 import Empty from "antd/lib/empty";
+import message from "antd/lib/message";
 import Skeleton from "antd/lib/skeleton/Skeleton";
+import Switch from "antd/lib/switch";
+import classNames from "classnames";
+import React, { useEffect, useRef, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { NOTIFICATION_TYPES } from "../../constants/constants";
+import { updateNotification } from "../../redux/socket/notificationSlice";
+import { RootState } from "../../redux/store";
+import { getBeforeTime } from "../../utils/Helpers";
+import { getExternalUrl } from "../../utils/ProtectedRoutes";
+import Transition from "../../utils/Transition";
+import service, { SOCKET_URL, baseURL } from "../services/axios.config";
 
 export const getNotificationTypeIcon = (data) => {
   const isSuccessType = data.type === NOTIFICATION_TYPES.success;
@@ -53,6 +54,12 @@ function Notifications() {
     (state: RootState) => state.notification.totalNotifications
   );
 
+  const [latestNotificationData, setLatestNotificationData] = useState<any>();
+
+  useEffect(() => {
+    console.log("Location >> ", location.pathname);
+  }, [location]);
+
   const notificationUrl = "/settings/notifications";
   const maxNotifications = 20;
   const getMutedStatus = () => {
@@ -81,6 +88,55 @@ function Notifications() {
   }, []);
 
   useEffect(() => {
+    if (!latestNotificationData) return;
+
+    if (
+      latestNotificationData.popUp &&
+      latestNotificationData.type === NOTIFICATION_TYPES.success
+    ) {
+      const pathname = location.pathname;
+      switch (latestNotificationData.title) {
+        case "Create Release Request":
+          if (pathname === "/release") {
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          }
+          break;
+        case "Create Custom Listing Request":
+          if (/^\/apps\/\d+\/custom-store-listing$/.test(pathname)) {
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          }
+          break;
+        case "Sync Apps Request":
+          if (pathname === "/apps") {
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          }
+          break;
+        case "Fetch Custom Listings Request":
+          if (/^\/apps\/\d+\/custom-store-listing$/.test(pathname)) {
+            console.log("Refresh");
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          }
+          break;
+        case "Fetch Main Listing Request":
+          if (/^\/apps\/\d+\/main-store-listing$/.test(pathname)) {
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          }
+          break;
+      }
+    }
+  }, [latestNotificationData]);
+
+  useEffect(() => {
     const onConnected = () => {
       client.subscribe(`/topic/notifications`, function (msg) {
         if (msg.body) {
@@ -88,6 +144,7 @@ function Notifications() {
           if (!jsonBody) return;
 
           const data = jsonBody;
+          setLatestNotificationData(data);
           console.log("updateNotification :>> ", jsonBody);
           if (data) {
             dispatch(updateNotification({}));
@@ -101,50 +158,6 @@ function Notifications() {
                   message.warning(messageText);
                 default:
                   message.success(messageText);
-              }
-            }
-
-
-            if (data.popUp && data.type === NOTIFICATION_TYPES.success) {
-              const pathname = location.pathname;
-              switch (data.title) {
-                case "Create Release Request":
-                  if (pathname === "/release") {
-                    setTimeout(() => {
-                      window.location.reload();
-                    }, 1000);
-                  }
-                  break;
-                case "Create Custom Listing Request":
-                  if (/^\/apps\/\d+\/custom-store-listing$/.test(pathname)) {
-                    setTimeout(() => {
-                      window.location.reload();
-                    }, 1000);
-                  }
-                  break;
-                case "Sync Apps Request":
-                  if (pathname === "/apps") {
-                    setTimeout(() => {
-                      window.location.reload();
-                    }, 1000);
-                  }
-                  break;
-                case "Fetch Custom Listings Request":
-                  console.log("Matched")
-                  if (/^\/apps\/\d+\/custom-store-listing$/.test(pathname)) {
-                    console.log("Refresh");
-                    setTimeout(() => {
-                      window.location.reload();
-                    }, 1000);
-                  }
-                  break;
-                case "Fetch Main Listing Request":
-                  if (/^\/apps\/\d+\/main-store-listing$/.test(pathname)) {
-                    setTimeout(() => {
-                      window.location.reload();
-                    }, 1000);
-                  }
-                  break;
               }
             }
           }
@@ -249,6 +262,10 @@ function Notifications() {
     }, 100);
   };
 
+  const getReportScreenshotUrl = (item) => {
+    return `${baseURL}/media/${item.mediaId}`;
+  };
+
   const onMute = () => {
     localStorage.setItem(NOTICATION_MUTED, `${!isMuted}`);
     setIsMuted(!isMuted);
@@ -331,54 +348,130 @@ function Notifications() {
 
                   return (
                     <React.Fragment key={idx}>
-                      <li
-                        className={classNames(
-                          "flex py-1.5 pr-4",
-                          isNewNoti ? "bg-slate-100" : "hover:bg-slate-50"
-                        )}
-                      >
-                        {isNewNoti ? (
-                          <div className="ml-2.5 mr-1.5 mt-[7px] w-1.5 h-1.5 bg-antPrimary rounded-full shrink-0" />
-                        ) : (
-                          <div className="ml-[22px]" />
-                        )}
-                        <div className="w-full">
-                          <div className="text-sm mb-0.5 line-clamp-4">
-                            <Link
-                              className="block truncate"
-                              to={getExternalUrl(data.externalLink)}
-                              // to={"/external-url/" + data.externalLink}
-                              onClick={onClose}
-                            >
-                              {getNotificationTypeIcon(data)}
-                              <span
-                                className="font-bold text-slate-900 truncate"
-                                title={data.createdBy}
-                              >
-                                {data.createdBy}:
-                              </span>
-                            </Link>
-                            <div
-                              className="text-slate-900 line-clamp-4 break-words"
-                              dangerouslySetInnerHTML={{
-                                __html: data.description,
-                              }}
-                            ></div>
-                          </div>
-
-                          <Link
-                            className="block !text-xs !text-slate-400"
-                            to={getExternalUrl(data.externalLink)}
-                            onClick={onClose}
+                      {data.mediaId ? (
+                        <Tooltip title="View screenshot of failed action">
+                          <li
+                            className={classNames(
+                              "flex py-1.5 pr-4 cursor-pointer",
+                              isNewNoti ? "bg-slate-100" : "hover:bg-slate-50"
+                            )}
                           >
-                            {getBeforeTime(data.createdDate)}
-                          </Link>
-                        </div>
-                      </li>
-                      {idx !== notificationData.length - 1 && (
-                        <div className="mx-12">
-                          <Divider className="!my-1" />
-                        </div>
+                            {isNewNoti ? (
+                              <div className="ml-2.5 mr-1.5 mt-[7px] w-1.5 h-1.5 bg-antPrimary rounded-full shrink-0" />
+                            ) : (
+                              <div className="ml-[22px]" />
+                            )}
+                            <div className="w-full">
+                              <div className="text-sm mb-0.5 line-clamp-4">
+                                <div
+                                  className={`block truncate ${
+                                    data.mediaId && "cursor-pointer"
+                                  }`}
+                                  // to={getExternalUrl(data.externalLink)}
+                                  // to={"/external-url/" + data.externalLink}
+                                  onClick={() => {
+                                    if (data.mediaId) {
+                                      window.open(
+                                        getReportScreenshotUrl(data),
+                                        "_blank"
+                                      );
+                                      onClose();
+                                    }
+                                  }}
+                                >
+                                  {getNotificationTypeIcon(data)}
+                                  <span
+                                    className="font-bold text-slate-900 truncate"
+                                    title={data.createdBy}
+                                  >
+                                    {data.createdBy}:
+                                  </span>
+                                </div>
+                                <div
+                                  className="text-slate-900 line-clamp-4 break-words"
+                                  dangerouslySetInnerHTML={{
+                                    __html: data.description,
+                                  }}
+                                ></div>
+                              </div>
+
+                              <Link
+                                className="block !text-xs !text-slate-400"
+                                to={getExternalUrl(data.externalLink)}
+                                onClick={onClose}
+                              >
+                                {getBeforeTime(data.createdDate)}
+                              </Link>
+                            </div>
+                          </li>
+                          {idx !== notificationData.length - 1 && (
+                            <div className="mx-12">
+                              <Divider className="!my-1" />
+                            </div>
+                          )}
+                        </Tooltip>
+                      ) : (
+                        <>
+                          <li
+                            className={classNames(
+                              "flex py-1.5 pr-4",
+                              isNewNoti ? "bg-slate-100" : "hover:bg-slate-50"
+                            )}
+                          >
+                            {isNewNoti ? (
+                              <div className="ml-2.5 mr-1.5 mt-[7px] w-1.5 h-1.5 bg-antPrimary rounded-full shrink-0" />
+                            ) : (
+                              <div className="ml-[22px]" />
+                            )}
+                            <div className="w-full">
+                              <div className="text-sm mb-0.5 line-clamp-4">
+                                <div
+                                  className={`block truncate ${
+                                    data.mediaId && "cursor-pointer"
+                                  }`}
+                                  // to={getExternalUrl(data.externalLink)}
+                                  // to={"/external-url/" + data.externalLink}
+                                  onClick={() => {
+                                    if (data.mediaId) {
+                                      window.open(
+                                        getReportScreenshotUrl(data),
+                                        "_blank"
+                                      );
+                                      onClose();
+                                    }
+                                  }}
+                                >
+                                  {getNotificationTypeIcon(data)}
+                                  <span
+                                    className="font-bold text-slate-900 truncate"
+                                    title={data.createdBy}
+                                  >
+                                    {data.createdBy}:
+                                  </span>
+                                </div>
+                                <div
+                                  className="text-slate-900 line-clamp-4 break-words"
+                                  dangerouslySetInnerHTML={{
+                                    __html: data.description,
+                                  }}
+                                ></div>
+                              </div>
+
+                              <Link
+                                className="block !text-xs !text-slate-400"
+                                to={getExternalUrl(data.externalLink)}
+                                onClick={onClose}
+                              >
+                                {getBeforeTime(data.createdDate)}
+                              </Link>
+                            </div>
+                          </li>
+                          {idx !== notificationData.length - 1 && (
+                            <div className="mx-12">
+                              <Divider className="!my-1" />
+                            </div>
+                          )}
+                        </>
                       )}
                     </React.Fragment>
                   );
