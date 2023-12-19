@@ -43,11 +43,16 @@ export const filterIcon = (filtered) => (
   />
 );
 
-export const getDateCol = (record) => (
-  <div className="whitespace-nowrap md:whitespace-normal">
-    {moment(record?.createdDate)?.format("DD-MM-YYYY HH:mm:ss")}
-  </div>
-);
+export const getDateCol = (record, field = "createdDate", fullTime = true) => {
+  if (!record?.[field]) return <></>;
+  const format = fullTime ? "DD-MM-YYYY HH:mm:ss" : "DD-MM-YYYY";
+
+  return (
+    <div className="whitespace-nowrap md:whitespace-normal">
+      {moment(record[field])?.format(format)}
+    </div>
+  );
+};
 
 export const getSortedData = (listData, sortData: SortData) => {
   const sortedData = [...listData];

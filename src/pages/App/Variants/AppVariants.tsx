@@ -22,7 +22,6 @@ import moment from "moment";
 import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import message from "antd/lib/message";
 import Modal from "antd/lib/modal";
 
 export const FORM_LISTING = "FormListing";
@@ -106,10 +105,6 @@ export default function AppVariants(props) {
     const { app, campaignName, time, store } = values;
     const id = getActivedApp(listStoreApps, app)?.id;
 
-    if (groups?.length === 1) {
-      return message.error("Please create at least two group listings!");
-    }
-
     const params: any = {
       scheduleStart: moment(time[0]).format(DATE_RANGE_FORMAT),
       scheduleEnd: moment(time[1]).format(DATE_RANGE_FORMAT),
@@ -167,11 +162,17 @@ export default function AppVariants(props) {
     }
   }
 
+  const onResetGroup = () => {
+    setGroups(defaultGroups);
+    setActiveKey([defaultGroups[0].id]);
+    setListCustomListing([]);
+  };
+
   const sessionTitle = "font-bold text-lg text-black";
   const contentComp = (
     <>
       {isLoading && <Loading />}
-      {!submitCb && <div className="page-title">Comparing Themes</div>}
+      {!submitCb && <div className="page-title">Campagin listing</div>}
 
       <div
         className={classNames(
@@ -242,10 +243,14 @@ export default function AppVariants(props) {
 
             <div className={`${sessionTitle} mt-6`}>Campaign information</div>
             <div className="md:ml-4">
-              <DynamicCampName form={form} listStores={listStores} />
+              <DynamicCampName
+                form={form}
+                listStores={listStores}
+                onResetGroup={onResetGroup}
+              />
             </div>
 
-            <div className={`${sessionTitle} mt-6`}>Comparing listings</div>
+            <div className={`${sessionTitle} mt-6`}>Campaign listings</div>
             <div className="mt-4 md:ml-4">
               <ListingGroup
                 form={form}

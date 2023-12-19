@@ -27,9 +27,10 @@ import SearchOutlined from "@ant-design/icons/lib/icons/SearchOutlined";
 import AntInput from "antd/lib/input/Input";
 import Empty from "antd/lib/empty";
 import Loading from "../../../../utils/Loading";
+import classNames from "classnames";
 
 function DetailNotifications(props) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isOpenDateRange, setIsOpenDateRange] = useState(false);
   const [dateRange, setDateRange] = useState<moment.Moment[]>(getLast7Day());
   const [type, setType] = useState();
@@ -148,7 +149,11 @@ function DetailNotifications(props) {
           )}
         </div>
 
-        <div className="mt-4 min-h-[130px]">
+        <div
+          className={classNames(
+            (!listData?.length || listData?.length > 2) && "min-h-[130px]"
+          )}
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {listData.length > 0 &&
               listData.map((data, idx) => {

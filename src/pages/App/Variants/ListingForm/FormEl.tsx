@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import Form from "antd/lib/form";
 import { FIELD_REQUIRED } from "../../../../constants/formMessage";
@@ -7,12 +7,12 @@ import DynamicUpload, {
 } from "../../../../partials/common/Forms/DynamicUpload";
 import SelectCustomListing from "../../../../partials/common/Forms/SelectCustomListing";
 
-export const DYNAMIC_LISTING = "dynamicCountries";
+export const DYNAMIC_LISTING = "dynamicListing";
 export const DYNAMIC_CREATIVES = "dynamicCreatives";
 
 function FormEl(props) {
   const { group, onChangeGroup, listingData, disabled, form } = props;
-  const { id, listings } = group;
+  const { id, listing } = group;
 
   const creatives = group.creatives || [];
   const creativeField = "creativeUploadEl";
@@ -29,18 +29,22 @@ function FormEl(props) {
     ]);
   };
 
+  useEffect(() => {
+    if (!listing) {
+      form.setFieldValue(DYNAMIC_LISTING + id, undefined);
+    }
+  }, [listing]);
+
   return (
     <>
       <Form.Item
         label="Listing"
         name={DYNAMIC_LISTING + id}
-        labelCol={{ span: 24 }}
-        wrapperCol={{ span: 24 }}
         rules={[{ required: true, message: FIELD_REQUIRED }]}
       >
         <SelectCustomListing
           listApp={listingData}
-          activedApp={listings}
+          activedApp={listing}
           setActivedApp={onSetListing}
         />
       </Form.Item>
@@ -48,8 +52,6 @@ function FormEl(props) {
       <Form.Item
         name={DYNAMIC_CREATIVES + id}
         label="Creatives"
-        labelCol={{ span: 24 }}
-        wrapperCol={{ span: 24 }}
         rules={[getUploadRule(creatives, "Please select creatives")]}
       >
         <DynamicUpload

@@ -32,6 +32,20 @@ function ListingGroup(props) {
 
   const onDeleteGroup = (event, groupId) => {
     event.stopPropagation();
+
+    // Đọc note ở hàm onPlusGroup
+    if (groups.length === 1) {
+      const id = groups[0].id;
+      setGroups([
+        {
+          id,
+          listing: undefined,
+          creatives: [],
+        },
+      ]);
+      activeKey !== id && setActiveKey([id]);
+      return;
+    }
     setGroups(groups.filter((el) => el.id !== groupId));
   };
 
@@ -149,6 +163,8 @@ export const addBidGroupLink = (params: any = {}) => (
 
 export const onPlusGroup = ({ groups, setGroups, setActiveKey, form }) => {
   if (!groups?.length) {
+    // Logic sẽ sai khi xóa hết group, do id sẽ update thành 0 thay vì đếm tiếp
+    // Có thể cần lưu id lớn nhất của group
     setGroups([{ id: 0 }]);
     setActiveKey([0]);
     return;

@@ -98,11 +98,9 @@ function ModalAddCustomListing(props) {
         toast(res.message, { type: "success" });
         setIsLoading(false);
         setIsOpenModalAddApp(false);
+        onCloseModal();
       },
-      (err) => {
-        setIsLoading(false);
-        toast(err, { type: "error" });
-      }
+      () => setIsLoading(false)
     );
   };
 

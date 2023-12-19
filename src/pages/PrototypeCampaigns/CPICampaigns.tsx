@@ -75,10 +75,10 @@ function Apps() {
         // const initedStore = res.results[0]?.id;
         // setSelectedValue(initedStore);
         // onSearchData(initedStore);
-        onSearchData();
       },
       () => {}
     );
+    onSearchData();
   }, []);
 
   useEffect(() => {

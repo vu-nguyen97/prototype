@@ -62,18 +62,12 @@ export default function getColumns(props) {
     {
       title: "Start date",
       // sorter: sortByDate("startDate"),
-      render: (record) => {
-        if (!record.startDate) return "";
-        return moment(record.startDate)?.format("DD-MM-YYYY");
-      },
+      render: (rd) => getDateCol(rd, "startDate", false),
     },
     {
       title: "End date",
       // sorter: sortByDate("endDate"),
-      render: (record) => {
-        if (!record.endDate) return "";
-        return moment(record.endDate)?.format("DD-MM-YYYY");
-      },
+      render: (rd) => getDateCol(rd, "endDate", false),
     },
     {
       title: "Status",

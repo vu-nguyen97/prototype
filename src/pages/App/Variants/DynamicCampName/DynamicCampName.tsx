@@ -8,12 +8,14 @@ import { GET_APPS_BY_STORE } from "../../../../api/constants.api";
 import { getAppsByStore } from "../../../../api/common/common.api";
 
 export default function DynamicCampName(props) {
-  const { form, listStores } = props;
+  const { form, listStores, onResetGroup } = props;
+
   const [listStoreApps, setListStoreApps] = useState<any>([]);
+  const [app, setApp] = useState();
 
   const formStoreId = Form.useWatch("store", form);
 
-  const { data: appsRes } = useQuery(
+  const { data: appsRes, isLoading } = useQuery(
     [GET_APPS_BY_STORE, formStoreId],
     getAppsByStore,
     {
@@ -24,22 +26,21 @@ export default function DynamicCampName(props) {
 
   useEffect(() => {
     setListStoreApps(appsRes);
+    setApp(undefined);
+    form.setFields([
+      { name: "app", value: "", errors: [] },
+      { name: "campaignName", value: "", errors: [] },
+    ]);
   }, [appsRes]);
 
   return (
-    <div className="">
+    <>
       <Form.Item
         name="store"
         label="Store"
         rules={[{ required: true, message: "Please select an app" }]}
       >
-        <Select
-          allowClear
-          placeholder="Store"
-          onChange={(value) => {
-            form.setFields([{ name: "app", value: undefined, errors: [] }]);
-          }}
-        >
+        <Select allowClear placeholder="Store" onChange={onResetGroup}>
           {listStores?.map((item) => (
             <Select.Option key={item.id} value={item.id}>
               {item.name}
@@ -54,8 +55,13 @@ export default function DynamicCampName(props) {
         rules={[{ required: true, message: "Please select an app" }]}
       >
         <SelectStoreApp
+          loading={isLoading}
           listApp={listStoreApps}
+          placeholder="Select a app"
+          activedApp={app}
           setActivedApp={(app) => {
+            setApp(app);
+            onResetGroup();
             if (app) {
               const regex = /(?=[A-Z])/;
               const index = app.toString().search(regex);
@@ -82,6 +88,6 @@ export default function DynamicCampName(props) {
       >
         <AntInput allowClear placeholder="Enter campaign name" />
       </Form.Item>
-    </div>
+    </>
   );
 }
