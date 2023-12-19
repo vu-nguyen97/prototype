@@ -1,5 +1,4 @@
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
-import { Client } from "@stomp/stompjs";
 import Button from "antd/lib/button";
 import axios from "axios";
 import classNames from "classnames";
@@ -8,7 +7,7 @@ import { useParams } from "react-router-dom";
 import TimeAgo from "react-timeago";
 import { toast } from "react-toastify";
 import SyncNow from "../../../partials/common/SyncNow";
-import service, { SOCKET_URL } from "../../../partials/services/axios.config";
+import service from "../../../partials/services/axios.config";
 import Page from "../../../utils/composables/Page";
 import CustomStoreListingTable from "./CustomStoreListingTable";
 import ModalAddCustomListing from "./ModalAddCustomListing";
@@ -32,38 +31,6 @@ const CustomStoreListing = () => {
 
   useEffect(() => {
     reloadCustomListings();
-  }, []);
-
-  useEffect(() => {
-    const onConnected = () => {
-      client.subscribe(`/topic/selenium-clients`, function (msg) {
-        if (msg.body) {
-          const jsonBody = JSON.parse(msg.body);
-          if (!jsonBody) return;
-
-          console.log("fetCustomListings", jsonBody);
-          // if (jsonBody.type === SOCKET_TYPES.fetCustomListings) {
-          //   setSyncing(false);
-          // }
-        }
-      });
-    };
-    const onDisconnected = () => {};
-
-    const client = new Client({
-      brokerURL: SOCKET_URL,
-      reconnectDelay: 5000,
-      heartbeatIncoming: 4000,
-      heartbeatOutgoing: 4000,
-      onConnect: onConnected,
-      onDisconnect: onDisconnected,
-    });
-
-    client.activate();
-
-    return () => {
-      client.deactivate();
-    };
   }, []);
 
   const sendUpdateListingRequest = () => {

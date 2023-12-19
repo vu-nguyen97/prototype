@@ -1,24 +1,22 @@
+import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
+import { useQuery } from "@tanstack/react-query";
 import { Badge, Button, Descriptions } from "antd";
+import AntInput from "antd/lib/input";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import TimeAgo from "react-timeago";
 import { toast } from "react-toastify";
-import service, { SOCKET_URL } from "../../../partials/services/axios.config";
-import Loading from "../../../utils/Loading";
-import Page from "../../../utils/composables/Page";
-import AntInput from "antd/lib/input";
+import { getAppById } from "../../../api/common/common.api";
+import { GET_APP_BY_ID } from "../../../api/constants.api";
 import ImagePreview, {
   ImgFile,
 } from "../../../partials/common/Modal/ImagePreview";
-import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
-import EditMainStoreListing from "./EditMainStoreListing";
-import { useQuery } from "@tanstack/react-query";
-import { GET_APP_BY_ID } from "../../../api/constants.api";
-import { getAppById } from "../../../api/common/common.api";
-import { SOCKET_TYPES } from "../../../constants/constants";
-import { Client } from "@stomp/stompjs";
 import SyncNow from "../../../partials/common/SyncNow";
+import service from "../../../partials/services/axios.config";
+import Loading from "../../../utils/Loading";
+import Page from "../../../utils/composables/Page";
+import EditMainStoreListing from "./EditMainStoreListing";
 
 const MainStoreListing = () => {
   const urlParams = useParams();
@@ -42,38 +40,6 @@ const MainStoreListing = () => {
       enabled: !!urlParams.appId,
     }
   );
-
-  useEffect(() => {
-    const onConnected = () => {
-      client.subscribe(`/topic/selenium-clients`, function (msg) {
-        if (msg.body) {
-          const jsonBody = JSON.parse(msg.body);
-          if (!jsonBody) return;
-
-          console.log("getMainListing", jsonBody);
-          if (jsonBody.type === SOCKET_TYPES.getMainListing) {
-            // setSyncing(false);
-          }
-        }
-      });
-    };
-    const onDisconnected = () => {};
-
-    const client = new Client({
-      brokerURL: SOCKET_URL,
-      reconnectDelay: 5000,
-      heartbeatIncoming: 4000,
-      heartbeatOutgoing: 4000,
-      onConnect: onConnected,
-      onDisconnect: onDisconnected,
-    });
-
-    client.activate();
-
-    return () => {
-      client.deactivate();
-    };
-  }, []);
 
   useEffect(() => {
     const data = storeListingRes?.results || {};

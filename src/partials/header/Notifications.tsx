@@ -56,10 +56,6 @@ function Notifications() {
 
   const [latestNotificationData, setLatestNotificationData] = useState<any>();
 
-  useEffect(() => {
-    console.log("Location >> ", location.pathname);
-  }, [location]);
-
   const notificationUrl = "/settings/notifications";
   const maxNotifications = 20;
   const getMutedStatus = () => {
@@ -119,7 +115,6 @@ function Notifications() {
           break;
         case "Fetch Custom Listings Request":
           if (/^\/apps\/\d+\/custom-store-listing$/.test(pathname)) {
-            console.log("Refresh");
             setTimeout(() => {
               window.location.reload();
             }, 1000);

@@ -4,13 +4,11 @@ import AntInput from "antd/lib/input/Input";
 import React, { useEffect, useState } from "react";
 import TimeAgo from "react-timeago";
 import { toast } from "react-toastify";
-import service, { SOCKET_URL } from "../../partials/services/axios.config";
+import SyncNow from "../../partials/common/SyncNow";
+import service from "../../partials/services/axios.config";
+import Loading from "../../utils/Loading";
 import Page from "../../utils/composables/Page";
 import AppTable from "./AppTable";
-import Loading from "../../utils/Loading";
-import { Client } from "@stomp/stompjs";
-import { SOCKET_TYPES } from "../../constants/constants";
-import SyncNow from "../../partials/common/SyncNow";
 
 function Apps(props) {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,43 +22,6 @@ function Apps(props) {
   const [selectedDeveloperId, setSelectedDeveloperId] = useState<string>();
   const [lastSyncAppsAt, setLastSyncAppsAt] = useState<number>();
   const [syncing, setSyncing] = useState(false);
-
-  useEffect(() => {
-    const onConnected = () => {
-      client.subscribe(`/topic/selenium-clients`, function (msg) {
-        if (msg.body) {
-          const jsonBody = JSON.parse(msg.body);
-          if (!jsonBody) return;
-          console.log("/topic/selenium-clients", jsonBody);
-          if (jsonBody.id === selectedDeveloperId && jsonBody.type) {
-            if (jsonBody.type === SOCKET_TYPES.syncApps) {
-              setSyncing(true);
-            } else {
-              setSyncing(false);
-            }
-          } else {
-            setSyncing(false);
-          }
-        }
-      });
-    };
-    const onDisconnected = () => {};
-
-    const client = new Client({
-      brokerURL: SOCKET_URL,
-      reconnectDelay: 5000,
-      heartbeatIncoming: 4000,
-      heartbeatOutgoing: 4000,
-      onConnect: onConnected,
-      onDisconnect: onDisconnected,
-    });
-
-    client.activate();
-
-    return () => {
-      client.deactivate();
-    };
-  }, []);
 
   useEffect(() => {
     setIsLoading(true);
