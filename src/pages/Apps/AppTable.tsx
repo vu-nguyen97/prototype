@@ -50,12 +50,12 @@ function AppTable(props) {
       ),
     },
     {
-      title: "PackageId",
+      title: "Package id",
       sorter: sortByString("packageId"),
       render: (record) => <div className="break-all">{record.packageId}</div>,
     },
     {
-      title: "App Status",
+      title: "App status",
       sorter: sortByString("consoleStatus"),
       render: (record) => (
         <div className="whitespace-nowrap md:whitespace-normal">
@@ -64,7 +64,7 @@ function AppTable(props) {
       ),
     },
     {
-      title: "Update Status",
+      title: "Update status",
       sorter: sortByString("updateStatus"),
       render: (record) => (
         <div className="whitespace-nowrap md:whitespace-normal">
@@ -73,7 +73,7 @@ function AppTable(props) {
       ),
     },
     {
-      title: "Last Update",
+      title: "Last update",
       sorter: (a, b) => sortNumberWithNullable(a, b, (el) => el.lastSyncTime),
       render: (record) => (
         <div className="whitespace-nowrap md:whitespace-normal">

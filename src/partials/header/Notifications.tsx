@@ -90,6 +90,7 @@ function Notifications() {
           const data = jsonBody;
           console.log("updateNotification :>> ", jsonBody);
           if (data) {
+            setDropdownOpen(false);
             dispatch(updateNotification({}));
 
             if (data.popUp && !getMutedStatus()) {
@@ -103,7 +104,6 @@ function Notifications() {
                   message.success(messageText);
               }
             }
-
 
             if (data.popUp && data.type === NOTIFICATION_TYPES.success) {
               const pathname = location.pathname;
@@ -130,7 +130,7 @@ function Notifications() {
                   }
                   break;
                 case "Fetch Custom Listings Request":
-                  console.log("Matched")
+                  console.log("Matched");
                   if (/^\/apps\/\d+\/custom-store-listing$/.test(pathname)) {
                     console.log("Refresh");
                     setTimeout(() => {
