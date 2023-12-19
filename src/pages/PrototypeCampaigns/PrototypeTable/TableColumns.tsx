@@ -132,7 +132,7 @@ export default function getColumns(props) {
                 />
               </Tooltip> */}
 
-              {state !== CAMPAIGN_STATUS.failed && (
+              {!record.processing && (
                 <Tooltip
                   title={checked ? "Pause campaign" : enableText + " campaign"}
                 >
@@ -168,7 +168,7 @@ export default function getColumns(props) {
                 </Tooltip>
               )}
 
-              {state !== CAMPAIGN_STATUS.running && (
+              {state !== CAMPAIGN_STATUS.running && !record.processing && (
                 <Popconfirm
                   placement="left"
                   title="Remove this campaign?"

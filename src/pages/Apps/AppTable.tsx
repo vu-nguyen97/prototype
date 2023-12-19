@@ -88,21 +88,30 @@ function AppTable(props) {
       render: (record) => {
         return (
           <>
-            {record.unityAppId ? (
-              <div className="flex items-center">
-                <AiOutlineCheck size={16} color="green" />
-                <span className="text-green-500 ml-0.5">Linked</span>
-              </div>
+            {record.consoleStatus !== "Draft" &&
+            record.consoleStatus !== "Draft Internal testing" ? (
+              record.unityAppId ? (
+                <div className="flex items-center">
+                  <AiOutlineCheck size={16} color="green" />
+                  <span className="text-green-500 ml-0.5">Linked</span>
+                </div>
+              ) : (
+                <div className="flex items-center cursor-pointer">
+                  <Tooltip title="Link this app to Unity">
+                    <span
+                      className="text-blue-400 ml-0.5 cursor-pointer underline"
+                      onClick={() => createUnityApp(record)}
+                    >
+                      Link now
+                    </span>
+                  </Tooltip>
+                </div>
+              )
             ) : (
-              <div className="flex items-center cursor-pointer">
-                <Tooltip title="Link this app to Unity">
-                  <span
-                    className="text-blue-400 ml-0.5 cursor-pointer underline"
-                    onClick={() => createUnityApp(record)}
-                  >
-                    Link now
-                  </span>
-                </Tooltip>
+              <div>
+                <div className="flex items-center">
+                  <span className="text-gray-400">Not available</span>
+                </div>
               </div>
             )}
           </>
