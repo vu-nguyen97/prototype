@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Transition from "../../utils/Transition";
 import { FaRegBell } from "@react-icons/all-files/fa/FaRegBell";
 import { FaRegBellSlash } from "@react-icons/all-files/fa/FaRegBellSlash";
@@ -48,6 +48,7 @@ const NOTICATION_MUTED = "notification-mute";
 function Notifications() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const totalNotification = useSelector(
     (state: RootState) => state.notification.totalNotifications
   );
@@ -95,11 +96,55 @@ function Notifications() {
               const messageText = data.createdBy + ": " + data.title;
               switch (data.type) {
                 case NOTIFICATION_TYPES.error:
-                  return message.error(messageText);
+                  message.error(messageText);
                 case NOTIFICATION_TYPES.warning:
-                  return message.warning(messageText);
+                  message.warning(messageText);
                 default:
-                  return message.success(messageText);
+                  message.success(messageText);
+              }
+            }
+
+
+            if (data.popUp && data.type === NOTIFICATION_TYPES.success) {
+              const pathname = location.pathname;
+              switch (data.title) {
+                case "Create Release Request":
+                  if (pathname === "/release") {
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 1000);
+                  }
+                  break;
+                case "Create Custom Listing Request":
+                  if (/^\/apps\/\d+\/custom-store-listing$/.test(pathname)) {
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 1000);
+                  }
+                  break;
+                case "Sync Apps Request":
+                  if (pathname === "/apps") {
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 1000);
+                  }
+                  break;
+                case "Fetch Custom Listings Request":
+                  console.log("Matched")
+                  if (/^\/apps\/\d+\/custom-store-listing$/.test(pathname)) {
+                    console.log("Refresh");
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 1000);
+                  }
+                  break;
+                case "Fetch Main Listing Request":
+                  if (/^\/apps\/\d+\/main-store-listing$/.test(pathname)) {
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 1000);
+                  }
+                  break;
               }
             }
           }

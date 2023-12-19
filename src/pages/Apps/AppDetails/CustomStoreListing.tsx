@@ -1,7 +1,7 @@
 import Button from "antd/lib/button";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import TimeAgo from "react-timeago";
 import { toast } from "react-toastify";
 import service, { SOCKET_URL } from "../../../partials/services/axios.config";
@@ -31,8 +31,11 @@ const CustomStoreListing = () => {
     console.log("record :>> ", record);
   };
 
+  const location = useLocation();
+
   useEffect(() => {
     reloadCustomListings();
+    console.log(location.pathname)
   }, []);
 
   useEffect(() => {
