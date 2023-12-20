@@ -117,6 +117,9 @@ function ModalAddRelease(props) {
         toast(res.message, { type: "success" });
         setIsLoading(false);
         onCloseModal();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       },
       () => setIsLoading(false)
     );

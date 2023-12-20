@@ -92,13 +92,6 @@ function Notifications() {
     ) {
       const pathname = location.pathname;
       switch (latestNotificationData.title) {
-        case "Create Release Request":
-          if (pathname === "/release") {
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-          }
-          break;
         case "Create Custom Listing Request":
           if (/^\/apps\/\d+\/custom-store-listing$/.test(pathname)) {
             setTimeout(() => {

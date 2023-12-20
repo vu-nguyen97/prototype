@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { sortByDate, sortByString } from "../../utils/Helpers";
 import moment from "moment";
+import { FaSpinner } from "@react-icons/all-files/fa/FaSpinner";
 
 function ReleaseStatusTable(props) {
   const defaultPageSize = 10;
@@ -74,7 +75,17 @@ function ReleaseStatusTable(props) {
             break;
         }
 
-        return <div style={{ color }}>{record.detailStatus}</div>;
+        return (
+          <React.Fragment>
+            <div className="flex items-center gap-2">
+              {record.detailStatus !== "Error" &&
+                record.detailStatus !== "Done" && (
+                  <FaSpinner className="spin text-green-600" />
+                )}
+              <div style={{ color }}>{record.detailStatus}</div>
+            </div>
+          </React.Fragment>
+        );
       },
     },
   ];

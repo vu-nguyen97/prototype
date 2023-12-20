@@ -1,11 +1,12 @@
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
 import SearchOutlined from "@ant-design/icons/lib/icons/SearchOutlined";
+import { Client } from "@stomp/stompjs";
 import { Button } from "antd";
 import AntInput from "antd/lib/input/Input";
 import Modal from "antd/lib/modal";
 import Select from "antd/lib/select";
 import React, { useEffect, useState } from "react";
-import service from "../../partials/services/axios.config";
+import service, { SOCKET_URL } from "../../partials/services/axios.config";
 import Page from "../../utils/composables/Page";
 import ModalAddRelease from "./ModalAddRelease/ModalAddRelease";
 import ReleaseStatusTable from "./ReleaseStatusTable";
@@ -17,6 +18,8 @@ function Releases() {
   const [releaseStatus, setReleaseStatus] = useState<any>([]);
   const [templateData, setTemplateData] = useState<any>();
   const [listStores, setListStores] = useState<any>([]);
+
+  const [filteredData, setFilteredData] = useState<any>([]);
 
   const [selectedStore, setSelectedStore] = useState<string>();
   const [search, setSearch] = useState("");
@@ -42,9 +45,42 @@ function Releases() {
           ),
         }));
         setReleaseStatus(newData);
+        console.log('releaseStatus :>> ', newData);
       },
       () => setIsLoading(false)
     );
+
+    const onConnected = () => {
+      client.subscribe("/topic/release-status", function (msg) {
+        if (msg.body) {
+          const jsonBody = JSON.parse(msg.body);
+          setReleaseStatus(prevState => 
+            prevState.map((el) =>
+              el.id === jsonBody.id
+                ? { ...el, detailStatus: jsonBody.status }
+                : el
+            )
+          );
+        }
+      });
+    };
+
+    const onDisconnected = () => {};
+
+    const client = new Client({
+      brokerURL: SOCKET_URL,
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+      onConnect: onConnected,
+      onDisconnect: onDisconnected,
+    });
+
+    client.activate();
+
+    return () => {
+      client.deactivate();
+    };
   }, []);
 
   const addNewRelease = () => {
@@ -61,20 +97,24 @@ function Releases() {
     });
   };
 
-  let filteredData = [...releaseStatus];
-  if (search || selectedStore) {
-    filteredData = filteredData.filter((data) => {
-      if (selectedStore && data.developerId !== selectedStore) return false;
-      if (
-        search &&
-        (!data.appName ||
-          !data.appName.toLowerCase()?.includes(search.toLowerCase()))
-      ) {
-        return false;
-      }
-      return true;
-    });
-  }
+  useEffect(() => {
+    setFilteredData(releaseStatus);
+    if (search || selectedStore) {
+      setFilteredData(
+        releaseStatus.filter((data) => {
+          if (selectedStore && data.developerId !== selectedStore) return false;
+          if (
+            search &&
+            (!data.appName ||
+              !data.appName.toLowerCase()?.includes(search.toLowerCase()))
+          ) {
+            return false;
+          }
+          return true;
+        })
+      );
+    }
+  }, [releaseStatus, search, selectedStore]);
 
   return (
     <Page>
