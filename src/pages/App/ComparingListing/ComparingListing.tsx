@@ -55,7 +55,7 @@ function ComparingListing(props) {
     <Page>
       {(isLoading || isLoadingApp) && <Loading />}
 
-      <div className="page-title">Compaign Listing</div>
+      <div className="page-title">Campaign Listing</div>
       <div className="bg-white rounded-sm shadow mt-2 mb-5 lg:p-6 p-4">
         <DescriptionsDetail
           listStores={listStores}

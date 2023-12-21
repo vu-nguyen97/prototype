@@ -82,13 +82,31 @@ export default function AppVariants(props) {
       (res: any) => {
         const newApp = res.results || {};
         if (!Object.keys(newApp).length) return;
-
         service.get("/" + newApp.consoleAppId + "/custom_listings").then(
           (res: any) => {
-            setListCustomListing(res.results || []);
+            console.log('custom_listings', res.results);
+
+            // Create a new object with the specified ID and name
+            const newObject = {
+              id: 'main_listing',
+              listingName: 'Main Listing'
+            };
+          
+            const existingResults = res.results
+            ? res.results.map((listing: any) => ({
+                ...listing,
+                listingName: 'Custom - ' + listing.listingName
+              }))
+            : [];
+
+            // Insert the new object at index 0
+            existingResults.unshift(newObject);
+
+            // Update the state with the modified array
+            setListCustomListing(existingResults);
           },
           () => {}
-        );
+        );       
       },
       () => {}
     );
