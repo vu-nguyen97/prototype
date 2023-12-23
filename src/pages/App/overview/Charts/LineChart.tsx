@@ -27,13 +27,13 @@ export const LineChartConfigs = {
   scales: {
     x: {
       title: {
-        display: true,
+        display: false,
         text: "Day",
       },
     },
     y: {
       title: {
-        display: true,
+        display: false,
         text: "Value",
       },
     },
