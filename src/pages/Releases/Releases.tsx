@@ -126,7 +126,7 @@ function Releases() {
             icon={<PlusOutlined />}
             onClick={addNewRelease}
           >
-            New release
+            New app
           </Button>
         </div>
       </div>

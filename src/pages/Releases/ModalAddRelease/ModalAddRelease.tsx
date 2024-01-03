@@ -20,6 +20,7 @@ import {
   getFullDescription,
   getShortDescription,
 } from "./Helpers";
+import { Switch } from "antd";
 
 function ModalAddRelease(props) {
   const [form] = Form.useForm();
@@ -29,11 +30,15 @@ function ModalAddRelease(props) {
   const [listFiles, setListFiles] = useState<any>({});
   const [addingRelease, setAddingRelease] = useState(false);
 
+  const [createReleaseBoolean, setCreateReleaseBoolean] = useState(false);
+
   const initialValues = {};
 
   useEffect(() => {
     if (!isOpen || !listStores?.length) return;
     form.setFieldValue("developerId", listStores[0].id);
+    form.setFieldValue("createRelease", false);
+    setCreateReleaseBoolean(false);
   }, [isOpen, listStores]);
 
   const onCloseModal = () => {
@@ -91,14 +96,18 @@ function ModalAddRelease(props) {
       fullDescription,
       shortDescription,
       url,
+      createRelease
     } = values;
     const formData = new FormData();
 
     formData.append("developerId", developerId);
     formData.append("appName", appName);
-    formData.append("releaseName", releaseName);
-    formData.append("countryNotes", releaseNote);
-    formData.append("file", listFiles["file"][0] as Blob);
+
+    if (createRelease) {
+      formData.append("releaseName", releaseName);
+      formData.append("countryNotes", releaseNote);
+      formData.append("file", listFiles["file"][0] as Blob);
+    }
 
     formData.append("shortDescription", shortDescription);
     formData.append("fullDescription", fullDescription);
@@ -181,42 +190,53 @@ function ModalAddRelease(props) {
             onChange={onChangeAppName}
           />
         </Form.Item>
-        <Form.Item
-          name="releaseName"
-          label="Release name"
-          rules={[{ required: true, message: FIELD_REQUIRED }]}
-        >
-          <AntInput
-            allowClear
-            className="w-full"
-            placeholder="Enter release name"
-          />
+        <Form.Item name="createRelease" label="Create release?" valuePropName="checked">
+          <Switch onChange={(checked) => setCreateReleaseBoolean(checked)}/>
         </Form.Item>
-        <Form.Item
-          name="releaseNote"
-          label="Release note"
-          rules={[{ required: true, message: "Please enter Release Notes" }]}
-        >
-          <AntInput.TextArea
-            allowClear
-            rows={5}
-            placeholder="Enter release notes"
-          />
-        </Form.Item>
-        <Form.Item
-          name="file"
-          label="Bundle"
-          rules={[getUploadRule(listFiles["file"], "Please select a bundle")]}
-        >
-          <DynamicUpload
-            wrapperClass=""
-            isShowLabel={false}
-            field="file"
-            onSetListFiles={onSetListFiles}
-            listFiles={listFiles["file"] || []}
-            accept=".aab, .AAB"
-          />
-        </Form.Item>
+        {createReleaseBoolean && (
+          <>
+            <Form.Item
+              name="releaseName"
+              label="Release name"
+              rules={[{ required: true, message: FIELD_REQUIRED }]}
+            >
+              <AntInput
+                allowClear
+                className="w-full"
+                placeholder="Enter release name"
+              />
+            </Form.Item>
+            <Form.Item
+              name="releaseNote"
+              label="Release note"
+              rules={[
+                { required: true, message: "Please enter Release Notes" },
+              ]}
+            >
+              <AntInput.TextArea
+                allowClear
+                rows={5}
+                placeholder="Enter release notes"
+              />
+            </Form.Item>
+            <Form.Item
+              name="file"
+              label="Bundle"
+              rules={[
+                getUploadRule(listFiles["file"], "Please select a bundle"),
+              ]}
+            >
+              <DynamicUpload
+                wrapperClass=""
+                isShowLabel={false}
+                field="file"
+                onSetListFiles={onSetListFiles}
+                listFiles={listFiles["file"] || []}
+                accept=".aab, .AAB"
+              />
+            </Form.Item>
+          </>
+        )}
 
         <div className="font-semibold text-base mt-4 mb-2">Store listing</div>
         <Form.Item
@@ -236,7 +256,7 @@ function ModalAddRelease(props) {
         <Form.Item
           name="fullDescription"
           label="Full description"
-          rules={[{ required: true, message: "Please anter full description" }]}
+          rules={[{ required: true, message: "Please enter full description" }]}
         >
           <AntInput.TextArea
             rows={10}

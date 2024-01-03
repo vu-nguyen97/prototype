@@ -343,6 +343,15 @@ function Notifications() {
                               "flex py-1.5 pr-4 cursor-pointer",
                               isNewNoti ? "bg-slate-100" : "hover:bg-slate-50"
                             )}
+                            onClick={() => {
+                              if (data.mediaId) {
+                                window.open(
+                                  getReportScreenshotUrl(data),
+                                  "_blank"
+                                );
+                                onClose();
+                              }
+                            }}
                           >
                             {isNewNoti ? (
                               <div className="ml-2.5 mr-1.5 mt-[7px] w-1.5 h-1.5 bg-antPrimary rounded-full shrink-0" />
@@ -357,15 +366,6 @@ function Notifications() {
                                   }`}
                                   // to={getExternalUrl(data.externalLink)}
                                   // to={"/external-url/" + data.externalLink}
-                                  onClick={() => {
-                                    if (data.mediaId) {
-                                      window.open(
-                                        getReportScreenshotUrl(data),
-                                        "_blank"
-                                      );
-                                      onClose();
-                                    }
-                                  }}
                                 >
                                   {getNotificationTypeIcon(data)}
                                   <span
