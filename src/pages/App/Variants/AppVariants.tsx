@@ -1,28 +1,33 @@
+import Button from "antd/lib/button/button";
+import DatePicker from "antd/lib/date-picker";
+import Form from "antd/lib/form";
+import InputNumber from "antd/lib/input-number";
+import Modal from "antd/lib/modal";
+import Select from "antd/lib/select";
+import Tag from "antd/lib/tag";
+import classNames from "classnames";
+import moment from "moment";
+import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import Page from "../../../utils/composables/Page";
-import service from "../../../partials/services/axios.config";
+import { toast } from "react-toastify";
+import { BID_CPI_TYPE, EXTRA_FOOTER } from "../../../constants/constants";
+import { COUNTRIES } from "../../../constants/countries";
+import { FIELD_REQUIRED } from "../../../constants/formMessage";
 import {
   DATE_RANGE_FORMAT,
   getCampDay,
   onClickRangePickerFooter,
 } from "../../../partials/common/Forms/RangePicker";
-import DatePicker from "antd/lib/date-picker";
-import { EXTRA_FOOTER } from "../../../constants/constants";
-import Tag from "antd/lib/tag";
-import Button from "antd/lib/button/button";
-import Loading from "../../../utils/Loading";
-import DynamicCampName from "./DynamicCampName/DynamicCampName";
 import { getActivedApp } from "../../../partials/common/Forms/SelectStoreApp";
-import Form from "antd/lib/form";
-import { Group } from "./ListingForm/interface";
+import service from "../../../partials/services/axios.config";
+import Loading from "../../../utils/Loading";
+import Page from "../../../utils/composables/Page";
+import BidGroupForm from "../../AddCampaign/components/BidGroupForm";
 import { defaultGroups } from "../../AddCampaign/constants";
+import { BidGroup } from "../../AddCampaign/interface";
+import DynamicCampName from "./DynamicCampName/DynamicCampName";
 import ListingGroup from "./ListingForm/ListingGroup";
-import { FIELD_REQUIRED } from "../../../constants/formMessage";
-import moment from "moment";
-import { toast } from "react-toastify";
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import Modal from "antd/lib/modal";
+import { Group } from "./ListingForm/interface";
 
 export const FORM_LISTING = "FormListing";
 
@@ -37,9 +42,16 @@ export default function AppVariants(props) {
   const [listStoreApps, setListStoreApps] = useState<any>([]);
   const [listCustomListing, setListCustomListing] = useState<any>([]);
   const [listStores, setListStores] = useState<any>([]);
+  const [listAdsConfigs, setListAdsConfigs] = useState<any>([]);
+
+  const [selectedConfigTemplateIndex, setSelectedConfigTemplateIndex] =
+    useState<any>(-1);
 
   const [activeKey, setActiveKey] = useState<any>([defaultGroups[0].id]);
   const [groups, setGroups] = useState<Group[]>(defaultGroups);
+
+  const [activeBidKey, setActiveBidKey] = useState<any>([defaultGroups[0].id]);
+  const [bidGroups, setBidGroups] = useState<BidGroup[]>(defaultGroups);
 
   const initialValues = {
     time: getCampDay(),
@@ -47,14 +59,18 @@ export default function AppVariants(props) {
   const formApp = Form.useWatch("app", form);
 
   useEffect(() => {
-    if (inited) return;
+    if (inited) {
+      form.setFieldValue("adsConfig", listAdsConfigs[0]?.id);
+      return;
+    }
     if (!isOpen && isOpen !== undefined) return;
 
     setIsLoading(true);
     const getUnityApps = service.get("/store-app");
     const getStores = service.get("/google-play-stores");
+    const getAdsConfigs = service.get("/configs");
 
-    Promise.all([getUnityApps, getStores]).then(
+    Promise.all([getUnityApps, getStores, getAdsConfigs]).then(
       (res: any) => {
         const newStores = res[1].results || [];
         setListStores(newStores);
@@ -65,10 +81,32 @@ export default function AppVariants(props) {
         );
         setIsLoading(false);
         setInited(true);
+        setListAdsConfigs(res[2].results || []);
+        form.setFieldValue("adsConfig", res[2].results[0]?.id);
       },
       () => setIsLoading(false)
     );
   }, [isOpen]);
+
+  useEffect(() => {
+    if (selectedConfigTemplateIndex === -1) return;
+    const bidGroups = listAdsConfigs[selectedConfigTemplateIndex]?.bids?.map(
+      (item, index) => {
+        return {
+          id: index,
+          countries: [item.country],
+          bid: item.bid,
+        };
+      }
+    );
+
+    setBidGroups(bidGroups);
+
+    form.setFieldsValue({
+      dailyBudget: listAdsConfigs[selectedConfigTemplateIndex]?.dailyBudget,
+      totalBudget: listAdsConfigs[selectedConfigTemplateIndex]?.totalBudget,
+    });
+  }, [selectedConfigTemplateIndex]);
 
   useEffect(() => {
     form.setFieldValue("store", store || listStores[0]?.id);
@@ -84,20 +122,20 @@ export default function AppVariants(props) {
         if (!Object.keys(newApp).length) return;
         service.get("/" + newApp.consoleAppId + "/custom_listings").then(
           (res: any) => {
-            console.log('custom_listings', res.results);
+            console.log("custom_listings", res.results);
 
             // Create a new object with the specified ID and name
             const newObject = {
-              id: 'main_listing',
-              listingName: 'Main Listing'
+              id: "main_listing",
+              listingName: "Main Listing",
             };
-          
+
             const existingResults = res.results
-            ? res.results.map((listing: any) => ({
-                ...listing,
-                listingName: 'Custom - ' + listing.listingName
-              }))
-            : [];
+              ? res.results.map((listing: any) => ({
+                  ...listing,
+                  listingName: "Custom - " + listing.listingName,
+                }))
+              : [];
 
             // Insert the new object at index 0
             existingResults.unshift(newObject);
@@ -106,7 +144,7 @@ export default function AppVariants(props) {
             setListCustomListing(existingResults);
           },
           () => {}
-        );       
+        );
       },
       () => {}
     );
@@ -115,19 +153,42 @@ export default function AppVariants(props) {
   const onCloseModal = () => {
     onClose();
     form.resetFields();
+    setSelectedConfigTemplateIndex(-1);
+    setBidGroups(defaultGroups);
     setActiveKey([defaultGroups[0].id]);
     setGroups(defaultGroups);
   };
 
   const onFinish = (values) => {
-    const { app, campaignName, time, store } = values;
+    const {
+      app,
+      campaignName,
+      time,
+      store,
+      adsConfig,
+      dailyBudget,
+      totalBudget,
+    } = values;
     const id = getActivedApp(listStoreApps, app)?.id;
+
+    const countriesBid: any[] = [];
+    bidGroups.forEach((el: BidGroup) => {
+      const { countries, bid } = el;
+      if (countries?.length) {
+        countries.forEach((country) => {
+          countriesBid.push({ country, bid });
+        });
+      }
+    });
 
     const params: any = {
       scheduleStart: moment(time[0]).format(DATE_RANGE_FORMAT),
       scheduleEnd: moment(time[1]).format(DATE_RANGE_FORMAT),
       appId: id,
       name: campaignName,
+      dailyBudget,
+      totalBudget,
+      bids: countriesBid,
     };
 
     if (!submitCb) return; // check and remove
@@ -267,6 +328,90 @@ export default function AppVariants(props) {
                 onResetGroup={onResetGroup}
               />
             </div>
+
+            <Form.Item
+              className="mt-4 md:ml-4"
+              label={"Ads config template"}
+              name="configTemplate"
+            >
+              <Select onSelect={setSelectedConfigTemplateIndex}>
+                {listAdsConfigs.map((item, index) => (
+                  <Select.Option key={item.id} value={index}>
+                    {item.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              className="mt-4 md:ml-4"
+              name="dailyBudget"
+              label="Daily budget"
+              rules={[{ required: true, message: FIELD_REQUIRED }]}
+            >
+              <InputNumber
+                className="!w-full"
+                min={
+                  selectedConfigTemplateIndex > -1 &&
+                  (listAdsConfigs[selectedConfigTemplateIndex].minDailyBudget
+                    ? listAdsConfigs[selectedConfigTemplateIndex].minDailyBudget
+                    : 0)
+                }
+                max={
+                  selectedConfigTemplateIndex > -1 &&
+                  (listAdsConfigs[selectedConfigTemplateIndex].maxDailyBudget
+                    ? listAdsConfigs[selectedConfigTemplateIndex].maxDailyBudget
+                    : 100)
+                }
+              />
+            </Form.Item>
+
+            <Form.Item
+              className="mt-4 md:ml-4"
+              name="totalBudget"
+              label="Total budget"
+              rules={[{ required: true, message: FIELD_REQUIRED }]}
+            >
+              <InputNumber
+                className="!w-full"
+                min={
+                  selectedConfigTemplateIndex > -1 &&
+                  (listAdsConfigs[selectedConfigTemplateIndex].minTotalBudget
+                    ? listAdsConfigs[selectedConfigTemplateIndex].minTotalBudget
+                    : 0)
+                }
+                max={
+                  selectedConfigTemplateIndex > -1 &&
+                  (listAdsConfigs[selectedConfigTemplateIndex].maxTotalBudget
+                    ? listAdsConfigs[selectedConfigTemplateIndex].maxTotalBudget
+                    : 500)
+                }
+              />
+            </Form.Item>
+
+            <Form.Item className="mt-4 md:ml-4" name="bid">
+              <BidGroupForm
+                form={form}
+                type={BID_CPI_TYPE}
+                activeKey={activeBidKey}
+                setActiveKey={setActiveBidKey}
+                bidGroups={bidGroups}
+                setBidGroups={setBidGroups}
+                allCountries={COUNTRIES}
+                min={
+                  selectedConfigTemplateIndex > -1 &&
+                  (listAdsConfigs[selectedConfigTemplateIndex].minGeoBid
+                    ? listAdsConfigs[selectedConfigTemplateIndex].minGeoBid
+                    : 0)
+                }
+                max={
+                  selectedConfigTemplateIndex > -1 &&
+                  (listAdsConfigs[selectedConfigTemplateIndex].maxGeoBid
+                    ? listAdsConfigs[selectedConfigTemplateIndex].maxGeoBid
+                    : 10)
+                }
+              />
+            </Form.Item>
 
             <div className={`${sessionTitle} mt-6`}>Campaign listings</div>
             <div className="mt-4 md:ml-4">

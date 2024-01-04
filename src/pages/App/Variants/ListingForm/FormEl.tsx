@@ -61,7 +61,7 @@ function FormEl(props) {
           field={creativeField}
           listFiles={creatives}
           onSetListFiles={onSetCreativeListFiles}
-          accept={".png, .jpeg, .mp4"}
+          accept={".png, .jpeg, .mp4, .jpg"}
         />
       </Form.Item>
     </>

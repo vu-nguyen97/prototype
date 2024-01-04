@@ -1,6 +1,13 @@
-import React, { useEffect } from "react";
-import PropTypes from "prop-types";
 import Form from "antd/lib/form";
+import InputNumber from "antd/lib/input-number";
+import PropTypes from "prop-types";
+import React from "react";
+import {
+  BID_CPI_TYPE,
+  BID_RETENSION_TYPE,
+  BID_ROAS_TYPE,
+  DEFAULT_BID_STEP,
+} from "../../../constants/constants";
 import {
   BASE_BID_PLACEHOLDER,
   BID_PLACEHOLDER,
@@ -9,13 +16,6 @@ import {
   MAX_BID_PLACEHOLDER,
   VALUE_REQUIRED,
 } from "../../../constants/formMessage";
-import InputNumber from "antd/lib/input-number";
-import {
-  BID_CPI_TYPE,
-  BID_RETENSION_TYPE,
-  BID_ROAS_TYPE,
-  DEFAULT_BID_STEP,
-} from "../../../constants/constants";
 import SelectCountryFromList from "../../../partials/common/Forms/SelectCountryFromList";
 
 export const DYNAMIC_COUNTRIES = "dynamicCountries";
@@ -25,7 +25,8 @@ export const DYNAMIC_BASE_BID = "dynamicBaseBid";
 export const DYNAMIC_MAX_BID = "dynamicMaxBid";
 
 function BidRateGroup(props) {
-  const { bidGroup, onChangeGroup, listCountries, type, disabled } = props;
+  const { bidGroup, onChangeGroup, listCountries, type, disabled, min, max } =
+    props;
   const { id, countries, bid } = bidGroup;
 
   return (
@@ -50,7 +51,8 @@ function BidRateGroup(props) {
           rules={[{ required: true, message: VALUE_REQUIRED }]}
         >
           <InputNumber
-            min={0}
+            min={min}
+            max={max}
             value={bid}
             onChange={(value) => onChangeGroup(bidGroup, value, "bid")}
             step={DEFAULT_BID_STEP}
@@ -132,6 +134,8 @@ BidRateGroup.propTypes = {
   onChangeGroup: PropTypes.func,
   type: PropTypes.string,
   disabled: PropTypes.bool,
+  min: PropTypes.number,
+  max: PropTypes.number,
 };
 
 export default BidRateGroup;

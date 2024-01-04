@@ -74,6 +74,8 @@ function BidGroupForm(props) {
     allCountries = [],
     title = "Bid by location",
     disabled,
+    min,
+    max,
   } = props;
 
   useEffect(() => {
@@ -152,7 +154,7 @@ function BidGroupForm(props) {
   return (
     <div
       className={classNames(
-        "border p-5 shadow-md rounded mb-6 max-w-3xl",
+        "border p-5 shadow-md rounded mb-6 w-full",
         className
       )}
     >
@@ -210,6 +212,8 @@ function BidGroupForm(props) {
                   onChangeGroup={onChangeGroup}
                   listCountries={listCountries}
                   disabled={disabled}
+                  min={min || 0}
+                  max={max || 100}
                 />
               </div>
             </Collapse.Panel>
