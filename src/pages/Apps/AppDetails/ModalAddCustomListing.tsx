@@ -4,14 +4,17 @@ import Button from "antd/lib/button";
 import Modal from "antd/lib/modal/Modal";
 import Form from "antd/lib/form";
 import AntInput from "antd/lib/input";
-import DynamicUpload from "../../../partials/common/Forms/DynamicUpload";
 import service from "../../../partials/services/axios.config";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { getYtbUrlRule } from "../../../utils/Helpers";
+import UploadAssets, {
+  AssetsData,
+  getAssets,
+} from "../../../partials/common/Forms/UploadAssets";
 
 function ModalAddCustomListing(props) {
-  const [listFiles, setListFiles] = useState<any>({});
+  const [listFiles, setListFiles] = useState<AssetsData>({});
   const urlParams = useParams();
   const [form] = Form.useForm();
   const { isOpen, onClose, setIsLoading, setIsOpenModalAddApp, mainListing } =
@@ -20,7 +23,6 @@ function ModalAddCustomListing(props) {
   useEffect(() => {
     if (mainListing === null) return;
 
-    console.log("mainListing", mainListing);
     form.setFieldsValue({
       appName: mainListing.appName,
       shortDescription: mainListing.shortDescription,
@@ -36,13 +38,7 @@ function ModalAddCustomListing(props) {
     }, 300);
   };
 
-  const onSetListFiles = (fieldName, files) => {
-    const newListFiles = { ...listFiles };
-    newListFiles[fieldName] = files;
-    setListFiles(newListFiles);
-  };
   const onFinish = (values) => {
-    console.log("values", values);
     const {
       apps,
       name,
@@ -52,15 +48,6 @@ function ModalAddCustomListing(props) {
       url,
       customURL,
     } = values;
-
-    const {
-      // featureImg,
-      // iconImg,
-      // phoneScreenshots,
-      // sevenInchScreenshots,
-      // tenInchScreenshots,
-      assets,
-    } = listFiles;
 
     const formData = new FormData();
 
@@ -74,25 +61,12 @@ function ModalAddCustomListing(props) {
       formData.append("youtubeVideoUrl", url);
     }
 
+    const assets = getAssets(listFiles);
     assets.forEach((el) => {
       formData.append("assets", el);
     });
 
-    // formData.append("featureGraphic", featureImg[0]);
-    // formData.append("appIcon", iconImg[0]);
-    // phoneScreenshots.forEach((el) => {
-    //   formData.append("phoneScreenshots", el);
-    // });
-    // console.log(phoneScreenshots.length);
-    // sevenInchScreenshots.forEach((el) => {
-    //   formData.append("tablet7Screenshots", el);
-    // });
-    // console.log(sevenInchScreenshots.length);
-    // tenInchScreenshots.forEach((el) => {
-    //   formData.append("tablet10Screenshots", el);
-    // });
-    // console.log(tenInchScreenshots.length);
-
+    setIsLoading(true);
     service.post("/play-store/custom-listings", formData).then(
       (res: any) => {
         toast(res.message, { type: "success" });
@@ -114,6 +88,7 @@ function ModalAddCustomListing(props) {
       onFinish={onFinish}
     >
       <Modal
+        maskClosable={false}
         width={850}
         title="Add new store listing"
         open={isOpen}
@@ -206,12 +181,11 @@ function ModalAddCustomListing(props) {
             allowClear
           />
         </Form.Item>
-        <DynamicUpload
-          field={"assets"}
-          label={"Assets"}
-          multiple={true}
-          listFiles={listFiles["assets"] || []}
-          onSetListFiles={onSetListFiles}
+
+        <UploadAssets
+          label="Assets"
+          listFiles={listFiles}
+          onSetListFiles={setListFiles}
         />
       </Modal>
     </Form>

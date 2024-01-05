@@ -4,14 +4,17 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import service from "../../../partials/services/axios.config";
 import AntInput from "antd/lib/input";
-import DynamicUpload from "../../../partials/common/Forms/DynamicUpload";
 import Loading from "../../../utils/Loading";
 import Modal from "antd/lib/modal";
 import { getYtbUrlRule } from "../../../utils/Helpers";
+import UploadAssets, {
+  AssetsData,
+  getAssets,
+} from "../../../partials/common/Forms/UploadAssets";
 
 export default function EditMainStoreListing({ isOpen, onClose, mainListing }) {
   const [form] = Form.useForm();
-  const [listFiles, setListFiles] = useState<any>({});
+  const [listFiles, setListFiles] = useState<AssetsData>({});
   const urlParams = useParams();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -32,17 +35,10 @@ export default function EditMainStoreListing({ isOpen, onClose, mainListing }) {
     }, 300);
   };
 
-  const onSetListFiles = (fieldName, files) => {
-    const newListFiles = { ...listFiles };
-    newListFiles[fieldName] = files;
-    setListFiles(newListFiles);
-  };
-
   const onFinish = (values) => {
     const { shortDescription, fullDescription, url } = values;
-    const { assets } = listFiles;
-
     const formData = new FormData();
+
     formData.append("appId", urlParams.appId!);
     formData.append("shortDescription", shortDescription);
     formData.append("fullDescription", fullDescription);
@@ -50,11 +46,11 @@ export default function EditMainStoreListing({ isOpen, onClose, mainListing }) {
     if (url) {
       formData.append("youtubeVideoUrl", url);
     }
-    if (assets?.length) {
-      assets.forEach((el) => {
-        formData.append("assets", el);
-      });
-    }
+
+    const assets = getAssets(listFiles);
+    assets.forEach((el) => {
+      formData.append("assets", el);
+    });
 
     setIsLoading(true);
     service.post("/main_listing", formData).then(
@@ -131,13 +127,12 @@ export default function EditMainStoreListing({ isOpen, onClose, mainListing }) {
             maxLength={50}
           />
         </Form.Item>
-        <DynamicUpload
+
+        <UploadAssets
           isRequireMark={false}
-          field={"assets"}
-          label={"Assets"}
-          multiple={true}
-          listFiles={listFiles["assets"] || []}
-          onSetListFiles={onSetListFiles}
+          label="Assets"
+          listFiles={listFiles}
+          onSetListFiles={setListFiles}
         />
       </Modal>
     </Form>
