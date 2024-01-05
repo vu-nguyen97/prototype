@@ -251,7 +251,7 @@ export default function AppVariants(props) {
   const contentComp = (
     <>
       {isLoading && <Loading />}
-      {!submitCb && <div className="page-title">Campagin listing</div>}
+      {!submitCb && <div className="page-title">Campaign listing</div>}
 
       <div
         className={classNames(
