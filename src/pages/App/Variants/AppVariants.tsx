@@ -352,16 +352,14 @@ export default function AppVariants(props) {
               <InputNumber
                 className="!w-full"
                 min={
-                  selectedConfigTemplateIndex > -1 &&
-                  (listAdsConfigs[selectedConfigTemplateIndex].minDailyBudget
+                  selectedConfigTemplateIndex > -1
                     ? listAdsConfigs[selectedConfigTemplateIndex].minDailyBudget
-                    : 0)
+                    : 0
                 }
                 max={
-                  selectedConfigTemplateIndex > -1 &&
-                  (listAdsConfigs[selectedConfigTemplateIndex].maxDailyBudget
+                  selectedConfigTemplateIndex > -1
                     ? listAdsConfigs[selectedConfigTemplateIndex].maxDailyBudget
-                    : 100)
+                    : 100
                 }
               />
             </Form.Item>
@@ -375,16 +373,14 @@ export default function AppVariants(props) {
               <InputNumber
                 className="!w-full"
                 min={
-                  selectedConfigTemplateIndex > -1 &&
-                  (listAdsConfigs[selectedConfigTemplateIndex].minTotalBudget
+                  selectedConfigTemplateIndex > -1
                     ? listAdsConfigs[selectedConfigTemplateIndex].minTotalBudget
-                    : 0)
+                    : 0
                 }
                 max={
-                  selectedConfigTemplateIndex > -1 &&
-                  (listAdsConfigs[selectedConfigTemplateIndex].maxTotalBudget
+                  selectedConfigTemplateIndex > -1
                     ? listAdsConfigs[selectedConfigTemplateIndex].maxTotalBudget
-                    : 500)
+                    : 500
                 }
               />
             </Form.Item>
@@ -399,16 +395,14 @@ export default function AppVariants(props) {
                 setBidGroups={setBidGroups}
                 allCountries={COUNTRIES}
                 min={
-                  selectedConfigTemplateIndex > -1 &&
-                  (listAdsConfigs[selectedConfigTemplateIndex].minGeoBid
+                  selectedConfigTemplateIndex > -1
                     ? listAdsConfigs[selectedConfigTemplateIndex].minGeoBid
-                    : 0)
+                    : 0
                 }
                 max={
-                  selectedConfigTemplateIndex > -1 &&
-                  (listAdsConfigs[selectedConfigTemplateIndex].maxGeoBid
+                  selectedConfigTemplateIndex > -1
                     ? listAdsConfigs[selectedConfigTemplateIndex].maxGeoBid
-                    : 10)
+                    : 10
                 }
               />
             </Form.Item>

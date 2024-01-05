@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import Button from "antd/lib/button";
-import Modal from "antd/lib/modal/Modal";
 import Form from "antd/lib/form";
 import AntInput from "antd/lib/input";
-import service from "../../../partials/services/axios.config";
-import { toast } from "react-toastify";
+import Modal from "antd/lib/modal/Modal";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getYtbUrlRule } from "../../../utils/Helpers";
+import { toast } from "react-toastify";
 import UploadAssets, {
   AssetsData,
   getAssets,
 } from "../../../partials/common/Forms/UploadAssets";
+import service from "../../../partials/services/axios.config";
+import { getYtbUrlRule } from "../../../utils/Helpers";
 
 function ModalAddCustomListing(props) {
   const [listFiles, setListFiles] = useState<AssetsData>({});

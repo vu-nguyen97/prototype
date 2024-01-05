@@ -21,6 +21,7 @@ import {
   getShortDescription,
 } from "./Helpers";
 import { Switch } from "antd";
+import UploadAssets, { getAssets } from "../../../partials/common/Forms/UploadAssets";
 
 function ModalAddRelease(props) {
   const [form] = Form.useForm();
@@ -96,7 +97,7 @@ function ModalAddRelease(props) {
       fullDescription,
       shortDescription,
       url,
-      createRelease
+      createRelease,
     } = values;
     const formData = new FormData();
 
@@ -115,9 +116,10 @@ function ModalAddRelease(props) {
       formData.append("youtubeUrl", url);
     }
 
-    listFiles["assets"].forEach((el) => {
+    const assets = getAssets(listFiles);
+    assets.forEach((el) => {
       formData.append("assets", el);
-    });
+    })
 
     // setAddingRelease(true)
     setIsLoading(true);
@@ -190,8 +192,12 @@ function ModalAddRelease(props) {
             onChange={onChangeAppName}
           />
         </Form.Item>
-        <Form.Item name="createRelease" label="Create release?" valuePropName="checked">
-          <Switch onChange={(checked) => setCreateReleaseBoolean(checked)}/>
+        <Form.Item
+          name="createRelease"
+          label="Create release?"
+          valuePropName="checked"
+        >
+          <Switch onChange={(checked) => setCreateReleaseBoolean(checked)} />
         </Form.Item>
         {createReleaseBoolean && (
           <>
@@ -274,21 +280,12 @@ function ModalAddRelease(props) {
           />
         </Form.Item>
 
-        <Form.Item
-          name="assets"
-          label={<span>Assets {AssetNotes}</span>}
-          rules={[getUploadRule(listFiles["assets"], "Please select assets")]}
-        >
-          <DynamicUpload
-            wrapperClass=""
-            isShowLabel={false}
-            multiple
-            field="assets"
-            onSetListFiles={onSetListFiles}
-            listFiles={listFiles["assets"] || []}
-            accept=".png, .jpg, .jpeg"
-          />
-        </Form.Item>
+        <UploadAssets
+          isRequireMark={false}
+          label="Assets"
+          listFiles={listFiles}
+          onSetListFiles={setListFiles}
+        />
       </Modal>
     </Form>
   );
