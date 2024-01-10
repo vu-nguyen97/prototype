@@ -41,7 +41,7 @@ function AppTable(props) {
       sorter: sortByString("name"),
       render: (record) => (
         <Link
-          to={`/apps/${record.consoleAppId}/main-store-listing`}
+          to={`/apps/${record.consoleAppId}/overview`}
           className="flex items-center space-x-2 md:ml-1.5 !text-blue-600 hover:!text-blue-600/80"
         >
           <img src={record.icon} className="w-8 h-8 rounded" />

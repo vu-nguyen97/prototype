@@ -7,6 +7,7 @@ import {
 } from "../utils/ProtectedRoutes";
 import { FallbackProvider } from "../utils/composables/FallbackProvider";
 import SeleniumClients from "../pages/SeleniumClients/SeleniumClients";
+import AppOverview from "../pages/Apps/AppDetails/AppOverview";
 // import ErrorBoundary from "../utils/ErrorBoundary";
 
 const DefaultLayout = React.lazy(() => import("../partials/layouts/layout"));
@@ -120,6 +121,7 @@ const AppRoutes = () => (
         <Route path="apps/:appId/">
           <Route index element={getAppPage(<Overview />)} />
           <Route path="perfomance" element={getAppPage(<Overview />)} />
+          <Route path="overview" element={getStoreAppPage(<AppOverview />)} />
           <Route
             path="main-store-listing"
             element={getStoreAppPage(<MainStoreListing />)}

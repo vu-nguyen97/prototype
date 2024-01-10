@@ -125,13 +125,20 @@ export const SidebarAppConfigs = [
 export const SidebarStoreAppConfigs = [
   {
     id: 0,
+    url: "/overview",
+    label: "Overview",
+    iconEl: <AiOutlineDashboard size={20} />,
+    preload: () => import("../../pages/Apps/AppDetails/AppOverview"),
+  },
+  {
+    id: 1,
     url: "/main-store-listing",
     label: "Main Store Listing",
     iconEl: <GoChecklist size={20} />,
     preload: () => import("../../pages/Apps/AppDetails/MainStoreListing"),
   },
   {
-    id: 1,
+    id: 2,
     url: "/custom-store-listing",
     label: "Custom Store Listing",
     iconEl: <MdOutlineCyclone size={20} />,
